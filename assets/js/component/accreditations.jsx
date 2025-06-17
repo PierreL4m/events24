@@ -231,7 +231,7 @@ export default function Accreditations () {
                                             {data &&
                                                 <button
                                                     style={styles.button} className="btn btn-primary btn-block">
-
+                                                    disabled={isLaoding === false ? false : true}
                                                     <><i className="fa-solid fa-check" style={{
                                                         color: "white",
                                                         marginRight: "15px"
