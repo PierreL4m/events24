@@ -1,0 +1,73 @@
+{% extends 'admin_base.html.twig' %}
+{% block js_head %}
+	<script src='https://www.google.com/recaptcha/api.js' async defer></script>
+     <script
+      src="https://code.jquery.com/jquery-3.3.1.min.js"
+      integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
+      crossorigin="anonymous" async defer></script>
+
+    <script>     
+	    function recaptcha_check(token, form){
+	        $.ajax({
+	            type: "POST",
+	            url: "/check-captcha",
+	            data: {token : token},
+	            cache: false,
+
+	           success: function(data){
+	               form.submit();
+	               console.log('success');
+	            },
+	            error: function(xhr,status,error){
+	                alert('La validation par reCAPTCHA a échoué');
+	                location.reload();
+	            }
+	        });
+	    }
+
+	    function recaptcha_check_register(token){
+	        recaptcha_check(token,$('form[name=registration]'));
+	    }
+	   
+	    
+	</script>
+{% endblock %}
+
+{% block content %}
+<style>
+    .example-wrapper { margin: 1em auto; max-width: 800px; width: 95%; font: 18px/1.5 sans-serif; }
+    .example-wrapper code { background: #F5F5F5; padding: 2px 6px; }
+</style>
+
+<div class="example-wrapper">
+     <h1>Inscription candidate fos</h1>
+
+     <a href="{{path('candidates_list', {'id' : event.id})}}"> liste </a>
+     {% if registered is defined %}
+     	<p><strong> registration ok </strong></p>
+     {% endif %}
+    {{form_start(form) }} {#, {'action': '/api/event/48/registration'}#}
+    	{{form_widget(form)}}
+    	<button class="btn btn-success 
+			g-recaptcha" 
+			id="register_action" type="submit"
+			{% if app.environment == 'prod'%}
+	        	data-sitekey="6LdpB3AUAAAAAGhw1sTJc0XCUNWKqbbD67b8IXMv"
+	    	{% else %}
+	    		data-sitekey="6LeIxAcTAAAAAJcZVRqyHh71UMIEGNQ_MXjiZKhI"
+	        {% endif %}
+	        data-callback="recaptcha_check_register">
+	            <i class='fa fa-check'></i>
+	            M'inscrire
+	        </button>       
+
+    {{form_end(form)}}
+
+    {% if app.environment != 'prod' and is_granted('ROLE_SUPER_ADMIN') %}
+		<a href="#" id="fill"> fill </a>
+	{% endif %}
+</div>
+
+
+
+{% endblock %}

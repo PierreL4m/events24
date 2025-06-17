@@ -1,0 +1,132 @@
+{% extends 'partials/form.html.twig' %}
+
+{% block title %}
+	{% if helper.isAtLeastViewer(app.user) %}
+		<span id="participation_id" data-id="{{ participation.id }}">{{participation.getType}} </span><br>
+    	{{participation.organization.name}} - {{helper.getAdminEventLink(participation.event)|raw}}
+    {% else %}
+		<span id="participation_id" data-id="{{ participation.id }}">Fiche de participation à l'événement {{participation.event.getFullType}} - {{participation.event}}</span>
+    {% endif %}
+{% endblock %}
+
+{% block form %}
+	<button class="btn btn-primary" id="display_participation_load_form" > Charger une autre fiche de participation </button>
+	{{form_start(form_load)}}
+		{{form_widget(form_load)}}
+	{{form_end(form_load)}}
+	<br><button style="margin-bottom:15px;margin-top:-10px"class="btn btn-success" id="participation_load">Charger</button>
+	{{ form_start(form) }}
+	<div id="form_edit">
+		{{form_errors(form)}}
+
+		{% if form.slug is defined %}
+			{{ form_row(form.slug) }}
+		{% endif %}
+
+		{% if form.premium is defined %}
+			{{ form_row(form.premium) }}
+			{{ form_row(form.file) }}
+			{{ form_row(form.fileMobile) }}
+			{{ form_row(form.startPub) }}
+			{{ form_row(form.endPub) }}
+		{% endif %}
+
+		{{ form_row(form.companyName) }}
+	    {{ form_row(form.presentation) }}
+		{{ form_row(form.sector) }}
+
+	{# children #}
+
+	    {% if form.contractTypes is defined %}
+	    	{{ form_row(form.contractTypes) }}
+	    {% endif %}
+
+	    {% if form.maxJobs is defined %}
+	    	{{ form_row(form.maxJobs) }}
+	    {% endif %}
+
+	{# end children #}
+
+		{% if form.jobs is defined %}
+			<p class="postes">
+				Poste(s)
+				{% if is_granted('ROLE_ORGANIZATION') and participation.maxJobs %}
+					<i>(max {{participation.maxJobs}}) </i>
+				{% endif %}
+			</p>
+			{{ form_row(form.jobs) }}
+		{% endif %}
+
+	    {{ form_row(form.sites) }}
+	    {{ form_row(form.facebook) }}
+	    {{ form_row(form.instagram) }}
+	    {{ form_row(form.twitter) }}
+	    {{ form_row(form.viadeo) }}
+	    {{ form_row(form.linkedin) }}
+	    {{ form_row(form.th) }}
+	    {{ form_row(form.div) }}
+	    {{ form_row(form.senior) }}
+	    {{ form_row(form.jd) }}
+	    {{ form_row(form.youtube) }}
+
+	    <div class="address">
+	    	<p>
+	    		<strong> Adresse </strong>
+	    	</p>
+
+	    	{{form_widget(form.addressL1)}}
+	    	<div class="one_line">
+    			{{form_widget(form.addressNumber)}}
+    			{{form_widget(form.street)}}
+    			{{form_widget(form.addressL2)}}
+	    	</div>
+	    	{{form_widget(form.addressL3)}}
+	    	<div class="one_line">
+	    		{{form_widget(form.cp)}}
+	    		{{form_widget(form.city)}}
+	    	</div>
+	    	{{form_errors(form.cp)}}
+	    	{{form_errors(form.city)}}
+	    </div>
+
+	   	<div class="contact">
+	   		<p><strong> Contact </strong></p>
+	   		<div class="one_line">
+	   			{{form_widget(form.contactTitle)}}
+	   			{{form_widget(form.contactName)}}
+	   			{{form_widget(form.contactFirstName)}}
+	   		</div>
+	   		{{form_widget(form.contactEmail)}}
+	   		{{form_widget(form.contactPhone)}}
+	   	</div>
+	   	<div class="logo">
+	   		{% if participation.logo %}
+	   			<div class="row">
+	   				<div class="col-md-2">
+	   					<strong>Logo actuel</strong>
+	   				</div>
+	   				<div class="col-md-10">
+	   					<img src="{{participation.getLogoFile()}}">
+	   				</div>
+	   			</div>
+	   			<div class="row">
+	   				<div class="col-md-2">
+	   					<strong>Changer le logo </strong>
+	   				</div>
+	   				<div class="col-md-10">
+			   			{{form_widget(form.logoFile)}}
+			   			{{form_errors(form.logoFile)}}
+			   		</div>
+			   	</div>
+	   		{% else %}
+	   			{{form_row(form.logoFile)}}
+	   		{% endif %}
+	   		<p class="notice">
+	   			Merci de choisir un logo HD pour notre guide papier
+	   		</p>
+	   	</div>
+
+			</div>
+	    <button class="btn btn-success" id="save">{{ button_label|default('Enregistrer') }}</button>
+	{{ form_end(form) }}
+{% endblock %}

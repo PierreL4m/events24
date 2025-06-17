@@ -1,0 +1,7 @@
+{% extends 'partials/form.html.twig' %}
+
+{% block title %}
+	Ajout d'exposant au technique - {{standType.dimension}} m<sup>2</sup>
+	<br>
+	{{helper.getAdminEventLink(standType.techGuide.event)|raw}}
+{% endblock %}

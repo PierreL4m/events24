@@ -1,0 +1,90 @@
+security:
+    enable_authenticator_manager: true
+    password_hashers:
+        App\Entity\User:
+            algorithm: auto
+
+    role_hierarchy:
+        ROLE_ONSITE: [ROLE_ONSITE]
+        ROLE_ORGANIZATION: [ ROLE_EXPOSANT_SCAN, ROLE_EXPOSANT ]
+        ROLE_ADMIN: [ ROLE_VIEWER ]
+        ROLE_SUPER_ADMIN: [ ROLE_ADMIN, ROLE_SCAN ]
+
+    # https://symfony.com/doc/current/security.html#where-do-users-come-from-user-providers
+    providers:
+        # used to reload user from session & other features (e.g. switch_user)
+        app_user_provider:
+            entity:
+                class: App\Entity\User
+
+    firewalls:
+        api_token:
+            pattern: ^/api/token$
+            security: false
+        api:
+            pattern: ^/api
+            security: true
+            stateless: true
+            oauth2: true
+            provider: app_user_provider
+            custom_authenticators:
+                - App\Security\ApiSessionAuthenticator
+        dev:
+            pattern: ^/(_(profiler|wdt)|css|images|js)/
+            security: false
+        main:
+            form_login:
+                # "login" is the name of the route created previously
+                username_parameter: username
+                password_parameter: username
+                login_path: app_login
+                check_path: app_login
+                default_target_path: secure_area
+                always_use_default_target_path: true
+            json_login:
+                # "login" is the name of the route created previously
+                check_path: json_login
+            lazy: true
+            logout:
+                path:   app_logout
+            remember_me:
+                secret:   '%kernel.secret%'
+                lifetime: 604800 # 1 week in seconds
+                path:     /
+            provider: app_user_provider
+            custom_authenticators:
+                - App\Security\ApiKeyAuthenticator
+
+    # Easy way to control access for large sections of your site
+    # Note: Only the *first* access control that matches will be used
+    access_control:
+        - { path: ^/bilan, role: PUBLIC_ACCESS  }
+        - { path: ^/auth/login, role: PUBLIC_ACCESS }
+        - { path: ^/auth/resetting, role: PUBLIC_ACCESS }
+        - { path: ^/auth/register, role: ROLE_SUPER_ADMIN }
+        - { path: ^/auth/profile, role: ROLE_USER }
+        - { path: ^/admin-exposant/ajax-get-max-jobs, role:[ ROLE_VIEWER,ROLE_EXPOSANT_SCAN] }
+        - { path: ^/admin-exposant/participation, role: [ROLE_ORGANIZATION,ROLE_EXPOSANT_SCAN] }
+        - { path: ^/admin-exposant, role: [ ROLE_ORGANIZATION,ROLE_EXPOSANT_SCAN ] }
+        - { path: ^/admin-recruteurs, role: [ ROLE_VIEWER, ROLE_RH,ROLE_EXPOSANT_SCAN ] }
+        - { path: ^/admin, role: [ ROLE_VIEWER ] }
+        - { path: ^/jobflix, role: [ ROLE_VIEWER ] }
+        - { path: ^/espace-candidat, role: ROLE_CANDIDATE }
+        - { path: ^/admin/debug, role: ROLE_SUPER_ADMIN }
+        - { path: ^/onsite, role: ROLE_ONSITE }
+        - { path: ^/admin-scan, role: ROLE_EXPOSANT_SCAN }
+        - { path: ^/espace-candidat, role: PUBLIC_ACCESS  }
+        #api
+        - { path: ^/api/authorize, roles: IS_AUTHENTICATED_REMEMBERED }
+        - { path: ^/api/doc, roles: [PUBLIC_ACCESS ] }
+        - { path: ^/api/candidate, roles: [IS_AUTHENTICATED_FULLY,IS_AUTHENTICATED] }
+        - { path: ^/api/user/me, roles: [IS_AUTHENTICATED_FULLY,IS_AUTHENTICATED] }
+        - { path: ^/api/event, roles: [IS_AUTHENTICATED_FULLY,IS_AUTHENTICATED] }
+        - { path: ^/api/events, roles: [IS_AUTHENTICATED_FULLY,IS_AUTHENTICATED] }
+        - { path: ^/api/job, roles: [IS_AUTHENTICATED_FULLY,IS_AUTHENTICATED] }
+        - { path: ^/api/sections, roles: [IS_AUTHENTICATED_FULLY,IS_AUTHENTICATED] }
+        - { path: ^/api/concept, roles: [IS_AUTHENTICATED_FULLY,IS_AUTHENTICATED] }
+        - { path: ^/api/participations, roles: [IS_AUTHENTICATED_FULLY,IS_AUTHENTICATED] }
+        - { path: ^/api/participation, roles: [IS_AUTHENTICATED_FULLY,IS_AUTHENTICATED] }
+        - { path: ^/api, roles: [IS_AUTHENTICATED_FULLY] }
+        - { path: ^/[a-z-]+[0-9-]+, role: [ PUBLIC_ACCESS]  }

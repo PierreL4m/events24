@@ -1,0 +1,87 @@
+{% extends 'admin_base.html.twig' %}
+
+{% block content %}
+    <div class="container">
+        <h1>Lieu <a href="{{ path('place_edit', {'id': place.id}) }}"><i class="fa fa-edit"></i></a>
+</h1>
+
+        <table class="table table-striped">
+            <tbody>
+                {% if is_granted('ROLE_SUPER_ADMIN') %}
+                    <tr>
+                        <th>Id</th>
+                        <td id="place_id">{{ place.id }}</td>
+                    </tr>
+                {% endif %}
+                <tr>
+                    <th>Nom</th>
+                    <td>{{ place.name }}</td>
+                </tr>
+                <tr>
+                    <th>Nom pour mobile/appli</th>
+                    <td>{{ place.nameMobile }}</td>
+                </tr>
+                <tr>
+                    <th>Adresse</th>
+                    <td>{{ place.address }}</td>
+                </tr>
+                <tr>
+                    <th>Cp</th>
+                    <td>{{ place.cp }}</td>
+                </tr>
+                <tr>
+                    <th>Ville</th>
+                    <td>{{ place.city }}</td>
+                </tr>
+                <tr>
+                    <th>Description</th>
+                    <td>{{ place.description|raw }}</td>
+                </tr>
+                 {% if is_granted('ROLE_SUPER_ADMIN') %}
+                    <tr>
+                        <th>Slug</th>
+                        <td>{{ place.slug }}</td>
+                    </tr>
+                {% endif %}
+                <tr>
+                    <th>Latitude</th>
+                    <td>{{ place.latitude }}</td>
+                </tr>
+                <tr>
+                    <th>Longitude</th>
+                    <td>{{ place.longitude }}</td>
+                </tr>
+                <tr>
+                    <th>Création</th>
+                    <td>
+                        {% include 'partials/created.html.twig' with {'entity' : place} %}
+                    </td>
+                </tr>
+                <tr>
+                    <th>Modification</th>
+                    <td>
+                       {% include 'partials/updated.html.twig' with {'entity' : place} %}
+                    </td>
+                </tr>
+                <tr>
+                    <th>Couleurs</th>
+                    <td>
+                        {% for color in place.colors %}
+                            <div style="background-color:{{color.code}};padding-left:1em">
+                                {% if is_granted('ROLE_SUPER_ADMIN') %}
+                                    {{color.name}} : 
+                                {% endif %}
+                                {{color.code}}                                
+                            </div>
+                        {% endfor %}
+                    </td>
+            </tbody>
+        </table>
+
+        <a href="{{ path('place_index') }}" class="btn btn-primary">
+            <i class="fa fa-arrow-left"></i> Retour à la liste
+        </a>
+        <div class="clear1"></div>
+        {{ include('place/_delete_form.html.twig') }}
+    </div>
+{% endblock %}

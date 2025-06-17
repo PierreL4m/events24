@@ -1,0 +1,18 @@
+{% extends 'public_base.html.twig' %}
+
+{% block content %}
+    <div class="container" id="admin_index">
+        <h1 style="margin-top:20px;margin-bottom: 30px;text-align: center">Événements en cours</h1>
+        <div style="display: flex;gap:10px;justify-content: center;flex-flow: row;flex-wrap:wrap">
+            {% if current_events|length > 0 %}
+                {% for event in current_events %}
+                    <a href="{{ path('on_site_registration', {'id' : event.id }) }}" style="text-align:center;font-size:20px;border:solid black 1px; width:200px;display:flex;flex-flow: column;padding:30px;align-items: center;">
+                        {{event}}
+                    </a>
+                {% endfor %}
+            {% else %}
+                <p> Pas d'événements en cours</p>
+            {% endif %}
+        </div>
+    </div>
+{% endblock %}

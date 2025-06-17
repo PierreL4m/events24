@@ -1,0 +1,141 @@
+{% extends 'scan_base.html.twig' %}
+
+{% block content %}
+    <div style="padding:0;height: 91vh" class="container-fluid" id="exposant_show_candidates">
+        {% if participation is defined %}
+            <div style="padding:20px;background-color:white;display:flex;justify-content:space-between" id="scanHeader">
+                <div class="scanInfoSalon">
+                    <p style="margin:2px;font-size: 20px; font-weight:bold;text-transform:uppercase; color:{{ participation.event.place.colors[0].code }}"class="scanCity">{{ participation.event.place.city }}</p>
+                    <p style="margin: 2px;text-transform: uppercase;font-weight: 500;color: darkslategray;" class="scanPlace">{{ participation.event.place.name }}</p>
+                    <p style="margin: 2px;text-transform: uppercase;color: #6d6868;" class="scanDate">{{ participation.event.date|format_date('none', 'EEEE', null, 'gregorian', 'fr')}} <span style="font-weight:bold">{{ participation.event.date|format_date('none', 'dd', null, 'gregorian', 'fr')}} {{ participation.event.date|format_date('none', 'MMMM', null, 'gregorian', 'fr')}}</span> {{ participation.event.date|format_date('none', 'yyyy', null, 'gregorian', 'fr')}}</p>
+                </div>
+                <div class="scanInfoSalon">
+                    {% if participation.event.type == "24" %}
+                    <a href="{{ path('exposant_index') }}">
+                        <img style="width:77px" src="/images/24H_logo.svg" />
+                    </a>
+                    {%  elseif participation.event.type == "48" %}
+                    <a href="{{ path('exposant_index') }}">
+                        <img style="width:77px" src="/images/logo_jobfest.svg" />
+                    </a>
+                    {% else %}
+                    <a href="{{ path('exposant_index') }}">
+                        <img style="width:77px" src="/images/logo_expert.svg" />
+                    </a>
+                    {% endif %}
+                </div>
+            </div>
+        {% endif %}
+        <div style="margin-left:10px;margin-top: 20px;margin-bottom: 20px">
+
+            {% set referer = app.request.headers.get('referer') %}
+            <button id="backComment"  onclick="history.back()">
+
+                <i class="fa fa-caret-left"></i>
+                Retour
+            </button>
+        </div>
+        {% if form is defined %}
+            <p style="margin-bottom:2px;margin-left:10px;font-size: 12px;text-transform:uppercase;letter-spacing:1px;color:#9a8f8f;font-weight: 600">Recherche par:</p>
+            <div id="containerSearchScanned" class="form_search_container">
+                {{ form_start(form) }}
+                    {{form_widget(form,) }}
+                    <button type="submit" class="btn btn-info searchButtonCandidatScanned">
+                        <i class="fa fa-search"></i>
+                    </button>
+                {{form_end(form)}}
+            </div>
+        {% endif %}
+
+                {% if participation is defined %}
+                    <p style="margin-bottom:-10px;margin-left:10px;font-size: 12px;text-transform:uppercase;letter-spacing:1px;color:#9a8f8f;font-weight: 600">Filtrer par évaluation :</p>
+                    <div class="filters {{filter}}">
+                        <a href="{{path('exposant_show_candidates', {'id' : participation.id})}}" class="filterButton">
+                            <i class="fa fa-group"></i>
+                        </a>
+                        <a class="filterButton" href="{{path('exposant_show_candidates', {'id' : participation.id})}}?filter=favorite">
+                            <i class="fa fa-star"></i>
+                        </a>
+                        <a class="filterButton" href="{{path('exposant_show_candidates', {'id' : participation.id})}}?filter=like">
+                            <i class="fa fa-thumbs-up"></i>
+                        </a>
+                        <a class="filterButton" href="{{path('exposant_show_candidates', {'id' : participation.id})}}?filter=dislike">
+                            <i class="fa fa-thumbs-down"></i>
+                        </a>
+                        <a class="filterButton" href="{{path('exposant_show_candidates', {'id' : participation.id})}}?filter=nolike">
+                            <i class="fa fa-question-circle-o"></i>
+                        </a>
+                    </div>
+                    <div class="export">
+                        <a id="buttonExportScannedCandidat" style="background-color:{{ participation.event.place.colors[0].code }}" href="{{path('exposant_export_candidates', {'id' : participation.id})}}" class="btn btn-success " target="_blank">
+                            Exporter les candidats
+                            <i class="fa fa-download"></i>
+                        </a>
+                    </div>
+                {% endif %}
+                <hr style="border-color:{{ participation.event.place.colors[0].code }};width: 95%;margin-top: 30px"/>
+                <h1 style="text-transform: uppercase;font-size: 25px;margin-left: 10px;letter-spacing: 1px;color: #4c4c4c;margin-bottom: 25px;">Liste des candidats</h1>
+                {% if comments|length > 0 %}
+                	<table id="candidateScannedTable" class="table table-striped">
+                        <tbody>
+                		 {% for comment in comments %}
+                            {% set candidate = comment.candidateParticipation.candidate %}
+                            {% set participation = comment.candidateParticipation %}
+                			<tr id="candidatsScannedTr">
+                                <td style="flex-grow: 1" class="text-center">
+                                    {% include 'partials/display_likes.html.twig' with {'nolike' : true} %}
+                                </td>
+                				<td style="flex-grow: 9;width:100px">
+                                    <a href="{{path('exposant_show_candidate', {'id' : comment.id})}}">
+                					   <span style="text-transform: capitalize">{{candidate.firstname}}</span> {{candidate.lastname}}
+                                    </a>
+                                     {% if app.environment == 'dev' %}
+                                        comment_id={{comment.id}}
+                                        participation_id={{participation.id}}<br>
+                                        candidate_id={{candidate.id}}
+                                    {% endif %}
+                				</td>
+                                <td class="no_mobile">
+                                    {{candidate.email}}
+                                </td>
+                                <td class="no_mobile">
+                                    {{candidate.phone}}
+                                </td>
+                                <td style="display:flex;justify-content:center;flex-grow: 1" class="text-center">
+                                    <a href="{{path('exposant_show_candidate', {'id' : comment.id})}} target="_blank">
+                                    <i style="width:10px;color:#4c4c4c!important" class="fa fa-edit"></i>
+                                    </a>
+                                </td>
+                                <td style="display:flex;justify-content:center;flex-grow: 1" class="text-center">
+                                    {% if helper.fileExists(candidate.getCvPath) %}
+                                        <a href="{{asset(candidate.getCvPath)}}" target="_blank">
+                                            <i style="width:10px;color:#4c4c4c!important" class="fa fa-eye"></i>
+                                        </a>
+                                    {% else %}
+                                        <a href="#" target="_blank">
+                                            <i style="width:10px;color:#4c4c4c!important" class="fa fa-remove"></i>
+                                        </a>
+                                    {% endif %}
+                                </td>
+                                 {% if app.environment == 'dev' %}
+                                    <td class="text-center">
+                                        {{ comment.favorite ? '<i class="fa fa-star"></i>'|raw : '' }}
+
+                                    </td>
+                                    <td class="text-center">
+                                        {% if comment.like == 1 %}
+                                            <i class="fa fa-thumbs-up"></i>
+                                        {% elseif comment.like == -1 %}
+                                            <i class="fa fa-thumbs-down"></i>
+                                        {% endif %}
+                                    </td>
+                                {% endif %}
+                			</tr>
+                		{% endfor %}
+                	</table>
+                {% else %}
+                    <p style="margin-left:10px"> Aucun résultat </p>
+                {% endif %}
+
+    </div>
+{% endblock %}

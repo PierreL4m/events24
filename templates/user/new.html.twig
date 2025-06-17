@@ -1,0 +1,14 @@
+{% extends 'partials/form.html.twig' %}
+{% block title %}
+
+	{% if participation %}
+		Créer un responsable pour la fiche de participation {{participation.getCompanyName}} - {{helper.getAdminEventLink(participation.event)|raw}}
+	{% else %}
+		 Créer un {{user.getType|lower}}
+	{% endif %}
+{% endblock %}
+{% block content %}
+	{% set button_label = 'Créer le nouvel utilisateur' %}
+	{% set notice = true %}
+	{{parent()}}
+{% endblock %}

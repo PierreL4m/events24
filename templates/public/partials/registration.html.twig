@@ -1,0 +1,75 @@
+	{% if section.typeSlug == 'registration' and section.onPublic %}
+		{% if helper.isAlreadyRegistered(app.user,event) %}
+			<p>
+				Vous êtes déjà inscrit à cet événement.
+			</p>
+			<p>
+				Retrouvez toutes les informations dans <a href="{{path('candidate_user_profile')}}"> votre compte </a>
+			</p>
+		{% elseif helper.registrationLimitOutdated(event) %}
+			<p>
+				Désolé, les inscriptions à cet événement sont clôturées.
+			</p>
+		{% else %}
+			{% if not app.user %}
+				<p class="have_an_account">
+					Déjà un compte? <a href="{{path('candidate_user_profile')}}">Identifiez-vous </a>
+				</p>
+			{% endif %}
+
+			{% if is_granted('ROLE_VIEWER') or is_granted('ROLE_EXPOSANT_SCAN') %}
+				<p>
+					Vous êtes connecté en tant que <strong>{{app.user}}</strong>.
+				</p>
+				<p>
+					Vous pouvez inscrire un candidat, il recevra son invitation et son mot de passe par email.
+				</p>
+			{% else %}
+				<p class="catch">
+					{% if event.type.mandatoryRegistration %}
+						L'inscription est obligatoire.
+						{% if not event.type.registrationValidationAuto %}
+							Votre participation est soumise à présélection afin de s'assurer de l'adéquation entre votre profil et les postes proposés par les entreprises.
+						{% endif %}
+					{% else %}
+					{% endif %}
+				</p>
+			{% endif %}
+			<div style="display:block">
+				{% include 'public/partials/registration_form.html.twig' %}
+			</div>
+
+			<div id="rgpd">
+				<p>
+					Les informations recueillies sur ce formulaire sont enregistrées dans un fichier informatisé par L4M pour la gestion de votre invitation à l'événement et la réalisation de statistiques. Elles seront conservées pendant 3 ans après votre dernière connexion.
+				</p>
+				{# <p>
+					Si vous souhaitez recevoir des mails de notre part, ces données seront destinées à vous proposer par email des événements de recrutement dans votre région.
+				</p>	 #}
+				<p>
+					Conformément à la loi « informatique et libertés », vous pouvez exercer votre droit d'accès aux données vous concernant et les faire rectifier ou supprimer en vous connectant sur <a href="{{path('candidate_user_profile')}}">votre compte candidat</a>, ou en nous contactant par courrier : L4M, 30 avenue Pierre Mauroy 59120 LOOS.
+				</p>
+			</div>
+		{% endif %}
+	{% else %}
+		{% if event.slug == 'amiens-2021' %}
+			<p>
+				Les inscriptions au salon seront possibles à partir du Mardi 9 Février 2021.<br>
+				En renseignant votre adresse mail ici, vous serez averti(e) dès que vous pourrez vous inscrire et choisir un créneau horaire de visite.
+			</p>
+		{% else %}
+			<p>
+				Les inscriptions au salon seront possibles à partir du {{event.online|format_date('none', 'MMMM Y', null, 'gregorian', 'fr')|capitalize}}.<br>
+				En renseignant votre adresse mail ici, vous serez averti(e) dès que vous pourrez vous inscrire et choisir un créneau horaire de visite.
+			</p>
+		{% endif %}
+		<form class="" action="{{path('recall_register', {'id': event.id})}}" method="post">
+			<div class="form-group">
+				<label for="mail">Email :</label>
+				<input class="form-control" type="email" name="mail" value="">
+				<button type="submit" class="btn btn-success">
+					Enregistrer
+				</button>
+			</div>
+		</form>
+	{% endif %}

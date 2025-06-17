@@ -1,0 +1,175 @@
+{% if participation is defined %}
+	{% set user = participation.event.manager %}
+{% elseif user is not defined %}
+	{% set user = app.user %}
+{% endif %}
+<style type="text/css">
+	@font-face {
+		font-family: 'Conv_GabrielSansCondLight';
+		src: url('https://www.l4m.fr/heberg/emails/fonts/GabrielSansCondLight.eot');
+		src: local('?'), url('https://www.l4m.fr/heberg/emails/fonts/GabrielSansCondLight.woff') format('woff'), url('https://www.l4m.fr/heberg/emails/fonts/GabrielSansCondLight.ttf') format('truetype'), url('https://www.l4m.fr/heberg/emails/fonts/GabrielSansCondLight.svg') format('svg');
+		font-weight: normal;
+		font-style: normal;
+	}
+	body {
+		font-family: 'Conv_GabrielSansCondLight';
+	}
+	</style>
+<table style="border:0;background: white;border-spacing:0;margin:0;padding-top:0;width:max-content;">
+	<tr>
+		<td>
+			<table style="border-spacing:0;margin:0;padding:0">
+				<tr>
+					<td width="337" align="center" valign="middle">
+						<a style="text-decoration:none;margin:0;padding:0" href="https://www.l4m.fr">
+							<img src="{{ absolute_url(asset('images/image_01.png'))}}" alt="l4m">
+						</a>
+					</td>
+					<td valign="middle">
+						<table style="border-spacing:0;margin:0;padding:0;width:max-content">
+							{% if user is defined and user is not null and team is not defined %}
+								<tr>
+									<td style="font-size:16px;color:#747474;text-transform: uppercase;font-family:'Conv_GabrielSansCondLight', arial, sans-serif"> {{user.firstName}} {{user.lastName}}</td>
+								</tr>
+								<tr>
+									<td style="font-size:16px;color:#D9823B;text-transform: uppercase;font-family:'Conv_GabrielSansCondLight', arial, sans-serif"> {{user.position}} </td>
+								</tr>
+								<tr>
+									<td style="height:14px"></td>
+								</tr>
+								<tr>
+									<td style="font-size:14px;color:#747474;text-transform: uppercase;font-family:'Conv_GabrielSansCondLight', arial, sans-serif"> <span style="color:#747474;text-transform:uppercase"> Tél. :</span> {{user.phone}} </td>
+								</tr>
+								<tr>
+									<td style="height:14px"></td>
+								</tr>
+							{% else %}
+								<tr>
+									<td style="font-size:16px;color:#747474;text-transform: uppercase;font-family:'Conv_GabrielSansCondLight', arial, sans-serif"> L'équipe L4M </td>
+								</tr>
+								<tr>
+									<td style="font-size:14px;color:#747474;text-transform: uppercase;font-family:'Conv_GabrielSansCondLight', arial, sans-serif"> <span style="color:#747474;text-transform:uppercase"> Tél. :</span> 03.20.04.64.92 </td>
+								</tr>
+							{% endif %}
+								<tr>
+									<td style="font-size:14px;color:#D9823B;text-transform: uppercase;font-family:'Conv_GabrielSansCondLight', arial, sans-serif"> LOOKING FOR MISSION </td>
+								</tr>
+								<tr>
+									<td style="font-size:14px;color:#747474;text-transform: uppercase;font-family:'Conv_GabrielSansCondLight', arial, sans-serif">  PARC EURASANTÉ, BÂTIMENT G, 30 AVENUE PIERRE MAUROY - 59120 LOOS    </td>
+								</tr>
+						</table>
+					</td>
+				</tr>
+			</table>
+		</td>
+	</tr>
+	<tr>
+		<td valign="middle" align="left">
+			<table style="border-spacing:0;margin:0;padding:0">
+				<tr>
+				<td width="339" height="42" valign="middle" align="center">
+					<img src="{{ absolute_url(asset('images/ligne.png'))}}" alt="l4m">
+				</td>
+					<td>
+						<a style="text-decoration:none;margin:0;padding:0" href="https://fr.viadeo.com/fr/profile/l4m.emploi,stage-et-formation-dans-le-nord-pas-de-calais">
+							<img src="{{ absolute_url(asset('images/viadeo.png'))}}" alt='Viadeo'>
+						</a>
+					</td>
+					<td style="width:25px" align="center">
+						<img src="{{ absolute_url(asset('images/separateur.png'))}}" alt=''>
+					</td>
+					<td>
+						<a style="text-decoration:none;margin:0;padding:0" href="https://www.linkedin.com/company/l4m-fr-looking-for-mission">
+							<img src="{{ absolute_url(asset('images/linkedin.png'))}}" alt='LinkedIn'>
+						</a>
+					</td>
+					<td style="width:25px" align="center">
+						<img src="{{ absolute_url(asset('images/separateur.png'))}}" alt=''>
+						</a>
+					</td>
+					<td>
+						<a style="text-decoration:none;margin:0;padding:0" href="https://www.facebook.com/L4M.fr">
+							<img src="{{ absolute_url(asset('images/facebook.png'))}}" alt='Facebook'>
+						</a>
+					</td>
+					<td style="width:25px" align="center">
+						<img src="{{ absolute_url(asset('images/separateur.png'))}}" alt=''>
+						</a>
+					</td>
+					<td>
+						<a style="text-decoration:none;margin:0;padding:0" href="https://www.twitter.com/l4mfr">
+							<img src="{{ absolute_url(asset('images/twitter.png'))}}" alt='Twitter'>
+						</a>
+					</td>
+				</tr>
+			</table>
+		</td>
+	</tr>
+	<tr>
+			<td>
+				<table style="border-spacing:0;margin:0;padding:0">
+					<tr>
+						<td>
+							<a style="text-decoration:none;margin:0;padding:0" href="https://www.l4m.fr">
+								<img src="{{ absolute_url(asset('images/l4m.png'))}}" alt="L4M.fr">
+							</a>
+						</td>
+						<td style="width:32px" align="center">
+							<img src="{{ absolute_url(asset('images/separateur.png'))}}" alt=''>
+							</a>
+						</td>
+						<td>
+							<a style="text-decoration:none;margin:0;padding:0" href="https://www.jobfest.fr">
+								<img src="{{ absolute_url(asset('images/jobfest.png'))}}" alt="Jobfest">
+							</a>
+						</td>
+						<td style="width:32px" align="center">
+							<img src="{{ absolute_url(asset('images/separateur.png'))}}" alt=''>
+							</a>
+						</td>
+						<td>
+							<a style="text-decoration:none;margin:0;padding:0" href="https://www.24h-emploi.com">
+								<img src="{{ absolute_url(asset('images/24h.png'))}}" alt="24h pour l'emploi et la formation">
+							</a>
+						</td>
+						<td style="width:32px" align="center">
+							<img src="{{ absolute_url(asset('images/separateur.png'))}}" alt=''>
+							</a>
+						</td>
+						<td>
+							<a style="text-decoration:none;margin:0;padding:0" href="https://www.recrutementexperts.fr">
+								<img src="{{ absolute_url(asset('images/experts.png'))}}" alt="Recrutement Experts">
+							</a>
+						</td>
+						<td style="width:32px" align="center">
+							<img src="{{ absolute_url(asset('images/separateur.png'))}}" alt=''>
+							</a>
+						</td>
+						<td>
+							<a style="text-decoration:none;margin:0;padding:0" href="https://www.accelerh.fr">
+								<img src="{{ absolute_url(asset('images/accelerh.png'))}}" alt="AcceleRh">
+							</a>
+						</td>
+						<td style="width:32px" align="center">
+							<img src="{{ absolute_url(asset('images/separateur.png'))}}" alt=''>
+							</a>
+						</td>
+						<td>
+							<a style="text-decoration:none;margin:0;padding:0" href="https://www.recrutcomedyclub.fr">
+								<img src="{{ absolute_url(asset('images/comedy.png'))}}" alt="Recrut Comedy Club">
+							</a>
+						</td>
+					</tr>
+				</table>
+			</td>
+		</tr>
+		<tr>
+			<td style="height:36px">
+			</td>
+		</tr>
+		<tr>
+			<td style="font-size:13px;color:#747474;font-family:'Conv_GabrielSansCondLight', arial, sans-serif">
+			Pensez environnement ! N'imprimez cet email que si c'est nécessaire.
+			</td>
+		</tr>
+</table>

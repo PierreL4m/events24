@@ -1,0 +1,117 @@
+{% extends 'admin_base.html.twig' %}
+
+{% block content %}
+    <div class="container" id="users">
+        <h1>Utilisateurs</h1>
+        <a href="{{ path('user_new',{'type' : 'l4m'}) }}" class="btn btn-primary">
+            <i class="fa fa-plus"></i> Nouvel admin L4M
+        </a>
+        <a href="{{ path('user_new',{'type' : 'onsite'}) }}" class="btn btn-primary">
+            <i class="fa fa-plus"></i> Nouvel utilisateur pour les inscriptions Jour-J
+        </a>
+       {#
+        <a href="{{ path('user_new',{'type' : 'rh'}) }}" class="btn btn-primary">
+            <i class="fa fa-plus"></i> Nouveau Rh
+        </a> #}
+         <div class="clear1"></div>
+        <a href="{{ path('user_index',{'type' : 'l4m'}) }}" class="btn btn-info">
+            <i class="fa fa-search"></i> Utilisateurs L4M
+        </a>
+        <a href="{{ path('user_index',{'type' : 'exposant'}) }}" class="btn btn-info">
+            <i class="fa fa-search"></i> Exposants
+        </a>
+        <a href="{{ path('user_index',{'type' : 'rh'}) }}" class="btn btn-info">
+            <i class="fa fa-search"></i> RHs
+        </a>
+        <a href="{{ path('user_index',{'type' : 'candidate'}) }}" class="btn btn-info">
+            <i class="fa fa-search"></i> Candidats
+        </a>
+
+        {% include 'partials/form_search.html.twig' %}
+
+
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    {% if is_granted('ROLE_SUPER_ADMIN') %}
+                        <th>Username</th>
+                        <th>Roles</th>
+                        <th>Id</th>
+                    {% endif %}
+                    <th>Nom</th>
+                    <th>Prénom</th>
+                    <th>Type</th>
+                    <th>Téléphone</th>
+                    <th>Email</th>
+                    {% if users[0].sendPassword is defined %}
+                        <th>Envoi de mot de passe</th>
+                    {%  else %}
+                        <th></th>
+                    {% endif %}
+                    <th>Job</th>
+                    <th>Actif</th>
+                    <th>Dernière connexion</th>
+                    <th>actions</th>
+                </tr>
+            </thead>
+            <tbody>
+            {% for user in users %}
+                <tr>
+                    {% if is_granted('ROLE_SUPER_ADMIN') %}
+                        <td>{{ user.username }}</td>
+                        <td>{{ user.roles ? user.roles|join(', ') : '' }}</td>
+                        <td>{{ user.id }}</td>
+                    {% endif %}
+                    <td>{{ user.firstname }}</td>
+                    <td>{{ user.lastname }}</td>
+                    <td>{{ user.getType() }} </td>
+                    <td>
+                        {{ user.phone }}
+                        {%  if user.mobile %}
+                            <br> {{ user.mobile }}
+                        {% endif %}
+                    </td>
+                    <td>{{ user.email }}</td>
+                    {% if user.sendPassword is defined %}
+                        <td>{{ user.sendPassword ? 'Oui' : 'Non' }}</td>
+                    {%  else %}
+                        <td></td>
+                    {% endif %}
+                    <td>{{ user.position }}</td>
+                    <td>{{ user.enabled ? 'Oui' : 'Non' }}</td>
+                    <td>{{ user.lastLogin ? user.lastLogin|date('Y-m-d H:i:s') : '' }}</td>
+                    <td>
+
+                        {% if user.getType() != 'Candidat' %}
+                        <a href="{{ path('user_edit', {'id': user.id}) }}">
+                            <i class="fa fa-edit"></i>
+
+                        </a>
+                        {% endif %}
+                        {% if user.getType() == 'Candidat' %}
+                        <a href="{{path('admin_candidate_profile', {'event' : 1, 'id' : user.id})}}">
+                            <i class="fa fa-eye"></i>
+                        </a>
+                        {% endif %}
+                        {% if user.getType() == "Exposant" %}
+                        <form action="{{ path('user_delete', {'id': user.id}) }}" id="a_confirm_form">
+                            <button class="btn btn-danger a_confirm is_form" data-msg="définitivement ce compte exposant? (Cette opération est irréversible) " id="delete_account">
+                                <i class="fa fa-remove"></i>
+                                {{ btn_label|default('Supprimer le compte') }}
+                            </button>
+                        </form>
+                        {% endif %}
+                    </td>
+                </tr>
+            {% else %}
+                <tr>
+                    <td colspan="18">Pas d'utilisateur</td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+        <div class="navigation">
+            {{ knp_pagination_render(users) }}
+        </div>
+   </div>
+{% endblock %}

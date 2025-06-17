@@ -1,0 +1,22 @@
+<span id="candidate_fa_icon">
+	{% if comment.favorite %}
+	    <i class="fa fa-star"></i>
+	   {#  {% if pdf is defined %}
+	    	<img src="{{absolute_url(asset('fa-star'))}}">
+	    {% endif %} #}
+	{% elseif comment.like == 1 %}
+	    <i class="fa fa-thumbs-up"></i>
+	    {# {% if pdf is defined %}
+	    	<img src="{{absolute_url(asset('fa-thumbs-up'))}}">
+	    {% endif %} #}
+	{% elseif comment.like == -1 %}
+	    <i class="fa fa-thumbs-down"></i>
+	   {#  {% if pdf is defined %}
+	    	<img src="{{absolute_url(asset('fa-thumbs-down'))}}">
+	    {% endif %} #}
+	{% elseif nolike is defined %}
+	    <i class="fa fa-question-circle-o"></i>
+	{% else %}
+		<i></i>
+	{% endif %}
+</span>

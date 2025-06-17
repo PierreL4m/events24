@@ -1,0 +1,26 @@
+{% if contact_address is not defined or contact_address is null %}
+
+	{{form_start(contact_form)}}
+		{{form_widget(contact_form)}}
+		<button type="submit" class="btn btn-success g-recaptcha" id="contact_action"
+		{% if app.environment == 'prod'%}
+        	data-sitekey="6LdpB3AUAAAAAGhw1sTJc0XCUNWKqbbD67b8IXMv"
+    	{% else %}
+    		data-sitekey="6LeIxAcTAAAAAJcZVRqyHh71UMIEGNQ_MXjiZKhI"
+        {% endif %}
+        data-callback="recaptcha_check_contact">
+			<i class="fa fa-envelope"></i>
+			Envoyer
+		</button>
+		{% if admin is defined %}
+			<span class="text-danger"><i>Ceci est un aperçu, ce formulaire n'envoie pas la demande de contact</i></span>
+		{% endif %}
+	{{form_end(contact_form)}}
+
+
+{% else %}
+	<p id="contact_send" class="alert alert-success">
+		Votre demande de contact a été envoyée.<br>
+		Nous y répondrons dans les meilleurs délais à l'adresse {{contact_address}} ou par téléphone au {{contact_phone}}.
+	</p>
+{% endif %}

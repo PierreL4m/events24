@@ -1,0 +1,36 @@
+{% extends 'admin_base.html.twig' %}
+
+{% block content %}
+    <div class="container">
+        <h1>PartnerType index</h1>
+
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Id</th>
+                    <th>Name</th>
+                    <th>Slug</th>
+                    <th>actions</th>
+                </tr>
+            </thead>
+            <tbody>
+            {% for partner_type in partner_types %}
+                <tr>
+                    <td>{{ partner_type.id }}</td>
+                    <td>{{ partner_type.name }}</td>
+                    <td>{{ partner_type.slug }}</td>
+                    <td>
+                        <a href="{{ path('partner_type_edit', {'id': partner_type.id}) }}">edit</a>
+                    </td>
+                </tr>
+            {% else %}
+                <tr>
+                    <td colspan="4">no records found</td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+
+        <a href="{{ path('partner_type_new') }}">Create new</a>
+    </div>
+{% endblock %}

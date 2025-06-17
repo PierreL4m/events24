@@ -1,0 +1,35 @@
+<div id="partners_container">
+	{% for partner in helper.getEventPartners(event,section.sectionType) %}
+		<span class="partner_container">
+			<a href="{{partner.url}}" class="flex-item" title="{{partner.name}}" target="_blank">
+				<img src="{{'/uploads/'~partner.logo.getPath}}" alt="{{partner.name}}">
+			</a>
+			{% if admin is defined %}
+				<span class="btn_actions">
+					<a href="{{path('partner_edit', {'id' : partner.id, 'section_id' : section.id})}}">
+						<i class="fa fa-edit"></i>
+					</a>
+					<a href="{{path('partner_remove_from_event', {'id' : partner.id, 'event_id' : event.id, 'section_id' : section.id})}}" class="a_confirm" data-msg="ce partenaire?">
+						<i class="fa fa-remove"></i>
+					</a>
+				</span>
+			{% endif %}
+		</span>
+	{% else %}
+		<p> Venez découvrir la liste de nos partenaires très prochainement </p>
+	{% endfor %}
+</div>
+
+{% if admin is defined %}
+	<div class="footer_section">
+		<a href="{{path('partners_add', {'id' : event.id, 'section_id' : section.id})}}" class="btn btn-primary">
+			<i class="fa fa-edit text-white"></i>
+			Ajouter des partenaires existants
+		</a>
+		<div class="clear1"></div>
+		<a href="{{path('partner_new', {'id' : event.id, 'section_id' : section.id })}}" class="btn btn-primary">
+			<i class="fa fa-plus"></i>
+			Ajouter un nouveau partenaire
+		</a>
+	</div>
+{% endif %}

@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<title> Accusé de récéption</title>
+	<style>
+	  body{
+            margin:0;
+        }
+        .container{            
+            margin:100px;
+            width:740px;  /*150dpi 1240x1754 px. */
+           
+        }
+        .title, .return{
+        	text-align: center;
+        	font-size:3.5em;
+        	font-weight:bold;
+        	margin-bottom:1em;
+        }
+        .return{
+        	font-size:2.3em;
+        	margin-bottom:2.5em;    	
+        }
+        .infos{
+        	font-weight:bold;
+        	font-size:1.6em;
+        	margin-bottom:2em;
+        }
+        .text{
+        	margin-bottom:4em;
+        	line-height:1.5em;
+        }
+        .event{
+        	text-align:center;
+        	font-weight:bold;
+        	display:block;
+        	margin:1em 0;
+        	font-size:1.1em;
+        }
+    </style>
+</head>
+<body>
+	{% set event = participation.event %}
+	<div class="container">
+		<div class="title">
+			Accusé de réception du cahier des charges
+		</div>
+		<div class="return">
+			À retourner avant le {{event.getAckDate()|date('d/m/Y')}}
+		</div>
+		<div class="infos">
+			<p>
+				Entreprise : {{participation.companyName}} <br>
+				Stand n°{{participation.standNumber}} 
+			</p>
+		</div>
+		<div class="text">
+			<p>
+				Je soussigné(e) M. / Mme ...................................................................................<br>
+				Représentant la société .....................................................................................
+			</p>
+			<p>
+				Déclare avoir reçu le cahier des charges relatif à l'événement <br>
+				<span class="event"> "{{event.getFullType}}" - {{event}}</span>
+				et en avoir pris connaissance.
+			</p>
+			<p>
+				Je m'engage à le respecter.
+			</p>
+		</div>
+		<div class="text">
+			<p>
+				Fait à ......................................................................... <br>
+				Le ............................................................................. 
+			</p>
+		</div>
+	</div>
+</body>
+</html>

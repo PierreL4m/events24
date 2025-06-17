@@ -1,0 +1,12 @@
+{% extends 'admin_base.html.twig' %}
+
+{% block content %}
+	<div id="form_template" class="container">
+		<h1 class="title">Modifier le profil de {{ candidate_user }} </h1>
+		
+		{{helper.getReturnButton|raw}}
+		
+		{% include 'public/partials/registration_form.html.twig' %}
+		
+	</div>
+{% endblock %}

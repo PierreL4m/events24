@@ -1,0 +1,94 @@
+{% extends 'admin_base.html.twig' %}
+
+{% block content %}
+    <div class="container" id="candidates_list_event">        
+        <h1>
+            {{candidates.getTotalItemCount}} candidats {{helper.getAdminEventLink(event)|raw}}
+        </h1>
+
+        {% if old_candidates is defined or new_candidates is defined %}
+            {% if old_candidates is defined and old_candidates|length > 0 %}
+                <a href="{{path('event_candidates', {'id' : event.id})}}">
+                    {{old_candidates}} candidats <i> (anciennes inscriptions)</i> 
+                </a>
+                {% set nb = old_candidates %}
+            {% elseif new_candidates is defined and new_candidates|length > 0 %}
+                <a href="{{path('candidates_list', {'id' : event.id})}}">
+                    {{new_candidates}} candidats <i> (nouvelles inscriptions)</i> 
+                </a>
+                {% set nb = new_candidates %}
+            {% endif %}
+
+            {% if nb is defined %}
+                <div class="total">Total : {{candidates.getTotalItemCount + nb }} candidats</div>
+                <div class="clear1"></div>
+            {% endif %}
+        {% endif %}
+
+        {% if not search %}
+            <a href="{{path('event_print_candidates', {'id' : event.id})}}" class="btn btn-primary">
+                <i class="fa fa-print"></i>
+                Imprimer la liste
+            </a>
+            <div class="clear1"></div>
+            <a href="{{path('export_sms', {'id' : event.id})}}" class="btn btn-primary">
+                <i class="fa fa-download"></i>
+                Export sms rappel
+            </a>
+        {% else %}
+            <a href="{{path('event_candidates', {'id' : event.id})}}" class="btn btn-primary">
+                <i class="fa fa-arrow-left"></i>
+                Retour à la liste
+            </a>
+        {% endif %}
+
+                
+        {{form_start(form)}}
+            {{form_widget(form)}}
+            <button type="submit" class="btn btn-info">
+                <i class="fa fa-search"></i>
+            </button>
+        {{form_end(form)}}
+
+
+        <table class="table table-striped" id="candidate_list">
+            <thead>
+                <tr>
+                    <th>Prénom Nom</th>
+                    <th>Email</th>
+                    <th>Téléphone </th>                                        
+                    <th class="check">Mailing Events</th>
+                    <th class="check">Mailing rappel</th>
+                    <th class="check">Sms rappel</th>
+                </tr>
+            <tbody>
+                {% for candidate in candidates %}
+                    <tr>
+                        <td>                            
+                            {{candidate}}                            
+                        </td>
+                        <td>
+                            {{candidate.email}}
+                        </td>
+                         <td>
+                            {{candidate.phone}}
+                        </td>                        
+                        <td class="check">
+                            {{ candidate.mailingEvents ? '<i class="fa fa-check"></i>'|raw : '' }}
+                        </td>
+                        <td class="check">
+                            {{ candidate.mailingRecall ? '<i class="fa fa-check"></i>'|raw : '' }}
+                        </td>
+                        <td class="check">
+                            {{ candidate.phoneRecall ? '<i class="fa fa-check"></i>'|raw : '' }}
+                        </td>                         
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        <div class="navigation">
+            {{ knp_pagination_render(candidates) }}
+        </div>
+
+    </div>
+{% endblock %}

@@ -1,0 +1,46 @@
+<h3>
+    {% if not_logged|length == 0 %}
+    	Aucun
+    {% else %}
+    	{{not_logged|length}}
+    {% endif %}
+    exposant(s) non connecté(s) depuis la génération automatique de la fiche
+</h3>
+<ul>
+    {% for p in not_logged %}
+    	<li> 
+            <a href="{{url('participation_show', {'id' : p.id})}}"> 
+                {{p.companyName}}
+            </a>
+            {% if p.responsable %}
+                - {{p.responsable}} - {{p.responsable.phone}}
+            {% else %}
+                <i class="fa fa-warning text-danger"></i>
+                Attention pas de responsable ! Pas d'envoi d'email.
+            {% endif %}
+        </li>
+    {% endfor %}
+</ul>
+<h3>
+    {% if missing_datas|length == 0 %}
+    	Aucune
+    {% else %}
+    	{{missing_datas|length}}
+    {% endif %} 
+    fiche(s) à donnée(s) manquante(s)
+</h3>
+<ul>
+    {% for p in missing_datas %}
+        <li> 
+            <a href="{{url('participation_show', {'id' : p.id})}}"> 
+               {{p.companyName}}
+            </a>
+            {% if p.responsable %}
+                - {{p.responsable}} - {{p.responsable.phone}}
+            {% else %}
+                <i class="fa fa-warning text-danger"></i>
+                Attention pas de responsable !
+            {% endif %}
+        </li>
+    {% endfor %}
+</ul>

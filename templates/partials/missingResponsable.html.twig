@@ -1,0 +1,29 @@
+{% if helper.getMissingResponsables(event) %}
+    <div id="missing_responsable">
+    	
+    	<div class="alert">
+    		<img src="{{asset('images/alert.gif')}}">
+    	</div>
+    	<div class="data">
+    		<div class="title">
+        		<i class="fa fa-warning pull-left"></i>
+        		Attention ces fiches n'ont pas de responsable !
+
+        		<i class="fa fa-warning pull-right"></i>
+                Pas de responsable = pas d'email envoyé
+        	</div>
+	        <ul>
+	            {% for participation in helper.getMissingResponsables(event) %}
+                    <li>
+                        <a href="{{path('participation_show', {'id' : participation.id})}}">
+        	                {% if participation.responsable %}
+        	                  {{participation.responsable}} n'a pas d'adresse email
+        	                {% endif %}
+        	                {{participation.companyName}}
+                        </a>
+                    </li>
+	               {% endfor %}
+	        </ul>
+	    </div>
+    </div>
+{% endif %}

@@ -1,0 +1,15 @@
+<h3> Bonjour </h3>
+<p> Un nouveau candidat vient de s'inscrire à {{participation.event.getTypeCityAndDate()}}.</p>
+<ul>
+	<li>{{participation.candidate}}</li>
+	<li>{{participation.candidate.email}}</li>
+	<li>{{participation.candidate.phone}}</li>
+	{% if participation.job %}
+		<li>{{participation.job.participation.companyName}} - {{participation.job.name}} </li>
+	{% endif %}
+	
+</ul>
+
+<a href="{{participation.event.type.host.name ~ '/redirect/login'}}"> Cliquer ici pour plus de détails </a>
+
+{% include 'emails/signature.html.twig' with {'team' : true} %}

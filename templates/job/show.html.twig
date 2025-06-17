@@ -1,0 +1,23 @@
+{% extends 'admin_base.html.twig' %}
+
+{% block content %}
+    <div class="container">
+        <h1 style="margin-bottom:10px;color:#0099cb;text-transform:uppercase;text-align:left">
+            {{job.name}}
+        </h1>
+        <h2 style="margin-bottom:10px;margin-top:0;color:#4f4b4b;text-transform:uppercase;text-align:left">
+            {{job.contractType}}
+        </h2>
+        <h3 style="font-size:20px;margin-bottom:10px;margin-top:0;color:#4f4b4b;text-transform:uppercase;text-align:left">{{job.jobType.name}}</h3>
+        <h4 style="margin-bottom:10px;margin-top:0;color:#4f4b4b;text-transform:uppercase;text-align:left">{{job.city.name}} - ({{job.city.cp}})</h4>
+        <hr style="border : black 1px solid">
+        <p style="color:#4f4b4b;text-align:left">{{job.presentation|raw}}</p>
+        <a href="{{ path('job_edit', {'id': job.id}) }}" class="btn btn-primary" id="participation_edit"> <i class="fa fa-edit"></i> Modifier l'offre</a>
+        <a href="{{ path('job_delete', {'id': job.id, 'id_participation':job.participation.id}) }}" class="btn btn-danger" id="participation_edit"> <i class="fa fa-times"></i> Supprimer l'offre</a>
+    </div>
+    {% if helper.isAtLeastViewer(app.user) %}
+    <a style="display:block;margin:auto;width:10%;margin-top:10px" href="{{ path('event_show', {'id': job.participation.event.id, 'anchor' : job.participation.id}) }}" class="btn btn-primary" id="return">
+        <i class="fa fa-arrow-left"></i> Retour à l'événement
+    </a>
+    {% endif %}
+{% endblock %}

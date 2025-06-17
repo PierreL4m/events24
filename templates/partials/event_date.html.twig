@@ -1,0 +1,5 @@
+{% if event.startBreak is not defined or (event.startBreak is defined and event.startBreak is null) %}
+	 de {{event.date|date('H\\Hi')}} à {{event.closingAt|date('H\\Hi')}} sans interruption
+{% else %}
+	de {{event.date|date('H\\Hi')}} à {{event.startBreak|date('H\\Hi')}} puis de {{event.endBreak|date('H\\Hi')}} à {{event.closingAt|date('H\\Hi')}}
+{% endif %}

@@ -1,0 +1,44 @@
+<h4> Bonjour {{responsable}}</h4>
+<p> Vous pouvez éditer dès à présent votre fiche exposant pour l'événement L4M  "{{participation.event.getTypeCityAndDate}}" </p>
+<p> Elle est disponible via ce lien : <a href="{{url('exposant_participation_edit',{'id' : participation.id})}}">éditer ma fiche exposant </a></p>
+
+{% if first %}
+	<p> 
+		Nous vous invitons par cette occasion à découvrir votre nouvelle interface exposant, qui vous apportera davantage de fonctionnalités.
+		Malgré tous nos soins, si vous rencontrez des désagréments, nous nous en excusons et vous invitons à nous en faire part.
+		Toutes vos remarques et suggestions sont également les bienvenues, en vue d’améliorer l’outil. 
+	</p>
+{% endif %}
+
+{% if password %}
+	<p> Votre compte vient d'être créé avec les identifiants suivants :</p>
+{% else %}
+	<p> Rappel de vos identifiants :</p>
+{% endif %}
+<ul>
+	<li> Nom d'utilisateur : <strong>{{responsable.username}}</strong></li>
+	<li> Adresse e-mail : <strong>{{responsable.email}}</strong></li>
+	{% if password %}
+		<li>Mot de passe : <strong>{{password}}</strong></li>
+		<span><i>(Merci de faire attention de ne pas copier coller d'espace avec votre mot de passe)</i></span>
+	{% endif %}
+	<li> 
+		{% if password %}
+			Vous souhaitez changer votre mot de passe ? 
+		{% else %}
+			Vous avez oublié votre mot de passe ? 
+		{% endif %}
+
+		<a href="{{url('app_forgot_password_request')}}"> Cliquez ici </a> 
+	</li>
+</ul>
+<p>(Merci de faire attention de ne pas copier coller d'espace avec votre mot de passe)</p>
+{% if first %}
+	<p>Merci de votre compréhension,</p>
+{% else %}
+	<p>Cordialement,</p>
+{% endif %}
+
+
+
+{% include ('emails/signature.html.twig') %}

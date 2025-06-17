@@ -1,0 +1,6 @@
+{% extends 'base_admin.html.twig' %}
+{% block body %}
+    <h1 style="text-align:center">Erreur 404 : Cette page n'existe pas.</h1>
+    <img style="width:400px;display: block;margin: auto;margin-top:50px" src="https://media1.giphy.com/media/KBYyUGgDEsILK/200w.webp?cid=ecf05e47720f1db45ea9a01e994bb8f78ee178fb7e123374&rid=200w.webp" alt="this slowpoke moves"  width=250/>
+    <button style="width:25%;display:block;margin:auto;margin-top:20px" type="submit" class="btn btn-primary btn-lg btn-block"><a style="color:white" href="{{path('app_login')}}">Revenir au site</a></button>
+{% endblock %}

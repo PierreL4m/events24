@@ -1,0 +1,16 @@
+{% extends 'partials/form.html.twig' %}
+
+{% block title %} Édition du cahier des charges de base{% endblock %}
+{% block form %}
+	
+	{{parent()}}
+
+	<p>
+		<strong><i class="fa fa-warning"></i> Attention !</strong> Si vous enregistrer un pdf avec word, cliquer sur options puis décocher la case :
+		<ul>
+			<li> Compatible ISO 190005-1 (PDF/A)</li>
+		</ul>	
+		<img src="{{asset('images/notice_pdf.jpg')}}" alt="notice">
+	</p>
+
+{% endblock %}

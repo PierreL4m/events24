@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+	<meta charset="UTF-8" />
+	<style>
+		p{
+			margin:0;
+		}
+		strong{
+			font-weight:normal!important;
+		}
+		ul{
+			margin:0;
+			padding:0;
+		}
+	</style>
+</head>
+<body>
+{% for p in participations %}
+	{{ p.companyName|upper }}<br/>
+	{% if p.addressL1 %}
+		{{p.addressL1}}<br>
+	{% endif %}
+	{% if p.addressNumber %}
+		{{p.addressNumber}}
+	{% endif %}
+	{% if p.street %}
+		{{p.street.label}}
+	{% endif %}
+	{% if p.addressL2 %}
+		{{p.addressL2}}<br>
+	{% endif %}
+	{% if p.addressNumber or p.street or p.addressL2 %}
+	{% endif %}
+	{% if p.addressL3 %}
+		{{p.addressL3}}<br>
+	{% endif %}
+	{{p.cp}} {{p.city|upper}}<br/>
+	{% for s in p.sites%}
+		{% if 'http://' in s.url %}
+			{{ s.url|replace({'http://':""}) }}
+		{% elseif 'https://' in s.url %}
+			{{s.url|replace({'https://':""})}}
+		{% else %}
+			{{s.url}}
+		{% endif %}
+	{% endfor %}
+	<br/>
+	{% set i = 0 %}
+	{% if p.getClassName() == 'ParticipationCompanySimple' or p.getClassName() == 'ParticipationFormationSimple' %}
+		Formations proposées<br/>
+	{% else %}
+		Postes à pourvoir(F/H)<br/>
+	{% endif %}
+	{% set obj = [] %}
+	{% for job in jobs %}
+		{% if job.participation.id == p.id %}
+			{% set obj = obj|merge([job.name]) %}
+		{% endif %}
+	{% endfor %}
+	{% set jobList = obj|join('-') %}
+	{{ jobList }}<br>
+{% endfor %}
+</body>
+</html>

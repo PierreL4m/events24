@@ -1,0 +1,21 @@
+{
+    "name": "wamania/zip-streamed-response-bundle",
+    "type": "symfony-bundle",
+    "description": "A symfony Response to build and stream Zip on the fly",
+    "homepage": "https://github.com/wamania/ZipStreamedResponseBundle",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Wamania",
+            "homepage": "https://github.com/wamania"
+        }
+    ],
+    "require": {
+        "php": ">=5.3.3",
+        "symfony/framework-bundle": ">=2.5"
+    },
+    "autoload": {
+        "psr-0": { "Wamania\\ZipStreamedResponseBundle": "" }
+    },
+    "target-dir": "Wamania/ZipStreamedResponseBundle"
+}

@@ -1,0 +1,7 @@
+<h3> Bonjour {{participation.candidate}}</h3>
+<p> Nous avons bien reçu votre candidature à l'événement {{participation.event.getTypeCityAndDate()}}. </p>
+<p> Vous serez très prochainement contacté(e) pour vous tenir informé(e) de l'avancée de votre candidature. </p>
+<p>Toutefois, si vous n'avez pas été rappelé(e) au plus tard la veille de l'événement, cela signifie que votre candidature n'a pas été retenue.</p>
+
+<p>Merci de votre compréhension.</p>
+{% include 'emails/signature.html.twig' with {'team' : true} %}

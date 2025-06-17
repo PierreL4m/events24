@@ -1,0 +1,80 @@
+<style media="screen">
+	input[type="checkbox"]{
+		margin:3px -20px 0px;
+	}
+</style>
+{{form_start(form)}}
+		{% if form.lastname is defined %}
+			{{form_row(form.lastname)}}
+		{% endif %}
+		{% if form.firstname is defined %}
+			{{form_row(form.firstname)}}
+		{% endif %}
+		{% if form.email is defined %}
+			{{form_row(form.email, {'attr' : {'autocomplete' : 'username'}})}}
+		{% endif %}
+		{% if form.phone is defined %}
+			{{form_row(form.phone)}}
+		{% endif %}
+		{% if form.file is defined %}
+			{% if cv is defined and cv is not null %}
+				<div id="cv_saved">
+					Votre CV a été enregistré. Vous pouvez le modifier en <a href="#" id="show_cv">cliquant ici </a>
+				</div>
+				<div id="hide_this">
+			{% endif %}
+					{{form_row(form.file)}}
+			{% if cv is defined and cv is not null %}
+				</div>
+			{% endif %}
+		{% endif %}
+		{% if form.mailingRecall is defined %}
+			{# <label class="form-check-label" for="registration_mailingEvents">
+				{{form_widget(form.mailingRecall)}}
+			</label> #}
+			{{form_widget(form.mailingRecall)}}
+		{% endif %}
+		{% if form.mailingEvents is defined %}
+			{{form_widget(form.mailingEvents)}}
+		{% endif %}
+		{% if form.phoneRecall is defined %}
+			{{form_widget(form.phoneRecall)}}
+		{% endif %}
+		{% if is_admin is defined %}
+			<button class="btn btn-success" type="submit" id="valid"><i class="fa fa-check"></i>
+			{% if edit is defined or is_admin is defined %}
+				Enregistrer
+			{% else %}
+				M'inscrire
+			{% endif %}</button>
+		{% elseif edit is defined %}
+			<button class="btn btn-success" id="register_action" type="submit"><span>
+			Valider
+		{% else %}
+			<p>
+				En validant mon inscription, j'accepte que mes données soient visibles des recruteurs participant à l'événement "{{event.getFullType}}".
+			</p>
+			<button class="btn btn-success
+			g-recaptcha"
+			id="register_action" type="submit"
+			{% if app.environment == 'prod'%}
+				data-sitekey="6LdpB3AUAAAAAGhw1sTJc0XCUNWKqbbD67b8IXMv"
+			{% else %}
+				data-sitekey="6LeIxAcTAAAAAJcZVRqyHh71UMIEGNQ_MXjiZKhI"
+			{% endif %}
+			data-callback="recaptcha_check_register">
+			<span>
+			Valider
+		{% endif %}
+		</span>
+		</button>
+		{#  <div class="lds-spinner"><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div></div> #}
+		{% if admin is defined %}
+			<span class="text-danger">
+				<i>Ceci est un aperçu, ce formulaire ne vous inscrit pas.</i>
+			</span>
+		{% endif %}
+	{{form_end(form)}}
+	{% if app.environment == 'dev'  %}
+	<a href="#" id="fill"> fill </a>
+	{% endif %}

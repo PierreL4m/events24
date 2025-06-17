@@ -1,0 +1,15 @@
+{% extends 'admin_base.html.twig' %}
+
+{% block content %}
+    <div class="container">
+        <h1> Export mailing </h1>
+        <ul>
+            {% for event in events %}
+                <li>
+                    <a href="{{ path('export_mailing', {'id': event.id}) }}">
+                        {{event}}
+                    </a>   
+                </li>                 
+            {% endfor %}
+    </div>
+{% endblock %}

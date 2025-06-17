@@ -1,0 +1,22 @@
+{% extends 'partials/form.html.twig' %}
+
+{% block title %} Chargement de la dernière page signée {% endblock %}
+{% block form %}
+
+	{{parent()}}
+
+	<p>
+		<strong><i class="fa fa-warning"></i> Attention !</strong> Si ça ne fonctionne pas, suivre cette procédure, <strong>si après cela l'érreur pérsiste contactez Pierre</strong> :
+		<ul>
+			<li> Rendez vous à <a href="https://docupub.com/pdfconvert/" title="Convertisseur PDF">cette adresse </a></li>
+			<li> Dans la liste "compatibility", sélectionner "Acrobat 5.0 (PDF 1.4)" </li>
+			<img style="width:100%" src="{{asset('images/tuto1.png')}}" alt="notice">
+			<li> Dans "Select the File to convert sélectionner le pdf de la dernière page du Dossier Technique puis cliquez sur "Upload & Convert"</li>
+			<li>Une fois le traitement terminé cliquez sur le nom du pdf afin de l'ouvrir</li>
+			<img style="width:100%" src="{{asset('images/tuto2.png')}}" alt="notice">
+			<li>Une fois le PDF ouvert cliquez sur la flèche en haut à droite pour télécharger votre fichier qui sera votre dérnière page du Guide Technique</li>
+			<img style="width:100%" src="{{asset('images/tuto3.png')}}" alt="notice">
+		</ul>
+	</p>
+
+{% endblock %}

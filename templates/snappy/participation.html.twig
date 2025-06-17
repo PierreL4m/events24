@@ -1,0 +1,519 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <title>Fiche candidat - {{participation.organization}}</title>
+        <link href="https://fonts.googleapis.com/css?family=Open+Sans:400,400i,700,700i" rel="stylesheet">
+        <link rel="stylesheet" href="path/to/font-awesome/css/font-awesome.min.css">
+        <style>
+        body{
+          background-color: #070707;
+          color:white;
+          font-family: 'Eurostile';
+        }
+        #participation_show_admin > .flex_container {
+    background-color: rgba(0,0,0,.97);
+    display: none;
+    position: fixed;
+    left: 0;
+    top: 0;
+    right: 0;
+    height: 100%;
+    color: #fff;
+    overflow: auto;
+    text-align: left;
+    z-index: 1000000;
+}
+        .flex_container .modal_content {
+            width: 860px;
+            margin: auto;
+        }
+        .flex_container .modal_content .social {
+            margin-bottom: 1em;
+        }
+        .flex_container .modal_content .social .fb {
+            width: 11px;
+            background: url("../../../../public/images/social_bg.png") 0 0 no-repeat;
+        }
+        .flex_container .modal_content .social .twitter {
+    width: 29px;
+    background: url("../../../../public/images/social_bg.png") -116px 0 no-repeat;
+}
+        .flex_container .modal_content .social .linkedin {
+    width: 21px;
+    background: url("../../../../public/images/social_bg.png") -36px no-repeat;
+}
+.flex_container .modal_content .social .instagram {
+    width: 24px;
+    background: url("../../../../public/images/instagram.png") 0 0 no-repeat;
+}
+.flex_container .modal_content .social .viadeo {
+    width: 21px;
+    background: url("../../../../public/images/social_bg.png") -77px 0 no-repeat;
+}
+.flex_container .modal_content .social a {
+    display: inline-block;
+    height: 24px;
+    margin-right: 1em;
+}
+        .flex_container .modal_content .img_container {
+              height: 231px;
+              width: 231px;
+              line-height: 231px;
+              background-color: #fff;
+              text-align: center;
+              display: inline-block;
+              margin-right: 1.5em;
+          }
+          .flex_container .modal_content .img_container img {
+              max-width: 211px;
+              max-height: 211px;
+              vertical-align: middle;
+          }
+          .flex_container .modal_content .float_container {
+              float: right;
+          }
+          a{
+            text-decoration: none;
+          }
+          #participation_show_admin > .flex_container .remove {
+    color: #fff;
+}
+.flex_container .modal_content .float_container .remove {
+    padding: 5px 6px 5px 5px;
+    background-color: white;
+}
+#participation_show_admin > .flex_container .remove {
+
+    color: #fff;
+
+}
+.flex_container .modal_content .float_container .remove {
+
+    padding: 5px 6px 5px 5px;
+    background-color: #4b8dcb;
+
+}
+.remove {
+
+    color: white;
+    font-size: 1.3em;
+
+}
+.fa {
+    display: inline-block;
+    font: normal normal normal 14px/1 FontAwesome;
+        font-size: 14px;
+    font-size: inherit;
+    text-rendering: auto;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+.flex_container .modal_content .float_container .mini_logo {
+    margin-top: 1.5em;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+.flex_container .modal_content .float_container .mini_logo .jd {
+    width: 31px;
+    background: url("../../../../public/images/mini_logo.png") 59px 0;
+    height: 25px;
+}
+.flex_container .modal_content .float_container .mini_logo .th {
+    width: 23px;
+    background: url("../../../../public/images/mini_logo.png") 24px 0;
+    height: 25px;
+}
+.flex_container .modal_content .float_container .mini_logo .div {
+    width: 29px;
+    background: url("../../../../public/images/mini_logo.png") 90px 0;
+    height: 25px;
+}
+.flex_container .modal_content .float_container .mini_logo .sen {
+    width: 34px;
+    background: url("../../../../public/images/mini_logo.png") 0 0;
+    height: 25px;
+}
+.flex_container .modal_content .middle {
+    display: inline-block;
+    vertical-align: top;
+    width: 58%;
+}
+.flex_container .modal_content .middle .exposant_title {
+    font-size: 2em;
+    margin-bottom: .5em;
+    color: #4b8dcb;
+    font-weight: 700;
+}
+.flex_container .modal_content .middle .address {
+    display: inline-block;
+    vertical-align: top;
+}
+.flex_container .modal_content .sites {
+    width: 300px;
+    margin-top: 2em;
+}
+.flex_container .modal_content .sites .site {
+    padding: 10px;
+    box-shadow: 3px 3px 2px #4b8dcb;
+}
+.flex_container .modal_content .sites .site a {
+    text-decoration: none;
+    color: #4b8dcb;
+    word-wrap: break-word;
+}
+.flex_container .modal_content .secondary {
+    margin-top: 2em;
+    margin-bottom: 2em;
+}
+.flex_container .modal_content .secondary div, .flex_container .modal_content .secondary p, .flex_container .modal_content .secondary span {
+    text-align: justify;
+    line-height: 1.3em;
+    background-color: none;
+    color: #fff;
+}
+.flex_container .modal_content .secondary .field_container .field_title {
+    font-weight: 700;
+    margin: 2em 0 1em;
+    font-size: 1.2em;
+    color: #4b8dcb;
+}
+.flex_container .modal_content .secondary div, .flex_container .modal_content .secondary p, .flex_container .modal_content .secondary span {
+    text-align: justify;
+    line-height: 1.3em;
+    background-color: none;
+    color: #fff;
+}
+.flex_container .modal_content .secondary a {
+    color: #44a4f2;
+}
+
+        </style>
+    </head>
+    <body>
+{% if participation is defined %}
+{% if formation is not defined %}
+	{% set formation = '' %}
+{% endif %}
+{% if array is defined %}
+{% set stringArray = array|join(',') %}
+<div class="flex_container">
+	<div class="modal_content {{formation}}">
+		{% if participation.facebook or participation.twitter or participation.linkedin or participation.viadeo %}
+			<div class="social">
+				{% if participation.facebook %}
+					<a href="{{participation.facebook}}" target="_blank" class="fb" title="facebook"> </a>
+				{% endif %}
+				{% if participation.twitter %}
+					<a href="{{participation.twitter}}" target="_blank" class="twitter" title="twitter"></a>
+				{% endif %}
+				{% if participation.linkedin %}
+					<a href="{{participation.linkedin}}" target="_blank" class="linkedin" title="linkedin"></a>
+				{% endif %}
+				{% if participation.viadeo %}
+					<a href="{{participation.viadeo}}" target="_blank" class="viadeo" title="viadeo"></a>
+				{% endif %}
+					{% if participation.instagram %}
+						<a href="{{participation.instagram}}" target="_blank" class="instagram" title="instagram"> </a>
+					{% endif %}
+			</div>
+		{% endif %}
+		<div class="img_container">
+			{% if participation.logo and participation.logo.path%}
+				<img src="{{ vich_uploader_asset(participation,'logoFile') }}" alt="{{participation.companyName}}">
+			{% endif %}
+		</div>
+
+		{% if i is not defined %}
+			{% set i = 1 %}
+		{% endif %}
+
+		<div class="float_container">
+			<div class="mini_logo">
+				{% if participation.th %}<div class="th" title="Politique RH en faveur de l'insertion des personnes en situation de handicap"></div>{% endif %}
+				{% if participation.div %} <div class="div" title="Politique RH en faveur de la diversité"></div> {% endif %}
+				{% if participation.senior %} <div class="sen" title="Politique RH en faveur des seniors"></div> {% endif %}
+				{% if participation.jd %} <div class="jd" title="Politique RH en faveur des jeunes diplômés"></div> {% endif %}
+			</div>
+		</div>
+
+		<div class="middle">
+			<p class="exposant_title">{{participation.companyName|upper}}</p>
+
+			<p class="address">
+				{% if participation.addressL1 is not empty %}
+					{{participation.addressL1|nl2br}} <br>
+				{% endif %}
+
+				{% if participation.AddressNumber is not empty %}
+					{{participation.AddressNumber}}
+				{% else %}
+					{% set noNumber = true %}
+				{% endif %}
+
+				{% if participation.street is not empty %}
+					{% if noNumber is defined %}
+						{{participation.street.label|capitalize}}
+					{% else %}
+						{{participation.street.label}}
+					{% endif %}
+				{% endif %}
+
+				{% if participation.addressL2 is not empty %}
+					{{participation.addressL2}} <br>
+				{% endif %}
+
+				{% if participation.addressL3 %}
+					{{participation.addressL3|nl2br}}<br>
+				{% endif %}
+
+				{{participation.cp}} {{participation.city|upper}}
+
+				{% if participation.city is not defined %}
+					L'adresse de l'exposant n'a pas été communiquée
+				{% endif %}
+
+			</p>
+
+
+
+			{% if participation.event.type.getDisplayParticipationContactInfo and (participation.contactName or participation.contactEmail or participation.contactPhone) %}
+				<p class="contact">
+					<span class="contact_label">Contact :</span>
+					{% if participation.contactName %}{{participation.contactTitle}} {{participation.contactName}}
+						{% if participation.contactFirstName %}
+							{{participation.contactFirstName}}
+						{% endif %} <br>
+					{% endif %}
+					{% if participation.contactEmail %}
+						{{participation.contactEmail}}<br>
+					{% endif %}
+					{% if participation.contactPhone %}
+						{{participation.contactPhone}}
+					{% endif %}
+				</p>
+			{% endif %}
+		</div>
+
+		{%  if  participation.joblinkSessions is defined and helper.hasSectionJoblink(participation.event)  %}
+			<div class="joblink_session">
+				{%  for session in participation.joblinkSessions %}
+					<div class="joblink">
+						<a href="#joblink_{{ session.joblink.id }}">
+
+						</a>
+
+							{%  if session.start and session.end %}
+								<span class="text">
+									{{ session.joblink.name }} : {{ session.start|date('H:i') }} - {{ session.end|date('H:i') }}
+								</span>
+							{%  endif %}
+
+					</div>
+				{%  endfor %}
+			</div>
+		{%  endif %}
+		<div class="sites">
+			{% if participation.sites is not empty %}
+				{% for site in participation.sites %}
+					<div class="site">
+						<a href="{{site.url}}" target="_blank" title="{{site.url}}">
+							{% if site.label %}
+								{{site.label}}
+							{% else %}
+								{{site.url|replace({'http://':'', 'https://':''})}}
+							{% endif %}
+						</a>
+					</div>
+					{% if not loop.index == loop.last %}
+						<div class="line"></div>
+					{% endif %}
+				{% endfor %}
+			{% endif %}
+		</div>
+
+		{% if participation.youtube is defined and participation.youtube and 'embed' not in helper.getYoutubeLink(participation.youtube) %}
+			<a href="{{participation.youtube}}" title="{{participation.companyName}}" target="_blank">
+				<i class="fa fa-youtube" aria-hidden="true"></i>
+			</a>
+		{% endif %}
+
+		<div class="secondary">
+			<p> {{participation.presentation|raw}} </p>
+
+			{% if participation.youtube is defined and participation.youtube and 'embed' in helper.getYoutubeLink(participation.youtube) %}
+				<div class="iframe_container">
+					<iframe width="640" height="480"
+						src="{{helper.getYoutubeLink(participation.youtube)}}">
+					</iframe>
+				</div>
+			{% endif %}
+		</div>
+		<div class="navigation" index="{{index}}-{{max}}">
+		{% if index > 1 %}
+			<div id="prevModal" class="prev" idExposant="{{array[index - 2]}}" prevIndex="{{index - 1}}" max="{{max}}"><span>Précédent</span><i class="fa fa-caret-left"></i></div>
+		{% endif %}
+		<span>Exposants</span>
+		{% if index < max %}
+			<div id="nextModal" class="next" idExposant="{{array[index]}}" nextIndex="{{index + 1}}" max="{{max}}"><i class="fa fa-caret-right"></i><span>Suivant</span></div>
+		{% endif %}
+		</div>
+</div>
+</div>
+{% else %}
+	<div class="flex_container">
+		<div class="modal_content {{formation}}">
+			{% if participation.facebook or participation.twitter or participation.linkedin or participation.viadeo %}
+				<div class="social">
+					{% if participation.facebook %}
+						<a href="{{participation.facebook}}" target="_blank" class="fb" title="facebook"> </a>
+					{% endif %}
+					{% if participation.twitter %}
+						<a href="{{participation.twitter}}" target="_blank" class="twitter" title="twitter"></a>
+					{% endif %}
+					{% if participation.linkedin %}
+						<a href="{{participation.linkedin}}" target="_blank" class="linkedin" title="linkedin"></a>
+					{% endif %}
+					{% if participation.viadeo %}
+						<a href="{{participation.viadeo}}" target="_blank" class="viadeo" title="viadeo"></a>
+					{% endif %}
+						{% if participation.instagram %}
+							<a href="{{participation.instagram}}" target="_blank" class="instagram" title="instagram"> </a>
+						{% endif %}
+				</div>
+			{% endif %}
+      <div class="img_container">
+  			{% if participation.logo and participation.logo.path%}
+				<img src="{{ vich_uploader_asset(participation,'logoFile') }}" alt="{{participation.companyName}}">
+  			{% endif %}
+  		</div>
+
+			{% if i is not defined %}
+				{% set i = 1 %}
+			{% endif %}
+
+			<div class="float_container">
+				<div class="mini_logo">
+					{% if participation.th %}<div class="th" title="Politique RH en faveur de l'insertion des personnes en situation de handicap"></div>{% endif %}
+					{% if participation.div %} <div class="div" title="Politique RH en faveur de la diversité"></div> {% endif %}
+					{% if participation.senior %} <div class="sen" title="Politique RH en faveur des seniors"></div> {% endif %}
+					{% if participation.jd %} <div class="jd" title="Politique RH en faveur des jeunes diplômés"></div> {% endif %}
+				</div>
+			</div>
+
+			<div class="middle">
+				<p class="exposant_title">{{participation.companyName|upper}}</p>
+
+				<p class="address">
+					{% if participation.addressL1 is not empty %}
+						{{participation.addressL1|nl2br}} <br>
+					{% endif %}
+
+					{% if participation.AddressNumber is not empty %}
+						{{participation.AddressNumber}}
+					{% else %}
+						{% set noNumber = true %}
+					{% endif %}
+
+					{% if participation.street is not empty %}
+						{% if noNumber is defined %}
+							{{participation.street.label|capitalize}}
+						{% else %}
+							{{participation.street.label}}
+						{% endif %}
+					{% endif %}
+
+					{% if participation.addressL2 is not empty %}
+						{{participation.addressL2}} <br>
+					{% endif %}
+
+					{% if participation.addressL3 %}
+						{{participation.addressL3|nl2br}}<br>
+					{% endif %}
+
+					{{participation.cp}} {{participation.city|upper}}
+
+					{% if participation.city is not defined %}
+						L'adresse de l'exposant n'a pas été communiquée
+					{% endif %}
+
+				</p>
+
+
+
+				{% if participation.event.type.getDisplayParticipationContactInfo and (participation.contactName or participation.contactEmail or participation.contactPhone) %}
+					<p class="contact">
+						<span class="contact_label">Contact :</span>
+						{% if participation.contactName %}{{participation.contactTitle}} {{participation.contactName}}
+							{% if participation.contactFirstName %}
+								{{participation.contactFirstName}}
+							{% endif %} <br>
+						{% endif %}
+						{% if participation.contactEmail %}
+							{{participation.contactEmail}}<br>
+						{% endif %}
+						{% if participation.contactPhone %}
+							{{participation.contactPhone}}
+						{% endif %}
+					</p>
+				{% endif %}
+			</div>
+
+			{%  if  participation.joblinkSessions is defined and helper.hasSectionJoblink(participation.event)  %}
+				<div class="joblink_session">
+					{%  for session in participation.joblinkSessions %}
+						<div class="joblink">
+							<a href="#joblink_{{ session.joblink.id }}">
+
+							</a>
+
+								{%  if session.start and session.end %}
+									<span class="text">
+										{{ session.joblink.name }} : {{ session.start|date('H:i') }} - {{ session.end|date('H:i') }}
+									</span>
+								{%  endif %}
+
+						</div>
+					{%  endfor %}
+				</div>
+			{%  endif %}
+			<div class="sites">
+				{% if participation.sites is not empty %}
+					{% for site in participation.sites %}
+						<div class="site">
+							<a href="{{site.url}}" target="_blank" title="{{site.url}}">
+								{% if site.label %}
+									{{site.label}}
+								{% else %}
+									{{site.url|replace({'http://':'', 'https://':''})}}
+								{% endif %}
+							</a>
+						</div>
+						{% if not loop.index == loop.last %}
+							<div class="line"></div>
+						{% endif %}
+					{% endfor %}
+				{% endif %}
+			</div>
+
+			{% if participation.youtube is defined and participation.youtube and 'embed' not in helper.getYoutubeLink(participation.youtube) %}
+				<a href="{{participation.youtube}}" title="{{participation.companyName}}" target="_blank">
+					<i class="fa fa-youtube" aria-hidden="true"></i>
+				</a>
+			{% endif %}
+
+			<div class="secondary">
+				<p> {{participation.presentation|raw}} </p>
+			</div>
+	</div>
+	</div>
+{% endif %}
+{% else %}
+	<div class="flex_container">
+		<div class="modal_content {{formation}}">
+		</div>
+	</div>
+{% endif %}
+</body>
+</html>

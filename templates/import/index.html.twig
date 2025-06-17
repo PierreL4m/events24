@@ -1,0 +1,22 @@
+{% extends 'admin_base.html.twig' %}
+
+
+
+{% block content %}
+<div class="container">
+	{% for event in events %}
+		<div class="row">
+			<div class="col-md-5">
+				{{event}}
+			</div>
+			<div class="col-md-5">
+				
+					{% for organizationType in event.organizationTypes %}
+						{{organizationType}}
+					{% endfor %}
+				
+			</div>
+		</div>
+	{% endfor %}
+</div>
+{% endblock %}

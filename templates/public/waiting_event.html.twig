@@ -1,0 +1,97 @@
+{% extends 'public_base.html.twig' %}
+{% block body %}
+	{% if is_granted('ROLE_VIEWER') and preview is defined %}
+		<div class="alert alert-info text-center">
+	 		Le site n'est pas encore en ligne, vous êtes en mode preview. <br><a href="{{path('fos_user_security_logout')}}" class='btn btn-info'> Deconnexion </a> pour voir le site comme le grand public.
+		</div>
+	{% endif %}
+	{% block page_header %}
+		{% set no_bg = "" %}
+		{% if not event.banner %}
+			{% set no_bg = "no_bg" %}
+		{% endif %}
+			<header id="{{no_bg}}" >
+			{% block nav %}
+			{% endblock %}
+			<a href="https://www.l4m.fr" title="l4m.fr" target="_blank">
+				<img src="{{asset('images/l4m_blanc.png')}}" alt="L4M.fr" id="l4m_header">
+			</a>
+
+			<ul id="social">
+				<li>
+					<a class="fb" href="https://www.facebook.com/L4M.fr" target="_blank"><i class="fa fa-facebook"></i></a>
+				</li>
+				<li>
+					<a class="twitter" href="https://twitter.com/l4mfr" target="_blank"><i class="fa fa-twitter"></i></a>
+				</li>
+				{# event experts #}
+				<li>
+					<a class="linkedin" href="https://www.linkedin.com/company/l4m-fr-looking-for-mission" target="_blank"><i class="fa fa-linkedin"></i></a>
+				</li>
+				<li>
+					<a class="viadeo" href="https://fr.viadeo.com/fr/profile/l4m.emploi,stage-et-formation-dans-le-nord-pas-de-calais" target="_blank"><i class="fa fa-viadeo"></i></a>
+				</li>
+			</ul>
+			<div class="img_container">
+				<img src="{{event.getlogoFile}}" alt="logo" id="logo_event">
+				{% if event.banner %}
+					<img src="{{event.getBannerFile()}}" alt="fond" id="bg_header">
+				{% endif %}
+			</div>
+			{% block bilan %} {% endblock %}
+			{% block map %}{% endblock %}
+		</header>
+	{% endblock %}
+	{% block map_popovers %}	 {% endblock %}
+	<div id="btn_top"><i class="fa fa-arrow-up"></i></div>
+	{% block main %}
+		<main>
+			<a href="https://24h-emploi.com/" title="Salons L4M">
+				<div id="soonEvent">
+			<span style="vertical-align: -webkit-baseline-middle; font-family: Eurostile;">{{event.type.fullName}} revient bientôt, pour découvrir nos autres salons : c'est par ici !</span>
+				</div>
+			</a>
+			<div id="top_clearer"></div>
+			{% set has_registration_section = 0 %}
+			{% block page %}
+				<section id="place">
+					<div class="content">
+						<div style="margin-left:0;text-align: -webkit-center;" class="place_container {% if event.place.name|length > 15 %}too_long{% endif %}{% if h48_helper.is48(event) %}h48{% endif %}">
+							<div class="table-cell_container" style="max-width:none;">
+								<span class="city">{{event.type.fullName}} revient bientôt</span>
+							</div>
+						</div>
+					</div>
+				</section>
+				{% for section in sections %}
+					{% if section.onPublic or is_granted("ROLE_VIEWER") %}
+						{% if section.typeSlug == 'concept' or section.typeSlug == 'registration' %}
+							<section id='{{section.sectionType.slug}}' class="content anchor">
+									{% if section.description %}
+										<div class="section_description">
+											{{section.description|raw}}
+										</div>
+									{% endif %}
+									{% if section.image %}
+										<div class="section_img_container">
+											<img src="{{section.getImageSrc}}" alt="image">
+										</div>
+									{% endif %}
+							</section>
+						{% endif %}
+					{% endif %}
+				{% endfor %}
+				<p style="text-align:center;font-weight:bold">Vous voulez participer à nos salons comme exposant ? Contactez nous</p>
+				<hr style="width:25%;display:block;margin:auto;margin-top:20px;margin-bottom:20px">
+				<section  class="content anchor">
+					{% include 'public/partials/contact.html.twig' %}
+				</section>
+				<p style="text-align:center;font-weight:bold">Vous êtes un candidat ? Pré-inscrivez vous pour les futurs évenements</p>
+				<hr style="width:25%;display:block;margin:auto;margin-top:20px;margin-bottom:20px">
+				<section  class="content anchor">
+					{% include 'public/partials/preRegistration_form.html.twig' %}
+				</section>
+			{% endblock %}
+		</main>
+	{% endblock %}
+{% endblock %}

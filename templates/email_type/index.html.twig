@@ -1,0 +1,41 @@
+{% extends 'admin_base.html.twig' %}
+
+{% block title %}EmailType index{% endblock %}
+
+{% block content %}
+    <div class="container">
+        <h1>EmailType index</h1>
+
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Id</th>
+                    <th>Label</th>
+                    <th>Slug</th>
+                    <th>Days</th>
+                    <th>actions</th>
+                </tr>
+            </thead>
+            <tbody>
+            {% for email_type in email_types %}
+                <tr>
+                    <td>{{ email_type.id }}</td>
+                    <td>{{ email_type.label }}</td>
+                    <td>{{ email_type.slug }}</td>
+                    <td>{{ email_type.days }}</td>
+                    <td>
+                        <a href="{{ path('email_type_show', {'id': email_type.id}) }}">show</a>
+                        <a href="{{ path('email_type_edit', {'id': email_type.id}) }}">edit</a>
+                    </td>
+                </tr>
+            {% else %}
+                <tr>
+                    <td colspan="4">no records found</td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+
+        <a href="{{ path('email_type_new') }}">Create new</a>
+    </div>
+{% endblock %}

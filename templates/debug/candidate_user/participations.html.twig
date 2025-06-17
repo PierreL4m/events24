@@ -1,0 +1,89 @@
+<div class="events">
+                
+    {% for participation in participations %}
+
+        <div class="event">
+            <div class="event_type_container">
+                <div class="parallelogram" style="background-color:{{participation.event.place.colors[0].code}}"></div>
+                <img src="{{ vich_uploader_asset(participation, 'logoFile') }}">
+            </div>
+            <div class="infos_container">
+                <div class="event_title">
+                    {{participation.event.place}} - {{participation.event.place.name}} - {{participation.event.date|localizeddate('full', 'none', 'fr', "Europe/Paris", 'EEEE d MMMM')|capitalize}}
+                    {% if app.environment == 'dev' %}
+                         id = {{participation.id}}
+                    {% endif %}
+                </div>
+
+              {#   {% if participation.invitationPath %}
+              file_download is only available for admins
+                    <div>
+                        <a href="{{path('file_download', {'web_path' : helper.escapeExtension(participation.getInvitationPath)|trim('/')})}}">
+                            <i class="fa fa-download"></i>
+                            Télécharger mon invitation 
+                        </a>
+                    </div>
+                {% endif %} #}
+                
+                {% if is_granted("ROLE_CANDIDATE") %}
+                    {% set delete_path = 'candidate_participation_delete' %}
+                {% else %}
+                    {% set delete_path = 'admin_candidate_participation_delete' %}
+                {% endif %}
+
+                {% if not old and participation.qrCode and not helper.registrationNeedsValidation(participation.event.type)%}
+                    <div class="qr_code">
+                        <a href="{{participation.qrcode}}" target="_blank">
+                            <i class="fa fa-qrcode"></i>
+                            Obtenir mon QR code (n° {{participation.id}})
+                        </a>
+                    </div>
+                {% elseif helper.registrationNeedsValidation(participation.event.type) %}
+
+                    {% if not participation.status or participation.status.slug == 'registered' %}
+                        <p>Votre candidature sera très prochainement étudiée</p>
+                    {% elseif participation.status.slug != 'confirmed' %}
+                        <p>{{participation.getRhComment()}}</p>
+                    {% endif %}
+                {% endif %}
+                
+                {% if not old %}
+                    {% if not (helper.registrationNeedsValidation(participation.event.type) and participation.status and participation.status.slug != 'registered') %}
+                        <div class="qr_code">
+                           {{ helper.getPublicEventLink(participation.event)|raw }}
+                        </div>
+                        <div class="qr_code">
+                             {% if h48_helper.is48(participation.event) %}
+                                {% set warning = " <p class='data-warning'> Attention : " ~ participation.event.getFullType ~ " se déroule sur deux jours. Si vous le souhaitez, vous pouvez participer à une seule journée. En supprimant votre venue à cet événement, vous supprimerez votre invitation et vos QR codes pour les deux jours. </p>" %}
+                            {% endif %}
+
+                            {% if participation.status and participation.status.slug != 'refused' and participation.status.slug != 'refused_after_call' %}
+                                <a href="{{path(delete_path, {'id' : participation.id})}}" target="_blank" class="a_confirm delete_participation" data-msg="/ annuler votre participation à l'événement {{participation.event.getTypeCityAndDate}} ?" {% if h48_helper.is48(participation.event) %}data-warning="{{warning}}"{% endif %}>
+                                    <i class="fa fa-remove"></i>
+                                    Ne plus participer
+                                </a>
+                            {% endif %}                        
+                        </div>
+                    {% endif %}
+                {% else %}
+                    <div class="qr_code">
+                        {% if participation.candidateComments|length > 0 %}
+                            {% if is_granted("ROLE_CANDIDATE") %}
+                                {% set path = 'candidate_seen_organization' %}
+                            {% else %}
+                                {% set path = 'admin_candidate_seen_organization' %}
+                            {% endif %}
+                            <a href="{{path(path, {'id' : participation.id})}}">
+                                Voir les recruteurs rencontrés
+                            </a>
+                        {% elseif participation.status.slug != 'refused' and participation.status.slug != 'refused_after_call' and participation.status.slug != 'waiting' %}
+                            <p>
+                                Je n'ai pas transmis mon QR code aux recruteurs 
+                            </p>
+                        {% endif %}
+                    </div>
+                {% endif %}
+            </div>
+        </div>                    
+    {% endfor %}
+</div>

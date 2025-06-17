@@ -1,0 +1,37 @@
+<div class="flex_container">
+    <div class="modal_content">
+
+        <div class="img_container text-center">
+            <img src="{{ vich_uploader_asset(joblink, 'logoFile') }}" alt='{{ joblink.name }}'>
+        </div>
+
+        <div class="float_container">
+            <div id="close_joblink_{{joblink.id}}" data-id="{{joblink.id}}">
+                FERMER
+                <i class="fa fa-remove"></i>
+            </div>
+
+        </div>
+
+        <div class="secondary">
+            <p>
+                <strong>{{ joblink.name }}</strong>
+            </p>
+            <p> {{joblink.description|raw}} </p>
+            <div class="clear2"></div>
+            <div class="grid_container joblink_session">
+                <div class="grid">
+
+                    {%  for session in joblink.joblinkSessions %}
+                        <div>
+                            <a class="logo grid-item" href="#exposant_{{ session.participation.id }}">
+                                <img src="{{ vich_uploader_asset(session.participation, 'logoFile') }}" alt='{{ session.participation.companyName }}'>
+                            </a>
+                            <span class="hours">{{ session.start|date('H:i') }} - {{ session.end|date('H:i') }}</span>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

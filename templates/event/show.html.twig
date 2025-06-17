@@ -1,0 +1,373 @@
+{% extends 'admin_base.html.twig' %}
+
+{% block content %}
+    <div class="container" id="show_event">
+    <h1>
+        {{event}}  {% if event.is_cancel == 1 %}<span style="color:red"> / Annulé</span>{% endif %}
+         {% if remove_helper.canDelete(event) %}
+            <a href="{{ path('event_delete', {'id': event.id}) }}" class="a_confirm pull-right" data-msg="cet événement ?">
+                <i class="fa fa-remove" id="delete_event"></i>
+            </a>
+        {% endif %}
+        <a href="{{ path('event_edit', {'id': event.id}) }}"  class="pull-right">
+            <i class="fa fa-edit" id="edit_event"></i>
+        </a>
+
+        {{ helper.getPreviewLink(event,"pull-right")|raw }}
+    </h1>
+
+    {% include 'partials/missingResponsable.html.twig' %}
+
+    {% if is_granted('ROLE_SUPER_ADMIN') %}
+        <p>id=<span id="id_event">{{event.id}}</span> slug = {{event.slug}} </p>
+    {% endif %}
+
+    <nav class="navbar navbar-default" id="event_nav">
+        <div class="container-fluid text-center">
+            <div class="navbar-header ">
+
+                <a href="{{path('add_organization', {'id' : event.id})}}" class="navbar-brand">
+                    <i class="fa fa-plus"></i> Ajouter un exposant
+                </a>
+                <a href="{{path('event_see_recall', {'id' : event.id})}}" class="navbar-brand">
+                    Voir les exposants à relancer
+                </a>
+                <a href="{{path('slots_index',{'id':event.id})}}" class="navbar-brand">
+                    Créneaux
+                </a>
+                <a href="{{path('section_index',{'id':event.id})}}" class="navbar-brand">
+                    Rubriques
+                </a>
+
+                <a href="{{path('tech_file_index',{'id':event.id})}}" class="navbar-brand">
+                    Dossier Tech
+                </a>
+
+                <a href="{{path('bat_index',{'id':event.id})}}" class="navbar-brand">
+                    BAT
+                </a>
+                <a href="{{path('candidates_list',{'id':event.id})}}" class="navbar-brand">
+                    Candidats
+                </a>
+
+                <a href="{{path('event_invitation',{'id':event.id, 'mode': 'pdf'})}}" class="navbar-brand" target="_blank">
+                    Invitation
+                </a>
+                    <a href="{{path('accreditations_list',{'id':event.id})}}" class="navbar-brand">
+                        Accreditation
+                    </a>
+                {% if parentEvent is not null %}
+                    <a href="{{ path('event_show', {'id' : parentEvent.id}) }}" class="navbar-brand"><i> Voir le jour 1</i></a>
+                {% endif %}
+                {% if childEvent is not null %}
+                    {% for child in childEvent %}
+                        <a href="{{ path('event_show', {'id' : child.id}) }}" class="navbar-brand"><i> Voir le jour {{ loop.index + 1 }}</i></a>
+                    {% endfor %}
+                {% endif %}
+                        <a href="{{ path('bilan_file_index', {'id': event.id}) }}" class="navbar-brand">Bilan</a>
+            </div>
+        </div>
+    </nav>
+    {% if event.is_cancel == 0 %}
+      <a href="{{path('cancel_event', {'id' : event.id })}}" class="btn btn-danger">
+          <i class="fa fa-power-off"></i> Annuler l'événement
+      </a>
+    {% else %}
+    <a href="{{path('restart_event', {'id' : event.id })}}" class="btn btn-success">
+        <i class="fa fa-power-off"></i> Relancer l'événement
+    </a>
+    {% endif %}
+    <div class="logos_container">
+        {% if h48_helper.is48(event) and h48_helper.is48Formation(event) %}
+            <p>Bannière et logo uniquement pour l'appli. Pour le web, ils sont pris de l'événement emploi</p>
+        {% endif %}
+        {% if event.bannerName %}
+            <div class="logo_container">
+                <span>Bannière</span>
+                <img src="{{ vich_uploader_asset(event,'bannerFile') }}" alt='social'>
+            </div>
+        {% else %}
+            <p class="text-danger"><i class="fa fa-exclamation-triangle"></i> Merci de charger la bannière de l'événement</p>
+        {% endif %}
+
+        {% if event.logoName %}
+            <div class="logo_container">
+                <span>Logo</span>
+                <img src="{{ vich_uploader_asset(event,'logoFile') }}" alt='social'>
+            </div>
+        {% else %}
+            <p class="text-danger"><i class="fa fa-exclamation-triangle"></i> Merci de charger le logo de l'événement</p>
+
+        {% endif %}
+
+        {% if not h48_helper.is48Formation(event) %}
+            {% if event.socialLogoName %}
+                <div class="logo_container">
+                    <span>Logo "partage sur les réseaux sociaux</span>
+                    <img src="{{ vich_uploader_asset(event,'socialLogoFile') }}" alt='social'>
+                </div>
+            {% else %}
+                <p class="text-danger"><i class="fa fa-exclamation-triangle"></i> Merci de charger le logo partage sur les réseaux sociaux</p>
+            {% endif %}
+        {% endif %}
+
+        <div class="logo_container">
+            <span>Image pub sur l'invitation</span>
+            {% if event.pubName %}
+                <img src="{{absolute_url(asset(event.pub.path))}}" alt='pub invitation'>
+            {% else %}
+                <img src="{{ vich_uploader_asset(event,'pubFile') }}" alt='pub invitation'>
+            {% endif %}
+        </div>
+    </div>
+
+    <table class="table table-striped">
+        <tbody>
+            <tr>
+                <th>Responsable</th>
+                <td>
+                    {{ event.manager }}
+                    <a href="{{path('event_change_manager', {'id' : event.id})}}" class="btn btn-default pull-right">
+                        Changer
+                    </a>
+                </td>
+            </tr>
+            <tr>
+                <th>Création</th>
+                <td> {% include 'partials/created.html.twig' with {'entity' : event} %}</td>
+            </tr>
+            <tr>
+                <th>Édition</th>
+                <td> {% include 'partials/updated.html.twig' with {'entity' : event} %}</td>
+            <tr>
+                <th>Date</th>
+                <td>{{ event.date ? event.date|date('d/m/Y H:i') : 'Attention pas de date' }}-{{ event.closingAt ? event.closingAt|date('H:i') : 'Attention pas d\'heure de fermeture' }}</td>
+            </tr>
+            {% if event.startBreak is defined %}
+                <tr>
+                    <th>Pause</th>
+                    <td>{{ event.startBreak ? event.startBreak|date('H:i') ~ '-' : 'Pas de pause' }}{{ event.endBreak ? event.endBreak|date('H:i') : '' }}</td>
+                </tr>
+            {% endif %}
+            <tr>
+                <th>Mise en ligne des fiches exposants sur le site public</th>
+                <td>{{ event.online ? event.online|date('d-m-Y H:i:s') : '' }}</td>
+            </tr>
+            {% if event.registrationLimit is defined %}
+            <tr>
+                <th>Date limite d'inscription </th>
+                <td>{{ event.registrationLimit|date('d-m-Y H:i:s')}}</td>
+            </tr>
+            {% endif %}
+            <tr>
+                <th>Mise hors ligne (plus sur la page d'accueil)</th>
+                <td>{{ event.offline ? event.offline|date('d-m-Y H:i:s') : '' }}</td>
+            </tr>
+
+            {# <tr>
+                <th>Proposer l'inscription sur l4m.fr?</th>
+                <td>{{ event.l4mRegistration ? 'Oui' : 'Non' }}</td>
+            </tr>           #}
+           {#
+            <tr>
+                <th>Date d'envoi des BAT</th>
+                <td>{{ event.batSent ? event.batSent|date('d-m-Y H:i') : 'Pas encore envoyés' }}</td>
+            </tr>
+            <tr>
+                <th>Date de retour de l'accusé de récéption</th>
+                <td>{{ event.ackDate ? event.ackDate|date('d-m-Y H:i') : 'Pas encore de date' }}</td>
+            </tr> #}
+            <tr>
+                <th>Première date de relance</th>
+                <td>{{ event.firstRecallDate ? event.firstRecallDate|date('d-m-Y') : 'Pas de première relance' }}</td>
+            </tr>
+            <tr>
+                <th>Deuxième date de relance</th>
+                <td>{{ event.secondRecallDate ? event.secondRecallDate|date('d-m-Y') : 'Pas de deuxième relance' }}</td>
+            </tr>
+          {#   <tr>
+                <th>Cahier des charges</th>
+                <td>
+                    {{ event.specificationPath ? event.specificationPath : 'Merci d\'ajouter la dernière page'}}
+                </td>
+            </tr> #}
+           {#  <tr>
+                <th>Modèle d'invitation</th>
+                <td>
+                    {% if event.invitation %}
+                        <div id="invitation_container">
+                            <img src="{{event.getInvitationSrc()}}" alt="Modèle invitation" id="invitation_model">
+                        </div>
+                    {% else %}
+                         <p class="text-danger">
+                            <i class="fa fa-exclamation-triangle"></i>
+                            Merci d'ajouter le modèle d'invitation
+                        </p>
+                    {% endif %}
+                </td>
+            </tr> #}
+            <tr>
+                <th>Types d'exposants acceptés :</th>
+                <td>
+                    <ul>
+                        {% for type in event.organizationTypes %}
+                            <li>{{type}}</li>
+                        {% endfor %}
+                    </ul>
+                </td>
+            </tr>
+            {% if event.sectors is defined %}
+                <tr>
+                    <th>Secteurs</th>
+                    <td>
+                        <ul>
+                        {% for sector in event.sectors %}
+                            <li>{{sector}}</li>
+                        {% endfor %}
+                    </ul>
+                    </td>
+                </tr>
+            {% endif %}
+            {% if event.joblinks is defined %}
+                <tr>
+                    <th>Joblinks</th>
+                    <td>
+                        <ul>
+                        {% for joblink in event.joblinks %}
+                            <li>{{joblink}}</li>
+                        {% endfor %}
+                    </ul>
+                    </td>
+                </tr>
+            {% endif %}
+            {% if event.recruitmentOffices is defined and event.type.recruitmentOfficeAllowed %}
+                <tr>
+                    <th>
+                        Cabinet(s) de recrutement :
+                        <div class="clear1"></div>
+                    </th>
+                    <td class="text-center">
+                        {% if event.recruitmentOffices|length == 0 %}
+                            <div class="alert text-center">
+                                <img src="{{asset('images/alert.gif')}}">
+                                <p class="alert alert-danger">
+                                    Merci de définir un cabinet de recrutement !
+                                </p>
+                            </div>
+                        {% else %}
+                            <ul class="text-left">
+                                {% for ro in event.recruitmentOffices %}
+                                    <li>
+                                        <a href="{{path('recruitment_office_show', {'id' : ro.id})}}">
+                                            {{ro}}
+                                        </a>
+                                    </li>
+                                {% endfor %}
+                            </ul>
+                        {% endif %}
+
+                        <a href="{{path('recruitment_office_admin_add_ro',{'id':event.id})}}" class="btn btn-primary">
+                            <i class="fa fa-edit white"></i>
+                            Éditer le(s) cabinet(s) de recrutement
+                        </a>
+                    </td>
+                </tr>
+            {% endif %}
+        </tbody>
+    </table>
+
+    <div class="actions_container">
+        <div class="row">
+            <div class="col-md-4">
+                <a href="{{path('participation_send_fills', {'id' : event.id })}}" class="btn btn-primary" id="send_fills">
+                    <i class="fa fa-envelope"></i>
+                    Envoyer le mail <span class="important">fiches à remplir</span>
+                </a>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-4">
+                <a href="{{path('participation_stand_numerotation', {'id' : event.id})}}" class="btn btn-primary">
+                    <i class="fa fa-flash"></i>
+                    Numéroter les stands
+                    <i class="fa fa-flash"></i>
+                </a>
+            </div>
+        </div>
+         <div class="row">
+            <div class="col-md-4">
+                <a href="{{path('emails_send', {'id' : event.id, 'slug' : 'organizations'})}}" class="btn btn-primary">
+                    <i class="fa fa-envelope"></i>
+                    Envoyer un mail aux <span class="important">exposants</span>
+                </a>
+            </div>
+        </div>
+         <div class="row">
+            <div class="col-md-4">
+                <a href="{{path('emails_send', {'id' : event.id, 'slug' : 'partners'})}}" class="btn btn-primary">
+                    <i class="fa fa-envelope"></i>
+                    Envoyer un mail aux <span class="important">partenaires</span>
+                </a>
+            </div>
+        </div>
+         <div class="row">
+            <div class="col-md-4">
+                 <a href="{{ path('event_index') }}" class="btn btn-primary return_btn">
+                    <i class="fa fa-arrow-left"></i>
+                    Retour à la liste des événements
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <table class="table table-striped">
+        <tbody>
+            <tr>
+                <th>Date d'envoi du guide à l'impression</th>
+                <td>
+                    {{event.dateGuide|date('d/m/Y')}}
+                </td>
+            </tr>
+             <tr>
+                <th>Nombre de stands total sur le plan</th>
+                <td>
+                    {{event.nbStand }}
+                </td>
+            </tr>
+            <tr>
+                <th>Nombre de stands restants</th>
+                <td>
+                    {{event.nbStand - event.participations|length}}
+                </td>
+            </tr>
+        </tbody>
+    </table>
+
+        <div class="row">
+            <div class="col-md-4">
+                <a style="margin-bottom:10px" href="{{path('admin_export_exposant_stand', {'id' : event.id})}}" class="btn btn-primary">
+                    Exporter la liste des exposants et leur stand
+                </a>
+            </div>
+        </div>
+    <div class="nb_exposants">
+        {{event.participations|length}} exposant(s)
+    </div>
+    <div class="clear1"></div>
+
+    {% for participation in helper.getOrderedParticipations(event) %}
+        {% include 'partials/participation.html.twig' %}
+    {% endfor %}
+
+</div>
+{% endblock %}
+
+{% block js_dev %}
+    <script>
+
+
+        {% if anchor is defined and anchor %}
+            window.location = "#"+{{anchor}} ;
+        {% endif %}
+    </script>
+{% endblock %}

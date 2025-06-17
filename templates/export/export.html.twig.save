@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+	<meta charset="UTF-8" />
+	<style>
+		p{
+			margin:0;
+		}
+		strong{
+			font-weight:normal!important;
+		}
+		ul{
+			margin:0;
+			padding:0;
+		}
+	</style>
+</head>
+<body>
+{% for p in participations %}
+	{{ p.companyName|upper }}<br/>
+	{% if p.addressL1 %}
+		{{p.addressL1}}
+	{% endif %}
+	{% if p.addressNumber %}
+		{{p.addressNumber}}
+	{% endif %}
+	{% if p.street %}
+		{{p.street.label}}
+	{% endif %}
+	{% if p.addressL2 %}
+		{{p.addressL2}}
+		{% if p.addressL3 %}
+			{{p.addressL3}}
+		{% endif %}
+	{% endif %}
+	<br>{{p.cp}} {{p.city|upper}}<br/>
+	{% for s in p.sites%}
+		{% if 'http://' in s.url %}
+			{{ s.url|replace({'http://':""}) }}<br/>
+		{% elseif 'https://' in s.url %}
+			{{s.url|replace({'https://':""})}}<br/>
+		{% else %}
+			{{s.url}}<br/>
+		{% endif %}
+	{% endfor %}
+	{% set i = 0 %}
+	{% set obj = [] %}
+	{% for job in jobs %}
+		{% if job.participation.id == p.id %}
+			{% set obj = obj|merge([job.name|capitalize|striptags|raw]) %}
+		{% endif %}
+	{% endfor %}
+	{% set jobList = obj|join('-') %}
+	{% if jobList is not empty %}
+		{% if p.getClassName() == 'ParticipationFormationSimple' %}
+			Formations proposées<br>
+		{% else %}
+			Postes à pourvoir (F/H)<br>
+		{% endif %}
+		{% if jobList|length > 500 %}
+			{{jobList|slice(0,500)|striptags|raw}} ...<br>
+		{%  else %}
+			{{jobList|striptags|raw}}<br>
+		{% endif %}
+	{% else %}
+		Présentation<br>
+		{% if p.presentation|length > 500 %}
+			{{p.presentation|slice(0,500)|capitalize|striptags|raw}} ...<br>
+		{%  else %}
+			{{p.presentation|capitalize|striptags|raw}}<br>
+		{% endif %}
+	{% endif %}
+{% endfor %}
+</body>
+</html>

@@ -1,0 +1,26 @@
+{% extends 'admin_base.html.twig' %}
+
+{% block content %}
+    <div id="form_template" class="container">
+        <h1 class="title">Modification du créneau pour l'événement {{helper.getAdminEventLink(participation.event)|raw}}</h1>
+        <form id="formCandidateSlots" action="{{ path('edit_slot_candidate', {'id': participation.id}) }}" method="POST">
+            <input type="hidden" name="token" value="{{ csrf_token('edit-slots-session') }}"/>
+            <legend class="col-form-label required">Sélectionnez le créneau dans la liste :</legend>
+            <div class="form-group">
+                <select id="slots" name="slots" class="form-control">
+                    <option {% if participation.slot is null %}
+                        selected="selected"
+                    {% endif %}
+                            value="Aucun créneau choisi"></option>
+                    {% for slots_session in slots_session %}
+                        <option {% if slots_session == participation.slot %}
+                            selected="selected"
+                        {% endif %}
+                                value="{{ slots_session.id }}">{{ slots_session.name }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <button id="{{button_id|default('enregistrer')}}" name="submitAction" value="enregistrer" class="btn btn-success">Valider la modification</button>
+        </form>
+    </div>
+{% endblock %}

@@ -1,0 +1,29 @@
+<div class="row">
+	<div class="col-md-4">
+		<a href="{{path('user_new', {'id' : participation.id, 'type' : 'exposant'})}}" class="btn btn-success">
+			<i class="fa fa-plus"></i>
+			Nouveau
+		</a>
+	</div>
+	<div class="col-md-8">
+		<p class="user_notice">
+			Utiliser cette fonction <strong>uniquement</strong> pour créer un utilisateur qui <strong>n'a jamais participé</strong> à un de nos événements
+		</p>
+	</div>
+</div>	
+{% if responsable %}			
+	<div class="row">
+		<div class="col-md-4">
+			<a href="{{path('user_edit', {'id' : responsable.id, 'p_id' : participation.id})}}" class="btn btn-info">
+				<i class="fa fa-edit"></i>
+				Éditer
+			</a>
+		</div>
+		<div class="col-md-8">
+			<p class="user_notice">
+				La personne a changé de nom ou d'email... ou
+				vous souhaiter assigner un utilisateur qui a déjà participé à un de nos événements
+			</p>
+		</div>
+	</div>
+{% endif %}

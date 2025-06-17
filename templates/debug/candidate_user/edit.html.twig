@@ -1,0 +1,19 @@
+{% extends 'admin_base.html.twig' %}
+
+{% block content %}
+	<div class="container" id="edit_profile">
+	    <h1>Éditer {% if is_granted("ROLE_CANDIDATE") %}mon {% endif %}profil</h1>
+
+	    {% include 'public/partials/registration_form.html.twig' with {'edit' :true } %}
+
+	    <div class="clear1"></div>
+	    {% if is_granted("ROLE_CANDIDATE") %}
+	    	<a href="{{ path('candidate_user_profile') }}" class="btn btn-primary">
+		    	<i class="fa fa-arrow-left"></i>
+		    	Retour à mon profil
+		    </a>	    	
+	    {% else %}
+	    	{{helper.getReturnButton|raw}}
+	    {% endif %}	    
+	</div>
+{% endblock %}

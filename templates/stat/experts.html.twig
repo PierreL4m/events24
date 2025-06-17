@@ -1,0 +1,395 @@
+{% extends 'admin_base.html.twig' %}
+
+{% block content %}
+
+<div class="container" id="experts_stats">
+    <h1> Statistiques {{helper.getAdminEventLink(event)|raw}} </h1>
+    <div class="clear1"></div>
+    <table class="table table-striped">
+        {%  for key, result in results %}
+            <tr>
+                <th>{{ key }}</th>
+                <td>{{ result }}</td>
+            </tr>
+        {% endfor %}
+    </table>
+
+    <canvas id="myChart"></canvas>
+    <canvas id="myChart2"></canvas>
+    <canvas id="myChart3"></canvas>
+    <canvas id="myChart4"></canvas>
+
+    {%  for sector in sectors_datas %}
+        <h2> {{ sector['name'] }}</h2>
+        <table class="table table-striped">
+            {%  for key, s in sector %}
+                {%  if key != 'name' and key != 'id' %}
+                    <tr>
+                        <th>{{ key }}</th>
+                        <td>{{ s }}</td>
+                    </tr>
+                {%  endif %}
+            {% endfor %}
+        </table>
+        <canvas id="myChartSector{{ loop.index0 }}"></canvas>
+        <canvas id="myChartSectorCame{{ loop.index0 }}"></canvas>
+    {%  endfor %}
+
+
+
+
+
+</div>
+{%  endblock %}
+
+{% block custom_javascript %}
+    {{ parent() }}
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.3/Chart.bundle.min.js"></script>
+
+    <script>
+
+        generateLabels = function (chart) {
+            var data = chart.data;
+            if (data.labels.length && data.datasets.length) {
+                return data.labels.map(function (label, i) {
+                    var meta = chart.getDatasetMeta(0);
+                    var ds = data.datasets[0];
+                    var arc = meta.data[i];
+                    var custom = arc && arc.custom || {};
+                    var arcOpts = chart.options.elements.arc;
+                    var fill = resolve([custom.backgroundColor, ds.backgroundColor, arcOpts.backgroundColor], undefined, i);
+                    var stroke = resolve([custom.borderColor, ds.borderColor, arcOpts.borderColor], undefined, i);
+                    var bw = resolve([custom.borderWidth, ds.borderWidth, arcOpts.borderWidth], undefined, i);
+
+                    return {
+                        text: ds.data[i] + ' ' + label,
+                        fillStyle: fill,
+                        strokeStyle: stroke,
+                        lineWidth: bw,
+                        hidden: isNaN(ds.data[i]) || meta.data[i].hidden,
+
+                        // Extra data used for toggling the correct item
+                        index: i
+                    };
+                });
+            }
+            return [];
+        };
+
+        resolve =  function(inputs, context, index) {
+            var i, ilen, value;
+
+            for (i = 0, ilen = inputs.length; i < ilen; ++i) {
+                value = inputs[i];
+                if (value === undefined) {
+                    continue;
+                }
+                if (context !== undefined && typeof value === 'function') {
+                    value = value(context);
+                }
+                if (index !== undefined && Array.isArray(value)) {
+                    value = value[index];
+                }
+                if (value !== undefined) {
+                    return value;
+                }
+            }
+        };
+
+        Chart.plugins.register({
+            afterDatasetsDraw: function(chartInstance, easing) {
+                // To only draw at the end of animation, check for easing === 1
+                var ctx = chartInstance.chart.ctx;
+                var total_array = chartInstance.data.datasets[0].data;
+                var total = 0;
+                total_array.forEach(function(data){
+                    total = total + data;
+                });
+
+                chartInstance.data.datasets.forEach(function(dataset, i) {
+                    var meta = chartInstance.getDatasetMeta(i);
+
+                    if (!meta.hidden) {
+                        meta.data.forEach(function(element, index) {
+                            // Draw the text in black, with the specified font
+                            ctx.fillStyle = 'grey';
+                            var fontSize = 16;
+                            var fontStyle = 'normal';
+                            var fontFamily = 'Helvetica Neue';
+                            ctx.font = Chart.helpers.fontString(fontSize, fontStyle, fontFamily);
+                            //var dataString = dataset.data[index].toString();
+                            var value = dataset.data[index];
+                            var result = (value * 100 / total).toFixed(2); ;
+
+                            // Make sure alignment settings are correct
+                            ctx.textAlign = 'center';
+                            ctx.textBaseline = 'middle';
+                            var padding = 5;
+                            var position = element.tooltipPosition();
+                            ctx.fillText(result + '%', position.x, position.y - (fontSize / 2) - padding);
+                        });
+                    }
+                });
+            }
+        });
+
+        var ctx = document.getElementById('myChart').getContext('2d');
+        var data = {
+            labels: ['Confirmés cabinet de recrutement', 'Confirmés L4M', 'Refusés'],
+            datasets: [{
+                data: [{{ results['Confirmés par le cabinet de recrutement'] }} , {{ results['Confirmés par l4m'] }}, {{ results['Refusés'] }}],
+                backgroundColor: [
+                    'rgba(255, 99, 132, 0.2)',
+                    'rgba(54, 162, 235, 0.2)',
+                    'rgba(255, 206, 86, 0.2)',
+                ],
+                borderColor: [
+                    'rgba(255, 99, 132, 1)',
+                    'rgba(54, 162, 235, 1)',
+                    'rgba(255, 206, 86, 1)',
+
+                ],
+                borderWidth: 1
+            }]
+        };
+        var options = {
+            title: {
+                display: true,
+                text: 'Nombre total de candidats ' + {{ results['Total candidats'] }},
+                position: 'top'
+            },
+            legend: {
+                display: true,
+                labels: {
+                    generateLabels: generateLabels
+                }
+            }
+        };
+        var myChart = new Chart(ctx, {
+            type: 'pie',
+            options: options,
+            data: data
+
+        });
+
+        var ctx2 = document.getElementById('myChart2').getContext('2d');
+        var data = {
+            labels: ['Venus cabinet de recrutement', 'Venus l4m'],
+            datasets: [{
+                data: [{{ results['Venus cabinet de recrutement'] }} , {{ results['Venus l4m'] }}],
+                backgroundColor: [
+                    'rgba(255, 99, 132, 0.2)',
+                    'rgba(54, 162, 235, 0.2)',
+                ],
+                borderColor: [
+                    'rgba(255, 99, 132, 1)',
+                    'rgba(54, 162, 235, 1)',
+
+                ],
+                borderWidth: 1
+            }]
+        };
+        var options = {
+            title: {
+                display: true,
+                text: 'Nombre total de venus ' + {{ results['Total venus'] }},
+                position: 'top'
+            },
+            legend: {
+                display: true,
+                labels: {
+                    generateLabels: generateLabels
+                }
+            }
+        };
+        var myChart2 = new Chart(ctx2, {
+            type: 'pie',
+            options: options,
+            data: data
+
+        });
+
+        var ctx3 = document.getElementById('myChart3').getContext('2d');
+        var data = {
+            labels: ['Confirmés linkedin', 'Venus linkedin'],
+            datasets: [{
+                data: [{{ results['Confirmés linkedin'] }} , {{ results['Venus linkedin'] }}],
+                backgroundColor: [
+                    'rgba(255, 99, 132, 0.2)',
+                    'rgba(54, 162, 235, 0.2)',
+                ],
+                borderColor: [
+                    'rgba(255, 99, 132, 1)',
+                    'rgba(54, 162, 235, 1)',
+
+                ],
+                borderWidth: 1
+            }]
+        };
+        var options = {
+            title: {
+                display: true,
+                text: 'Inscriptions linkedin ',
+                position: 'top'
+            },
+            legend: {
+                display: true,
+                labels: {
+                    generateLabels: generateLabels
+                }
+            }
+        };
+
+        var myChart3 = new Chart(ctx3, {
+            type: 'pie',
+            options: options,
+            data: data
+
+        });
+
+        var sectors = {{ sectors_stats|json_encode|raw }};
+        var labels = [];
+        var datas = [];
+        sectors.forEach(function(k){
+            labels.push(k[0]);
+            datas.push(k[1]);
+        })
+        var ctx4 = document.getElementById('myChart4').getContext('2d');
+        var data = {
+            labels: labels,
+            datasets: [{
+                data: datas,
+                backgroundColor: [
+                    'rgba(255, 99, 132, 0.2)',
+                    'rgba(54, 162, 235, 0.2)',
+                ],
+                borderColor: [
+                    'rgba(255, 99, 132, 1)',
+                    'rgba(54, 162, 235, 1)',
+
+                ],
+                borderWidth: 1
+            }]
+        };
+        var options = {
+            title: {
+                display: true,
+                text: 'Venus par secteurs ',
+                position: 'top'
+            },
+            legend: {
+                display: true,
+                labels: {
+                    generateLabels: generateLabels
+                }
+            }
+        };
+
+        var myChart4 = new Chart(ctx4, {
+            type: 'pie',
+            options: options,
+            data: data
+
+        });
+
+
+        var sectors = {{ sectors_datas|json_encode|raw }};
+
+        for (i=0;i<{{ sectors_datas|length }};i++){
+
+            this['ctx'] = document.getElementById('myChartSector' + i).getContext('2d');
+            var sector = sectors[i];
+
+            if (sector != undefined) {
+                var data = {
+                    labels: ['Confirmés rh', 'Confirmés l4m', 'Refusés'],
+                    datasets: [{
+                        data: [sector['Confirmés rh'] , sector['Confirmés l4m'] , sector['Confirmés l4m'] ],
+                        backgroundColor: [
+                            'rgba(255, 99, 132, 0.2)',
+                            'rgba(54, 162, 235, 0.2)',
+                            'rgba(255, 206, 86, 0.2)',
+                        ],
+                        borderColor: [
+                            'rgba(255, 99, 132, 1)',
+                            'rgba(54, 162, 235, 1)',
+                            'rgba(255, 206, 86, 1)',
+
+                        ],
+                        borderWidth: 1
+                    }]
+
+                };
+                var options = {
+                    title: {
+                        display: true,
+                        text: sector['name'],
+                        position: 'top'
+                    },
+                    legend: {
+                        display: true,
+                        labels: {
+                            generateLabels: generateLabels
+                        }
+                    }
+                };
+
+
+
+                this['myChart'] = new Chart(this['ctx'], {
+                    type: 'pie',
+                    options: options,
+                    data: data
+
+                });
+
+                this['ctx2'] = document.getElementById('myChartSectorCame' + i).getContext('2d');
+
+                if (sector != undefined) {
+                    var data = {
+                        labels: ['Venus rh', 'Venus l4m'],
+                        datasets: [{
+                            data: [sector['Venus rh'], sector['Venus l4m']],
+                            backgroundColor: [
+                                'rgba(255, 99, 132, 0.2)',
+                                'rgba(54, 162, 235, 0.2)',
+                                'rgba(255, 206, 86, 0.2)',
+                            ],
+                            borderColor: [
+                                'rgba(255, 99, 132, 1)',
+                                'rgba(54, 162, 235, 1)',
+                                'rgba(255, 206, 86, 1)',
+
+                            ],
+                            borderWidth: 1
+                        }]
+
+                    };
+                    var options = {
+                        title: {
+                            display: true,
+                            text: sector['name'] + ' - Total venus : ' + sector['Total venus'],
+                            position: 'top'
+                        },
+                        legend: {
+                            display: true,
+                            labels: {
+                                generateLabels: generateLabels
+                            }
+                        }
+                    };
+
+
+                    this['myChart2'] = new Chart(this['ctx2'], {
+                        type: 'pie',
+                        options: options,
+                        data: data
+
+                    });
+                }
+
+            }
+        }
+
+    </script>
+{%  endblock %}

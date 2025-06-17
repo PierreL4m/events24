@@ -1,0 +1,46 @@
+{% extends 'admin_base.html.twig' %}
+
+{% block content %}
+<div class="container">
+    <h1>Secteurs</h1>
+
+    <table class="table table-striped">
+        {% if is_granted('ROLE_SUPER_ADMIN') %}
+            <thead>
+                <tr>
+                    <th>Id</th>                   
+                    <th>Slug</th>
+                    <th>Name</th>
+                    <th>actions</th>
+                </tr>
+            </thead>
+        {% endif %}
+        <tbody>
+        {% for sector in sectors %}
+            <tr>
+                {% if is_granted('ROLE_SUPER_ADMIN') %}
+                    <td>{{ sector.id }}</td>
+                    <td>{{ sector.slug }}</td>
+                {% endif %}
+
+                <td>{{ sector.name }}</td>                
+                <td>                    
+                    <a href="{{ path('sector_edit', {'id': sector.id}) }}">
+                        <i class="fa fa-edit"></i>
+                    </a>
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="4">Pas de secteurs</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <a href="{{ path('sector_new') }}" class="btn btn-primary"> 
+        <i class="fa fa-plus"></i>
+        Nouveau
+    </a>
+</div>
+{% endblock %}

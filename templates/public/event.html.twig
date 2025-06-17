@@ -1,0 +1,389 @@
+{% extends 'public_base.html.twig' %}
+
+{% block canonical %}
+	{# <link rel="canonical" href="{{'http://www.' ~h~ '-emploi-formation.com'~app.request.pathinfo}}"> #}
+{% endblock %}
+
+{% block js_head %}
+{#     <script src='https://www.google.com/recaptcha/api.js' async defer></script>#}
+{#      <script src='{{asset('js/jquery3.3.1.min.js')}}' async defer></script>#}
+{#    <script>#}
+{#	    function recaptcha_check(token, form){#}
+{#	        $.ajax({#}
+{#	            type: "POST",#}
+{#	            url: "/check-captcha",#}
+{#	            data: {token : token},#}
+{#	            cache: false,#}
+
+{#	           success: function(data){#}
+{#	               form.submit();#}
+{#	               console.log('success');#}
+{#	            },#}
+{#	            error: function(xhr,status,error){#}
+{#	                alert('La validation par reCAPTCHA a échoué');#}
+{#	                location.reload();#}
+{#	            }#}
+{#	        });#}
+{#	    }#}
+
+{#	    function recaptcha_check_register(token){#}
+{#	        recaptcha_check(token,$('form[name=registration]'));#}
+{#	    }#}
+
+{#	    function recaptcha_check_contact(token){#}
+{#	        recaptcha_check(token,$('form[name=contact]'));#}
+{#	    }#}
+{#	</script>#}
+	<style type="text/css">
+	#p_{{event.place.slug}} {
+		display: inline-block;
+	}
+	</style>
+
+	{# version mapbox
+
+	<link rel="stylesheet" href="https://unpkg.com/leaflet@1.3.4/dist/leaflet.css"
+	integrity="sha512-puBpdR0798OZvTTbP4A8Ix/l+A4dHDD0DGqYW6RQ+9jxkRFclaxxQb/SJAWZfWAkuyeQUytO7+7N4QKrDh+drA=="
+	crossorigin=""/>
+	<!-- Make sure you put this AFTER Leaflet's CSS -->
+	<script src="https://unpkg.com/leaflet@1.3.4/dist/leaflet.js"
+	integrity="sha512-nMMmRyTVoLYqjP9hrbed9S+FzjZHW5gY1TWCHA5ckwXZBadntCNs8kEqAWdrb9O7rxbCaA4lKTIWjDXZxflOcA=="
+	crossorigin=""></script>
+
+	#}
+{% endblock %}
+
+{% block body %}
+	{% if is_granted('ROLE_VIEWER') and preview is defined %}
+		<div class="alert alert-info text-center">
+	 		Le site n'est pas encore en ligne, vous êtes en mode preview. <br><a href="{{path('fos_user_security_logout')}}" class='btn btn-info'> Deconnexion </a> pour voir le site comme le grand public.
+		</div>
+	{% endif %}
+
+	{% block page_header %}
+		{% set no_bg = "" %}
+		{% if not event.banner %}
+			{% set no_bg = "no_bg" %}
+		{% endif %}
+			<header id="{{no_bg}}" >
+			{% block nav %}
+				{% include 'partials/menu_bar.html.twig' %}
+			{% endblock %}
+
+			<a href="https://www.l4m.fr" title="l4m.fr" target="_blank">
+				<img src="{{asset('images/l4m_blanc.png')}}" alt="L4M.fr" id="l4m_header">
+			</a>
+
+			<ul id="social">
+				<li>
+					<a class="fb" href="https://www.facebook.com/L4M.fr" target="_blank"><i class="fa fa-facebook"></i></a>
+				</li>
+				<li>
+					<a class="twitter" href="https://twitter.com/l4mfr" target="_blank"><i class="fa fa-twitter"></i></a>
+				</li>
+				{# event experts #}
+				<li>
+					<a class="linkedin" href="https://www.linkedin.com/company/l4m-fr-looking-for-mission" target="_blank"><i class="fa fa-linkedin"></i></a>
+				</li>
+				<li>
+					<a class="viadeo" href="https://fr.viadeo.com/fr/profile/l4m.emploi,stage-et-formation-dans-le-nord-pas-de-calais" target="_blank"><i class="fa fa-viadeo"></i></a>
+				</li>
+			</ul>
+
+			<div class="img_container">
+
+				<img src="/{{event.getLogo.path}}" alt="logo" id="logo_event">
+
+				{% if event.banner %}
+					<img src="/{{event.getBanner.path}}" alt="fond" id="bg_header">
+				{% endif %}
+			</div>
+			{% block bilan %} {% endblock %}
+
+			{% block map %}
+			{% endblock %}
+		</header>
+	{% endblock %}
+
+	{% block map_popovers %}	 {% endblock %}
+
+	<div id="btn_top"><i class="fa fa-arrow-up"></i></div>
+
+	{% block main %}
+		<main>
+  {% if event.type == 'Experts' and event.is_cancel == true %}
+    <div id="hubAlertOpen" style="display: table; height: 35px; width:100%; position:fixed; top:50px;overflow: hidden; background-color:#2FAAAF;z-index:1000">
+  </div>
+{% endif %}
+			<section id="place">
+				<div class="content">
+					{% block event_date %}
+						<div class="parallelogram_container{% if h48_helper.is48(event) %} emploi{% endif %}">
+							<div class="parallellogram"></div>
+						</div>
+						<div class="date {% if h48_helper.is48(event) %} emploi{% endif %}">
+							<span class="day">{{event.date|format_date('none', 'EEEE', null, 'gregorian', 'fr')}} </span>
+							<span class="number"> {{event.date|format_date('none', 'd', null, 'gregorian', 'fr')}}</span>
+							<span class="month"> {{event.date|format_date('none', ' MMMM', null, 'gregorian', 'fr')}}</span>
+
+						</div>
+						{% if h48_helper.is48(event) %}
+							{% set second_event = h48_helper.getSecond48(event) %}
+							{% if second_event %}
+								<div class="parallelogram_container formation">
+									<div class="parallellogram"></div>
+								</div>
+								<div class="date formation">
+									<span class="day">{{second_event.date|format_date('none', 'EEEE', null, 'gregorian', 'fr')}} </span>
+									<span class="number"> {{second_event.date|format_date('none', 'd', null, 'gregorian', 'fr')}}</span>
+									<span class="month"> {{second_event.date|format_date('none', ' MMMM', null, 'gregorian', 'fr')}}</span>
+								</div>
+							{% endif %}
+						 {% endif %}
+					{% endblock %}
+					<div class="place_container {% if event.place.name|length > 15 %}too_long{% endif %}{% if h48_helper.is48(event) %}h48{% endif %}">
+						<div class="table-cell_container">
+							<span class="city">{{event.place.name}} </span>
+							<span class="line"></span>
+							<span class="place_name">{{event.place.city}}</span>
+						</div>
+					</div>
+				</div>
+			</section>
+			<div id="top_clearer"></div>
+
+			{% set has_registration_section = 0 %}
+			{% block page %}
+				{% for section in sections %}
+					{% if section.onPublic or is_granted("ROLE_VIEWER") or section.typeSlug == 'registration'%}
+						{% include 'public/partials/section.html.twig' %}
+					{% endif %}
+				{% endfor %}
+				{% if event is defined and event.pressFiles %}
+					<!--{% block press %}
+						{% if event.pressFiles.count() > 0 %}
+						<section id="Kit-presse" class="content anchor">
+								<h2 class="title">Kit Presse</h2>
+								<table id="tablePress">
+									<thead id="theadPress">
+									<tr>
+										<th colspan="3">Fichiers du kit presse</th>
+									</tr>
+									</thead>
+									<tbody>
+									{% set nbLine = 1 %}
+									{% for pressFile in event.pressFiles %}
+										{% set extension = pressFile.path|split('.') %}
+											<tr style="{% if nbLine % 2 %}{% else %}background-color: #E0E0E0;{% endif %}height:40px">
+												<td>{% if extension[1] == "pdf" %}<i style="margin-left: 15px" class="fa fa-file-pdf-o" aria-hidden="true"></i> {% elseif extension[1] == "jpg" or extension[1] == "png" %}<i style="margin-left: 15px" class="fa fa-file-image-o" aria-hidden="true"></i>{% else %}<i style="margin-left: 15px" class="fa fa-file-word-o" aria-hidden="true"></i> {% endif %}</td>
+												<td style="padding-left: 15px">{{ pressFile.name}} ({{ extension[1] }})</td>
+												<td style="text-align: center"><a style="color:black" href="{{ path('press_file_download', {'id': pressFile.id}) }}"><i class="fa fa-download" aria-hidden="true"></i></a></td>
+											</tr>
+										{% set nbLine = nbLine + 1 %}
+									{% endfor %}
+									</tbody>
+								</table>
+								<button id="pressFilesButton" class="btn btn-success dlPressFiles">
+									<a id="presse" href="{{path('public_press',{'slug' : event.slug})}}">
+										Télécharger le kit presse complet (zip) <i class="fa fa-file-archive-o" aria-hidden="true"></i>
+									</a>
+								</button>
+						</section>
+						{% endif %}
+					{% endblock %}!-->
+				{% endif %}
+			{% endblock %}
+
+			{% if not helper.registrationLimitOutdated(event) %}
+    			{% block mandatory_registration_container %}
+        			{% for section in sections %}
+    					{% if section.typeSlug == 'registration' and section.onPublic %}
+    						<div id="mandatory_registration_banner">
+            					<a href="#registration">
+            						{% block register %} {% endblock %}
+            					</a>
+            				</div>
+              {% endif %}
+    				{% endfor %}
+    			{% endblock %}
+			{% endif %}
+		</main>
+	{% endblock %}
+
+	{% block footer %}
+		{% include 'partials/footer.html.twig' %}
+	{% endblock %}
+
+{% endblock %}
+
+{% block js_dev %}
+	<script>
+	function initMap() {
+		var conteneur = document.getElementById('leafletmap');
+		if(!conteneur) {
+			return null;
+		}
+    	{# version google map #}
+    	var myOptions = {
+    	      zoom: 14,
+    	      center: {
+    	    	  lat: {{event.place.latitude}},
+    	    	  lng:  {{event.place.longitude}}
+    	      },
+    	      mapTypeId: google.maps.MapTypeId.ROADMAP,
+    	      styles: [
+    	          {
+    	        	  "featureType": "all",
+    	        	  "stylers": [{ "color": "eaeaea" }]
+    	          },
+
+               {elementType: 'labels.text.stroke', stylers: [{color: '#eaeaea'}]},
+               {elementType: 'labels.text.fill', stylers: [{color: '#9a9a9a'}]},
+               {
+                 featureType: 'administrative.locality',
+                 elementType: 'labels.text.fill',
+                 stylers: [{color: '#9a9a9a'}]
+               },
+               {
+                 featureType: 'poi',
+                 elementType: 'labels',
+                 stylers: [{visibility: 'off'}]
+               },
+               {
+                 featureType: 'poi.park',
+                 elementType: 'geometry',
+                 stylers: [{color: '#ffffff'}]
+               },
+               {
+                 featureType: 'poi.park',
+                 elementType: 'labels.text.fill',
+                 stylers: [{color: '#9a9a9a'}]
+               },
+               {
+                 featureType: 'road',
+                 elementType: 'geometry',
+                 stylers: [{color: '#ffffff'}]
+               },
+               {
+                 featureType: 'road',
+                 elementType: 'geometry.stroke',
+                 stylers: [{color: '#dddddd'}]
+               },
+               {
+                 featureType: 'road',
+                 elementType: 'labels.text.fill',
+                 stylers: [{color: '#9a9a9a'}]
+               },
+               {
+                 featureType: 'road.highway',
+                 elementType: 'geometry',
+                 stylers: [{color: '#d7d7d7'}]
+               },
+               {
+                 featureType: 'road.highway',
+                 elementType: 'geometry.stroke',
+                 stylers: [{color: '#dddddd'}]
+               },
+               {
+                 featureType: 'road.highway',
+                 elementType: 'labels.text.fill',
+                 stylers: [{color: '#9a9a9a'}]
+               },
+               {
+                 featureType: 'transit',
+                 elementType: 'geometry',
+                 stylers: [{color: '#d7d7d7'}]
+               },
+               {
+                 featureType: 'transit.station',
+                 elementType: 'labels.text.fill',
+                 stylers: [{color: '#9a9a9a'}]
+               },
+               {
+                 featureType: 'water',
+                 elementType: 'geometry',
+                 stylers: [{color: '#ffffff'}]
+               },
+               {
+                 featureType: 'water',
+                 elementType: 'labels.text.fill',
+                 stylers: [{color: '#9a9a9a'}]
+               },
+               {
+                 featureType: 'water',
+                 elementType: 'labels.text.stroke',
+                 stylers: [{color: '#17263c'}]
+               }
+             ]
+    	    };
+
+    	var map = new google.maps.Map(document.getElementById('leafletmap'), myOptions);
+    	var marker = new google.maps.Marker({
+        	position: {
+            	lat: {{event.place.latitude}},
+            	lng:  {{event.place.longitude}}
+        	},
+        	icon: '/images/point_carte_google_02.png',
+        	map: map,
+        	title: "{{event.type.fullName}}"
+    	});
+
+    	new google.maps.InfoWindow({
+        	content: "<strong>{{event.type.fullName}}</strong><br />{{event.place.name}}",
+    	}).open(map, marker);
+	}
+	</script>
+	{# version google map #}
+	<script src="//maps.googleapis.com/maps/api/js?key=AIzaSyBs3dwvroi-zpYtD4I9gdbln0Hga2RG7Nc&callback=initMap"></script>
+	{# version mapbox
+		<script async defer>
+		if (document.getElementById('leafletmap')){
+			var name = "{{event.place.name}}";
+			$(document).ready(function(){
+
+
+					var lat = {{event.place.latitude}};
+				var long = {{event.place.longitude}};
+				var place_slug = "{{event.place.slug}}" ;
+				var type = "{{event.getFullType}}";
+				var point = document.getElementById('p_'+place_slug);
+				if(point){
+					point.style.display = "inline-block";
+				}
+
+				var mymap = L.map('leafletmap').setView([lat, long], 16);
+				var myIcon = L.icon({
+					iconUrl: '/images/point_carte_google_02.png',
+					iconAnchor:   [31, 68],
+					popupAnchor:  [0, -34]
+				});
+
+
+				var marker = L.marker([lat, long], {icon: myIcon}).addTo(mymap);
+				marker.bindPopup('<p>'+type+'</p>');
+
+				$('.leaflet-marker-icon').on('mouseenter', function(){
+					marker.openPopup();
+				})
+				$('.leaflet-marker-icon').on('mouseleave', function(){
+					marker.closePopup();
+				})
+				{% if app.environment != 'prod' %}
+				var token ='pk.eyJ1IjoiZnJhbmNlLWJlbm9pdC1sNG0iLCJhIjoiY2pub3J6cHZxMXlxdDNwczVxcWloMWZvZyJ9.ni7lkWwRO2g1rX2MQhLLfw' ;
+				{% else %}
+				var token = 'pk.eyJ1IjoiZnJhbmNlLWJlbm9pdC1sNG0iLCJhIjoiY2pubXdkaWYxMXUxczNrbzNmM3U2MmxoYSJ9.1iexbLDOjG2QC8VBZAYt3g';
+				{% endif %}
+
+				L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token='+token, {
+					attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, <a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
+					id: 'mapbox.streets',
+					accessToken: token
+				}).addTo(mymap);
+			})
+		}
+		</script>
+	#}
+
+
+
+{% endblock %}

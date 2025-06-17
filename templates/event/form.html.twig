@@ -1,0 +1,92 @@
+{% extends 'admin_base.html.twig' %}
+{% block custom %}{% endblock %}
+{% block content %}
+
+	<div id="form_template" class="container">
+		<h1 class="title">{% block title %} {% endblock %} </h1>
+
+		{% block form %}
+			{{ form_start(form) }}
+				{{form_errors(form)}}
+			    {{ form_row(form.organizationTypes) }}
+			    {{ form_row(form.date) }}
+			    <a href="#" class="btn btn-info" id="complete">
+			    	<i class="fa fa-clock-o"></i>
+			    	Auto-complexion
+			    </a>
+			    {{ form_row(form.closingAt) }}
+			    {{ form_row(form.online) }}
+			    {{ form_row(form.offline) }}
+			    {# {{ form_row(form.l4mRegistration) }} #}
+			     {# {{ form_row(form.invitationTypePath) }} #}
+			    {{ form_label(form.firstRecallDate) }}
+			    <div class="custom_checkbox">
+			    	<input type="checkbox" id="firstRecall" name="firstRecall" {% if event.firstRecallDate is null and event.id is not null %} checked{% endif %}> Pas de première relance
+			    </div>
+
+		    	<div id="firstRecallContainer" {% if event.firstRecallDate is null and event.id is not null %} style="display:none" {% endif %}>
+				    {{ form_widget(form.firstRecallDate) }}
+				</div>
+
+			    {{ form_label(form.secondRecallDate) }}
+			    <div class="custom_checkbox">
+			    	<input type="checkbox" id="secondRecall" name="secondRecall"{% if event.secondRecallDate is null and event.id is not null %} checked{% endif %}> Pas de deuxième relance
+			    </div>
+			    <div id="secondRecallContainer" {% if event.secondRecallDate is null and event.id is not null %} style="display:none" {% endif %}>
+				    {{ form_widget(form.secondRecallDate) }}
+				</div>
+
+				<div>
+			    	{{ form_row(form.dateGuide) }}
+			    	{{ form_row(form.nbStand) }}
+			    </div>
+
+			    {% if form.startBreak is defined %}
+			    	<div class="break_container">
+				    	<div class="break_checkbox">
+					    	<input type="checkbox" id="break" {% if event.startBreak %} checked{% endif %} name="break"> Pause <i class="fa fa-cutlery"></i>
+					    </div>
+					    <div class="break_fields" {% if event.startBreak is null %} style="display:none"{% endif %}>
+					    	{{ form_row(form.startBreak) }}
+					    	{{ form_row(form.endBreak) }}
+					    </div>
+				    </div>
+			   	{% endif %}
+
+			   	{{ form_row(form.pubFile) }}
+				{{ form_row(form.pubAccredFile) }}
+
+			   	{% if not h48_helper.is48(event) or (h48_helper.is48(event) and not h48_helper.is48Formation(event)) %}
+				   	{{ form_row(form.bannerFile) }}
+				   	{{ form_row(form.socialLogoFile) }}
+				   	{{ form_row(form.logoFile) }}
+				   	{{ form_row(form.backBadgeFile) }}
+					{{ form_row(form.backSignatureFile) }}
+				   	{{ form_row(form.backFacebookFile) }}
+				   	{{ form_row(form.backInstaFile) }}
+				   	{{ form_row(form.backTwitterFile) }}
+				   	{{ form_row(form.backLinkedinFile) }}
+				{% endif %}
+				{{ form_row(form.parentEvent) }}
+
+				{% if form.invitation is defined %}
+				{# to do escape #}
+					{{ form_row(form.invitation) }}
+				{% endif %}
+
+			   	{% if form.registrationLimit is defined %}
+			    	{{ form_row(form.registrationLimit) }}
+			    	{{ form_row(form.sectors) }}
+					{{ form_row(form.sectorPics) }}
+			   	{% endif %}
+			    <button class="btn btn-success" id="{{button_id|default('save')}}">{{ button_label|default('Enregistrer') }}</button>
+			{{ form_end(form) }}
+		{% endblock %}
+
+	{% if app.environment == 'dev' %}
+		<a href="#" id="fill"> fill </a>
+	{% endif %}
+
+		{{helper.getReturnButton()|raw}}
+	</div>
+{% endblock %}

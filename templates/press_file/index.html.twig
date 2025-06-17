@@ -1,0 +1,40 @@
+{% extends 'admin_base.html.twig' %}
+
+{% block content %}
+    <div class="container" id="press_files">
+    <h1>Kit presse {{helper.getAdminEventLink(event)|raw}}</h1>
+
+
+        {% for press_file in event.pressFiles %}
+            <div class="custom_row">
+                <div class="name">
+                    {{ press_file.name }}
+                </div>
+                <div class="r">
+                    <a href="{{ path('press_file_download', {'id': press_file.id}) }}" class="fa_container">
+                        <i class="fa fa-download"></i>
+                    </a>
+                    <a href="{{ path('press_file_edit', {'id': press_file.id}) }}" class="fa_container">
+                        <i class="fa fa-edit"></i>
+                    </a>
+                    <a href="{{ path('press_file_delete', {'id': press_file.id}) }}" class="fa_container a_confirm" data-msg="supprimer définitevement ce fichier presse?">
+                        <i class="fa fa-remove"></i>
+                    </a>
+                </div>
+            </div>
+        {% else %}
+            <p> Pas encore de fichier </p>
+        {% endfor %}
+
+    <div class="clear2"></div>
+    <a href="{{ path('press_file_new', {'id' : event.id}) }}" class="btn btn-primary">
+        <i class="fa fa-plus"></i>
+        Ajouter un fichier
+    </a>
+    <div class="clear1"></div>
+    <a href="{{ path('press_kit_download', {'id' : event.id}) }}" class="btn btn-primary">
+        <i class="fa fa-download"></i>
+       Kit Presse
+    </a>
+</div>
+{% endblock %}

@@ -1,0 +1,12 @@
+<div class="container">
+    <h1 style="color:#0099cb;text-transform:uppercase;text-align:left">
+        {{job.name}}
+    </h1>
+    <h2 style="color:#4f4b4b;text-transform:uppercase;text-align:left;margin-top:0;margin-bottom:0;font-size:30px">{{job.jobType.name}}</h2>
+    <div style="text-align:left;margin:10px">{{job.presentation|raw}}</div>
+    <h3 style="color:#4f4b4b;text-align:left">Informations supplémentaires :</h3>
+    <ul>
+      <li style="color:#4f4b4b;text-align:left">Type de contrat : {{job.contractType.name}} {% if job.contractType.id != 1 and job.timeContract is not null %}: {{job.timeContract}}{% endif %}</li>
+    <li style="color:#4f4b4b;text-align:left">Localisation : {{job.city}} {{job.city.cp}}</li>
+    </ul>
+</div>

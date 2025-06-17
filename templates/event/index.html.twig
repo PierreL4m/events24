@@ -1,0 +1,65 @@
+{% extends 'admin_base.html.twig' %}
+
+{% block content %}
+    <div class="container">
+        <h1> Événements </h1>
+        {% include 'partials/form_search.html.twig' %}
+    <button type="button" class="btn btn-primary displayAll">Afficher tous</button>
+        <table class="table table-striped" id="event_list">
+            <tbody>
+                {% for event in events %}
+                    <tr>
+                        <td>
+                            <a href="{{ path('event_show', {'id': event.id}) }}">
+                                {{event}}
+                            </a>
+                             {% if is_granted('ROLE_SUPER_ADMIN') %}
+                                <p>
+                                    <strong>{{event.date|date('d-m-Y H:i')}}-{{event.closingAt|date('H:i')}} </strong>
+                                </p>
+                            {% endif %}
+                            <p>
+                                {{event.getFullType()}}<br>
+                                {{event.manager|capitalize}} <br>
+                                {% if event.participations|length != 0 %}
+                                    {{event.participations|length}} exposant(s)
+                                {% else %}
+                                    Pas encore d'exposants
+                                {% endif %}
+                            </p>
+                            {% if event.is_cancel == 1 %}
+                              <p style="color:red">
+                                Annulé
+                              <p>
+                            {% endif %}
+                        </td>
+                        <td class="edit">
+                            {% if remove_helper.canDelete(event) %}
+                                <a href="{{ path('event_edit', {'id': event.id}) }}"><i class="fa fa-edit"></i></a>
+                            {% endif %}
+                        </td>
+                        <td class="edit">
+                            {% if remove_helper.canDelete(event) %}
+                                <a href="{{ path('event_delete', {'id': event.id}) }}" class="a_confirm" data-msg="cet événement ?"><i class="fa fa-remove"></i></a>
+                            {% endif %}
+                        </td>
+                        <td class="preview">
+                             {{ helper.getPreviewLink(event)|raw }}
+                        </td>
+                    </tr>
+            {% else %}
+                <tr>
+                    <td colspan="5">Aucun résultats</td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+        <div class="navigation">
+            {{ knp_pagination_render(events) }}
+        </div>
+
+        <a href="{{ path('event_place') }}" class="btn btn-primary">
+            <i class="fa fa-plus"></i>Nouvel événement
+        </a>
+    </div>
+{% endblock %}

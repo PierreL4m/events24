@@ -1,0 +1,349 @@
+{% if participation is defined %}
+{% if formation is not defined %}
+	{% set formation = '' %}
+{% endif %}
+{% if array is defined %}
+{% set stringArray = array|join(',') %}
+<div class="flex_container">
+	<div class="modal_content {{formation}}">
+		{% if participation.facebook or participation.twitter or participation.linkedin or participation.viadeo %}
+			<div style="text-align:left" class="social">
+				{% if participation.facebook %}
+					<a href="{{participation.facebook}}" target="_blank" class="fb" title="facebook"> </a>
+				{% endif %}
+				{% if participation.twitter %}
+					<a href="{{participation.twitter}}" target="_blank" class="twitter" title="twitter"></a>
+				{% endif %}
+				{% if participation.linkedin %}
+					<a href="{{participation.linkedin}}" target="_blank" class="linkedin" title="linkedin"></a>
+				{% endif %}
+				{% if participation.viadeo %}
+					<a href="{{participation.viadeo}}" target="_blank" class="viadeo" title="viadeo"></a>
+				{% endif %}
+					{% if participation.instagram %}
+						<a href="{{participation.instagram}}" target="_blank" class="instagram" title="instagram"> </a>
+					{% endif %}
+			</div>
+		{% endif %}
+		<div class="img_container">
+			{% if participation.logo and participation.logo.path %}
+				<img src="{{"/uploads/"~participation.logo.path}}" alt="{{participation.companyName}}">
+			{% endif %}
+		</div>
+
+		{% if i is not defined %}
+			{% set i = 1 %}
+		{% endif %}
+
+		<div class="float_container">
+			<a style="color:white" id="odal{{formation ~ i}}" type="button"  data-dismiss="modal">FERMER
+				<i class="fa fa-remove"></i>
+			</a>
+		</div>
+
+		<div style="text-align:left;color:white" class="middle">
+			<p class="exposant_title">{{participation.companyName|upper}}</p>
+
+			<p class="address">
+				{% if participation.addressL1 is not empty %}
+					{{participation.addressL1|nl2br}} <br>
+				{% endif %}
+
+				{% if participation.AddressNumber is not empty %}
+					{{participation.AddressNumber}}
+				{% else %}
+					{% set noNumber = true %}
+				{% endif %}
+
+				{% if participation.street is not empty %}
+					{% if noNumber is defined %}
+						{{participation.street.label|capitalize}}
+					{% else %}
+						{{participation.street.label}}
+					{% endif %}
+				{% endif %}
+
+				{% if participation.addressL2 is not empty %}
+					{{participation.addressL2}} <br>
+				{% endif %}
+
+				{% if participation.addressL3 %}
+					{{participation.addressL3|nl2br}}<br>
+				{% endif %}
+
+				{{participation.cp}} {{participation.city|upper}}
+
+				{% if participation.city is not defined %}
+					L'adresse de l'exposant n'a pas été communiquée
+				{% endif %}
+
+			</p>
+
+
+
+			{% if participation.event.type.getDisplayParticipationContactInfo and (participation.contactName or participation.contactEmail or participation.contactPhone) %}
+				<p class="contact">
+					<span class="contact_label">Contact :</span>
+					{% if participation.contactName %}{{participation.contactTitle}} {{participation.contactName}}
+						{% if participation.contactFirstName %}
+							{{participation.contactFirstName}}
+						{% endif %} <br>
+					{% endif %}
+					{% if participation.contactEmail %}
+						{{participation.contactEmail}}<br>
+					{% endif %}
+					{% if participation.contactPhone %}
+						{{participation.contactPhone}}
+					{% endif %}
+				</p>
+			{% endif %}
+		</div>
+
+		{%  if  participation.joblinkSessions is defined and helper.hasSectionJoblink(participation.event)  %}
+			<div class="joblink_session">
+				{%  for session in participation.joblinkSessions %}
+					<div class="joblink">
+						<a href="#joblink_{{ session.joblink.id }}">
+
+						</a>
+
+							{%  if session.start and session.end %}
+								<span class="text">
+									{{ session.joblink.name }} : {{ session.start|date('H:i') }} - {{ session.end|date('H:i') }}
+								</span>
+							{%  endif %}
+
+					</div>
+				{%  endfor %}
+			</div>
+		{%  endif %}
+		<div class="sites">
+			{% if participation.sites is not empty %}
+				{% for site in participation.sites %}
+					<div class="site">
+						<a href="{{site.url}}" target="_blank" title="{{site.url}}">
+							{% if site.label %}
+								{{site.label}}
+							{% else %}
+								{{site.url|replace({'http://':'', 'https://':''})}}
+							{% endif %}
+						</a>
+					</div>
+					{% if not loop.index == loop.last %}
+						<div class="line"></div>
+					{% endif %}
+				{% endfor %}
+			{% endif %}
+		</div>
+
+		{% if participation.youtube is defined and participation.youtube and 'embed' not in helper.getYoutubeLink(participation.youtube) %}
+			<a href="{{participation.youtube}}" title="{{participation.companyName}}" target="_blank">
+				<i class="fa fa-youtube" aria-hidden="true"></i>
+			</a>
+		{% endif %}
+
+		<div class="secondary">
+			<p> {{participation.presentation|raw}} </p>
+			{% if participation.youtube is defined and participation.youtube and 'embed' in helper.getYoutubeLink(participation.youtube) %}
+				<div class="iframe_container">
+					<iframe width="640" height="480"
+						src="{{helper.getYoutubeLink(participation.youtube)}}">
+					</iframe>
+				</div>
+			{% endif %}
+		</div>
+		<div style="color:white" class="navigation" index="{{index}}-{{max}}">
+		{% if index > 1 %}
+			<div id="prevModal" class="prev" idExposant="{{array[index - 2]}}" prevIndex="{{index - 1}}" max="{{max}}"><span>Précédent</span><i class="fa fa-caret-left"></i></div>
+		{% endif %}
+		<span>Exposants</span>
+		{% if index < max %}
+			<div id="nextModal" class="next" idExposant="{{array[index]}}" nextIndex="{{index + 1}}" max="{{max}}"><i class="fa fa-caret-right"></i><span>Suivant</span></div>
+		{% endif %}
+		</div>
+</div>
+</div>
+{% else %}
+	<div class="flex_container">
+		<div class="modal_content {{formation}}">
+			{% if participation.facebook or participation.twitter or participation.linkedin or participation.viadeo %}
+				<div style="text-align:left" class="social">
+					{% if participation.facebook %}
+						<a href="{{participation.facebook}}" target="_blank" class="fb" title="facebook"> </a>
+					{% endif %}
+					{% if participation.twitter %}
+						<a href="{{participation.twitter}}" target="_blank" class="twitter" title="twitter"></a>
+					{% endif %}
+					{% if participation.linkedin %}
+						<a href="{{participation.linkedin}}" target="_blank" class="linkedin" title="linkedin"></a>
+					{% endif %}
+					{% if participation.viadeo %}
+						<a href="{{participation.viadeo}}" target="_blank" class="viadeo" title="viadeo"></a>
+					{% endif %}
+						{% if participation.instagram %}
+							<a href="{{participation.instagram}}" target="_blank" class="instagram" title="instagram"> </a>
+						{% endif %}
+				</div>
+			{% endif %}
+			<div class="img_container">
+				{% if participation.logo and participation.logo.path %}
+					<img src="{{"/uploads/"~participation.logo.path}}" alt="{{participation.companyName}}">
+				{% endif %}
+			</div>
+
+			{% if i is not defined %}
+				{% set i = 1 %}
+			{% endif %}
+
+			<div class="float_container">
+				<a style="color:white" id="odal{{formation ~ i}}" type="button"  data-dismiss="modal">FERMER
+					<i class="fa fa-remove"></i>
+				</a>
+				<div class="mini_logo">
+					{% if participation.th %}<div class="th" title="Politique RH en faveur de l'insertion des personnes en situation de handicap"></div>{% endif %}
+					{% if participation.div %} <div class="div" title="Politique RH en faveur de la diversité"></div> {% endif %}
+					{% if participation.senior %} <div class="sen" title="Politique RH en faveur des seniors"></div> {% endif %}
+					{% if participation.jd %} <div class="jd" title="Politique RH en faveur des jeunes diplômés"></div> {% endif %}
+				</div>
+			</div>
+
+			<div style="text-align:left;color:white" class="middle">
+				<p class="exposant_title">{{participation.companyName|upper}}</p>
+
+				<p class="address">
+					{% if participation.addressL1 is not empty %}
+						{{participation.addressL1|nl2br}} <br>
+					{% endif %}
+
+					{% if participation.AddressNumber is not empty %}
+						{{participation.AddressNumber}}
+					{% else %}
+						{% set noNumber = true %}
+					{% endif %}
+
+					{% if participation.street is not empty %}
+						{% if noNumber is defined %}
+							{{participation.street.label|capitalize}}
+						{% else %}
+							{{participation.street.label}}
+						{% endif %}
+					{% endif %}
+
+					{% if participation.addressL2 is not empty %}
+						{{participation.addressL2}} <br>
+					{% endif %}
+
+					{% if participation.addressL3 %}
+						{{participation.addressL3|nl2br}}<br>
+					{% endif %}
+
+					{{participation.cp}} {{participation.city|upper}}
+
+					{% if participation.city is not defined %}
+						L'adresse de l'exposant n'a pas été communiquée
+					{% endif %}
+
+				</p>
+
+
+
+				{% if participation.event.type.getDisplayParticipationContactInfo and (participation.contactName or participation.contactEmail or participation.contactPhone) %}
+					<p class="contact">
+						<span class="contact_label">Contact :</span>
+						{% if participation.contactName %}{{participation.contactTitle}} {{participation.contactName}}
+							{% if participation.contactFirstName %}
+								{{participation.contactFirstName}}
+							{% endif %} <br>
+						{% endif %}
+						{% if participation.contactEmail %}
+							{{participation.contactEmail}}<br>
+						{% endif %}
+						{% if participation.contactPhone %}
+							{{participation.contactPhone}}
+						{% endif %}
+					</p>
+				{% endif %}
+			</div>
+
+			{%  if  participation.joblinkSessions is defined and helper.hasSectionJoblink(participation.event)  %}
+				<div class="joblink_session">
+					{%  for session in participation.joblinkSessions %}
+						<div class="joblink">
+							<a href="#joblink_{{ session.joblink.id }}">
+
+							</a>
+
+								{%  if session.start and session.end %}
+									<span class="text">
+										{{ session.joblink.name }} : {{ session.start|date('H:i') }} - {{ session.end|date('H:i') }}
+									</span>
+								{%  endif %}
+
+						</div>
+					{%  endfor %}
+				</div>
+			{%  endif %}
+			<div class="sites">
+				{% if participation.sites is not empty %}
+					{% for site in participation.sites %}
+						<div class="site">
+							<a href="{{site.url}}" target="_blank" title="{{site.url}}">
+								{% if site.label %}
+									{{site.label}}
+								{% else %}
+									{{site.url|replace({'http://':'', 'https://':''})}}
+								{% endif %}
+							</a>
+						</div>
+						{% if not loop.index == loop.last %}
+							<div class="line"></div>
+						{% endif %}
+					{% endfor %}
+				{% endif %}
+			</div>
+
+			{% if participation.youtube is defined and participation.youtube and 'embed' not in helper.getYoutubeLink(participation.youtube) %}
+				<a href="{{participation.youtube}}" title="{{participation.companyName}}" target="_blank">
+					<i class="fa fa-youtube" aria-hidden="true"></i>
+				</a>
+			{% endif %}
+
+			<div class="secondary">
+				<p> {{participation.presentation|raw}} </p>
+				{% if participation.youtube is defined and participation.youtube and 'embed' in helper.getYoutubeLink(participation.youtube) %}
+					<div class="iframe_container">
+						<iframe width="640" height="480"
+							src="{{helper.getYoutubeLink(participation.youtube)}}">
+						</iframe>
+					</div>
+				{% endif %}
+			</div>
+	</div>
+	</div>
+{% endif %}
+{% else %}
+	<div class="flex_container">
+		<div class="modal_content {{formation}}">
+		</div>
+	</div>
+{% endif %}
+
+<div class="modal fade jobModal" id="jobModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true" idJob="">
+	<div class="modal-dialog modal-lg" role="document">
+		<div class="modal-content">
+			<button style="text-align:right;padding-right: 15px" type="button" class="close closeJobModal" aria-label="Close" data-dismiss="jobModal">
+				<span aria-hidden="true">&times;</span>
+			</button>
+			<div class="modal-body" id="bodyModalJob">
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-secondary closeJobModal">Fermer</button>
+			</div>
+		</div>
+	</div>
+</div>
+<script type="text/javascript">
+$(document).on('click','.closeJobModal',function() {
+		window.$('#jobModal').modal('hide');
+});
+</script>

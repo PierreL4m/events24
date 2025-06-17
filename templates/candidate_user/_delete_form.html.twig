@@ -1,0 +1,19 @@
+{% if is_granted('ROLE_CANDIDATE') %}	
+	<form method="post" action="{{ path('candidate_user_delete') }}" id="a_confirm_form">
+	    <input type="hidden" name="_method" value="DELETE">
+	    <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ candidate.id) }}">
+	    <button class="btn btn-danger a_confirm is_form" data-msg="définitivement votre compte ? (Cette opération est irréversible)" id="delete_account">
+	    	<i class="fa fa-remove"></i>
+	    	{{ btn_label|default('Supprimer mon compte') }}
+	    </button>
+	</form>
+{% elseif is_granted('ROLE_VIEWER') %}
+	<form method="post" action="{{ path('admin_candidate_user_delete' , {'id' : candidate.id}) }}" id="a_confirm_form">
+	    <input type="hidden" name="_method" value="DELETE">
+	    <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ app.user.id) }}">
+	    <button class="btn btn-danger a_confirm is_form" data-msg="définitivement ce compte candidat? (Cette opération est irréversible)" id="delete_account">
+	    	<i class="fa fa-remove"></i>
+	    	{{ btn_label|default('Supprimer le compte') }}
+	    </button>
+	</form>
+{% endif %}

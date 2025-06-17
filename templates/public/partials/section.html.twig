@@ -1,0 +1,64 @@
+<section id='{{section.sectionType.slug}}' class="content anchor">
+
+	{% if admin is defined %}
+		<h1 class="pre_title">{{helper.getAdminEventLink(event)|raw}}</h1>
+	{% endif %}
+
+{# 48 #}
+	{% set type48 = null %}
+	{% set is48 = false %}
+	{% if h48_helper.is48(event) %}
+		{% set is48 = true %}
+		{% if section.sectionType.slug == 'company' %}
+			{% set type48 = 'company' %}
+		{% elseif section.sectionType.slug == 'formation' %}
+			{% set type48 = 'formation' %}
+		{% endif %}
+	{% endif %}
+{# 48 #}
+	<h2 class="title {{type48}}">
+			{{section.title}}
+		{% if is48 %}
+			{% if type48 == 'company' %}
+				{% set date = section.event.date %}
+			{% elseif type48 == 'formation' %}
+				{% set date = h48_helper.getSecond48(event).date %}
+			{% endif %}
+			{% if type48 %}
+			    - {{date.date|format_date('none', 'MMMM Y', null, 'gregorian', 'fr')}}
+			{% endif %}
+		{% endif %}
+
+	</h2>
+	{% if is_granted("ROLE_VIEWER") and not section.onpublic %}
+	 	<p>Visible uniquement pour les utilisateurs l4m <i>(Mettre sur le site public pour l'affichage au grand public)</i></p>
+	{% endif %}
+
+	{% if section.sectionType.slug != 'infos' %}
+		{% if section.description %}
+			<div class="section_description">
+				{{section.description|raw}}
+			</div>
+		{% endif %}
+		{% if section.image %}
+			<div class="section_img_container">
+				<img src="{{section.getImageName}}" alt="image">
+			</div>
+			{%  if section.sectionType.slug == 'sectors' %}
+				<div id="sectors_container">
+					{% for sector in event.sectors %}
+						{{sector}} <br>
+					{% endfor %}
+				</div>
+			{% endif %}
+		{% endif %}
+	{% endif %}
+
+	{% set template_name = helper.getSectionTemplate(section)  %}
+
+	{% if template_name == 'SectionSimple' %}
+		{% include 'public/partials/' ~ section.sectionType.slug ~ '.html.twig' ignore missing %}
+	{% else %}
+		{% include 'public/partials/sections/' ~ template_name ~ '.html.twig' %}
+	{% endif %}
+</section>

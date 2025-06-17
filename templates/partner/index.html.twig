@@ -1,0 +1,66 @@
+{% extends 'admin_base.html.twig' %}
+
+{% block content %}
+    <div class="container">
+        <h1>Partenaires</h1>
+
+        <div id="partners_list">
+            {% for partner in partners %}
+                {% set image = partner.logo.path %}
+                <div class="custom_row">
+                   {#  {% if is_granted('ROLE_SUPER_ADMIN') %}
+                        <div>{{ partner.id }}</div>                    
+                        <div>{{ partner.slug }}</div>
+                    {% endif %} #}
+                    <div class="img_container">
+                        <img src="{{'/uploads/'~partner.logo.getPath}}" alt="{{partner.name}}">
+                    </div>
+                    <div class="infos">
+                        <strong>{{ partner.name }} </strong><br>
+                        <a href="{{ partner.url }}">
+                            {{partner.url}}
+                        </a><br>
+                        <strong> Partenaire "{{ partner.getType|lower }}"</strong><br>
+                        {{ partner.email }}
+                        <p class="other_infos">
+                            {{ partner.phone }}<br>
+                            {{ partner.baseline }}<br>
+                            {{ partner.address }}
+                        </p>
+                    </div>
+                    <div class="events">
+                        {% set old = false %}                       
+                        {% for event in helper.getOrderedEventsByPartner(partner) %}
+                            {% if event.date <= date('now') and not old %}
+                                <hr>
+                                {% set old = true %}
+                            {% endif %}
+                            {# show section #}
+                           &#8226; {{helper.getAdminEventLink(event)|raw}}<br>
+                            
+                        {% endfor %}
+
+                        <a href="{{path('add_events_to_partner',{'id' : partner.id})}}" class="btn btn-primary">
+                            <i class="fa fa-plus"></i>
+                            Ajouter / supprimer d'un événément
+                        </a>
+                    </div>
+                    
+                    <div class="fa_container">
+                        <a href="{{ path('partner_edit', {'id': partner.id}) }}">
+                            <i class="fa fa-edit"></i>
+                        </a>
+                        {% if partner.events|length == 0 %}
+                            <a href="{{ path('partner_delete', {'id': partner.id}) }}" class="a_confirm" data-msg="supprimer définitivement ce partenaire?">
+                                <i class="fa fa-remove"></i>
+                            </a>
+                        {% endif %}
+                    </div>
+                </div>
+            {% else %}
+                <div>Pas de résultat</div>
+            {% endfor %}
+        </div>
+    </div>
+
+{% endblock %}

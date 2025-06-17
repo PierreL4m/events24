@@ -1,0 +1,30 @@
+{% extends 'admin_base.html.twig' %}
+
+{% block content %}
+    <div class="container">
+        <h1> IDS Événements </h1>
+       	<div>
+        {% for annee in annees %}
+        	<a href="#annee_{{ annee }}">{{ annee }}</a> 
+        {% endfor %}
+        </div>
+    	{% for annee, annee_events in ids %}
+    		<a name="annee_{{ annee }}"></a>
+    		<h2>{{ annee }}</h2>
+    		{% for type, places_ids in annee_events %}
+            	<h3>{{ type }}</h2>
+            	<div style="padding-left:2em;">
+            	{% for place, events in places_ids %}
+	            	<h4>{{ place }}</h4>
+	            	<ul>
+		            	{% for event in events %}
+		            		<li>{{ event['date'] }} : {{ event['id'] }}</li>
+		            	{% endfor %}
+	            	</ul>
+	            	</table>
+            	{% endfor %}
+            	</div>
+        	{% endfor %}
+    	{% endfor %}
+    </div>
+{% endblock %}

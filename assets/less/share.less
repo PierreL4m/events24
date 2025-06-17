@@ -1,0 +1,1160 @@
+@import '~font-awesome/css/font-awesome.min.css';
+@import url('https://fonts.googleapis.com/css?family=Open+Sans:400,600,700,800.css');
+@import url('nav_bar.less');
+
+@orange_premium : #E98833;
+@blue: #44a4f2;
+@grey_title: #777;
+@grey:#e1e2e3;
+@mini-size:35px;
+@social:20px;
+@event_color_2:#4b8dcb;
+@other_event:#4b8dcb;
+@blue_link:#337ab7;
+
+a:hover{
+    text-decoration:none;
+}
+#fill{
+	display: block;
+    background-color: #a70606;
+    width: 80px;
+    text-align: center;
+    padding: 10px;
+    margin-bottom: 20px;
+    color: white;
+    font-size: 16px;
+    text-transform: uppercase;
+}
+#nav_picto_user{
+    display:none;
+}
+footer{
+    padding: 20px 0;
+    color: @grey_header;
+    font-size: 0.85em;
+    background-color:black;
+    text-align:center;
+    position:absolute;
+    left:0;
+    right:0;
+    bottom:-4em;
+
+    .footer_text{
+        display:inline-block;
+        margin:0;
+    }
+    a{
+       color:blue;
+    }
+    a:hover,#presse:hover{
+        color:#686868;
+        text-decoration:none;
+    }
+
+    #presse{
+        color:blue;
+        float:right;
+
+        .fa{
+            font-size:1.4em;
+        }
+    }
+    #social_mobile{
+        display:none;
+    }
+}
+
+h2.premium{
+    color:@orange_premium;
+}
+
+[id^="myModal"],#participation_show_admin >.flex_container{
+    background-color: rgba(0,0,0,0.97);
+    display:none;
+    position: fixed;
+    left: 0;
+    top: 0;
+    right:0;
+    height: 100%;
+    color:white;
+    overflow:auto;
+    text-align:left;
+    z-index:1000000;
+}
+.flex_container{
+  .modal_content{
+    .secondary{
+      a.btnRegisterJob{
+        padding: 10px;
+        border: 1px solid white;
+        box-shadow: inset 0 0 20px rgba(255, 255, 255, 0);
+        outline-color: rgba(255, 255, 255, 0.5);
+        outline-offset: 0px;
+        text-shadow: none;
+        -webkit-transition: all 1250ms cubic-bezier(0.19, 1, 0.22, 1);
+        transition: all 1250ms cubic-bezier(0.19, 1, 0.22, 1);
+        color:@event_color_2;
+        border-radius: 20px;
+      }
+      a.btnRegisterJob:hover {
+        box-shadow: inset 0 0 5px @event_color_2, 0 0 5px @event_color_2;
+        outline-color: rgba(255, 255, 255, 0);
+        outline-offset: 15px;
+        text-shadow: 1px 1px 2px @event_color_2;
+        color : white;
+        border-radius: 20px;
+        border: 1px solid @event_color_2;
+      }
+    }
+  }
+}
+.flex_container{
+        display:flex;
+        height:100%;
+        padding-top:2em;
+
+    .modal_content{
+        width:860px;
+        margin:auto;
+
+        .social{
+            margin-bottom:1em;
+            a{
+                display:inline-block;
+                height:24px;
+                margin-right:1em;
+            }
+            .linkedin{
+                width: 21px;
+                background: url('/images/social_bg.png') -36px no-repeat;
+            }
+            .fb{
+                width: 11px;
+                background: url('/images/social_bg.png') 0 0 no-repeat;
+            }
+            .instagram{
+                width: 24px;
+                background: url('/images/instagram.png') 0 0 no-repeat;
+            }
+            .twitter{
+                width: 29px;
+                background: url('/images/social_bg.png') -116px 0 no-repeat;
+            }
+            .viadeo{
+                width: 21px;
+                background: url('/images/social_bg.png') -77px 0 no-repeat;
+            }
+        }
+
+        @logo_width : 231px;
+
+        .img_container{
+            height:@logo_width;
+            width:@logo_width;
+            line-height:@logo_width;
+            background-color:white;
+            text-align:center;
+            display:inline-block;
+            margin-right:1.5em;
+
+            img{
+                max-width:@logo_width - 20px;
+                max-height:@logo_width - 20px;
+                vertical-align:middle;
+            }
+        }
+        .middle{
+            display:inline-block;
+            vertical-align: top;
+            width:58%;
+
+            .exposant_title{
+                font-size:2em;
+                margin-bottom:0.5em;
+                color:@event_color_2;
+                font-weight:bold;
+            }
+            .address{
+                display:inline-block;
+                vertical-align:top;
+            }
+            .infos{
+                margin-bottom:1em;
+                .info{
+                    display:inline-block;
+                    font-weight:bold;
+                    margin-bottom:2px;
+                }
+            }
+            .contact{
+                .contact_label{
+                    display:block;
+                    font-weight:bold;
+                }
+            }
+        }
+
+        .float_container{
+            float:right;
+
+            .fa-remove{
+                padding: 5px 6px 5px 5px;
+                background-color:@event_color_2;
+            }
+
+            .mini_logo{
+                margin-top:1.5em;
+                display:flex;
+                flex-direction:column;
+                align-items:center;
+
+                div{
+                    margin-bottom:0.4em;
+                }
+                @max_width:34px;
+                .logo_container{
+                    width:@max_width;
+                    text-align:center;
+                }
+                .th{
+                    width: 23px;
+                    background: url('/images/mini_logo.png') 24px 0;
+                    height:25px;
+                    // float:right;
+                }
+                .div{
+                    width: 29px;
+                    background: url('/images/mini_logo.png') 90px 0;
+                     height:25px;
+                    // float:right;
+                }
+                .sen{
+                    width: 34px;
+                    background: url('/images/mini_logo.png') 0 0;
+                    height:25px;
+                    //float:right;
+                }
+                .jd{
+                    width: 31px;
+                    background: url('/images/mini_logo.png') 59px 0;
+                    height:25px;
+                    // float:right;
+                }
+            }
+            [id^="odal"]:hover,[id^="close_joblink"]:hover,[id^="close_participant_"]:hover,[id^="close_agenda_"]:hover{
+                cursor:pointer;
+            }
+        }
+        .sites{
+            width:@logo_width;
+            margin-top:2em;
+            .site{
+                padding:10px;
+                box-shadow:3px 3px 2px @event_color_2;
+
+                a{
+                    text-decoration:none;
+                    color:@event_color_2;
+                    word-wrap:break-word;
+                }
+            }
+            .line{
+                height:1px;
+                width:100%;
+                background-color:#5D5D5F;
+            }
+        }
+        .fa-youtube{
+            font-size:2em;
+            color: #bb0000;
+            margin-top:0.5em;
+        }
+        .secondary{
+            margin-top:2em;
+            margin-bottom: 1em;
+
+            .field_container{
+                .field_title{
+                    font-weight:bold;
+                    margin:2em 0 1em;
+                    font-size:1.2em;
+                    color:@event_color_2;
+                }
+            }
+            .field_container.job{
+                .field_title.job{
+                  box-shadow: 3px 3px 2px @event_color_2;
+                    padding:0.5em 1em;
+
+                    .fa{
+                        margin-top:4px;
+                    }
+                }
+                .field_title.job:hover{
+                    cursor:pointer;
+                }
+                .margin_fields{
+                    padding-left:1em;
+                    display:none;
+                }
+            }
+            p, div, span{
+                text-align:justify;
+                line-height:1.3em;
+                background-color:none;
+                color:white;
+            }
+            a{
+                color:@blue;
+            }
+            .jobList{
+              .btn-three {
+            	color: #FFF;
+            	transition: all 0.5s;
+            	position: relative;
+              width: 100%;
+              margin-bottom: 10px;
+            }
+            .btn-three::before {
+            	content: '';
+            	position: absolute;
+            	top: 0;
+            	left: 0;
+            	width: 100%;
+            	height: 100%;
+            	z-index: 1;
+            	background-color: rgba(255,255,255,0.1);
+            	transition: all 0.3s;
+            }
+            .btn-three:hover::before {
+            	opacity: 0 ;
+            	transform: scale(0.5,0.5);
+            }
+            .btn-three::after {
+            	content: '';
+            	position: absolute;
+            	top: 0;
+            	left: 0;
+            	width: 100%;
+            	height: 100%;
+            	z-index: 1;
+            	opacity: 0;
+            	transition: all 0.3s;
+            	border: 1px solid @event_color_2;
+            	transform: scale(1.2,1.2);
+            }
+            .btn-three:hover::after {
+            	opacity: 1;
+            	transform: scale(1,1);
+            }
+            }
+        }
+        .iframe_container{
+            text-align:center;
+            margin-top:3em;
+            iframe{
+                text-align:center;
+                border:none;
+                max-width:100%;
+            }
+        }
+
+        @height:1.8em;
+        .navigation{
+            text-transform:uppercase;
+            margin-bottom:1em;
+            display:flex;
+            justify-content: center;
+            align-items:baseline;
+
+            .fa{
+                color:@event_color_2;
+                font-size:@height;
+            }
+            a{
+                color:white;
+                height:@height;
+                display: inline-block;
+                vertical-align: middle;
+            }
+            .nav_item{
+                display:inline-block;
+                line-height:@height;
+            }
+            .company{
+                color:@event_color_2;
+            }
+            .prev{
+              cursor:pointer;
+                .fa{
+                    margin:0 0.5em 0 2em;
+                }
+            }
+            .next{
+              cursor:pointer;
+
+                .fa{
+                    margin:0 2em 0 0.5em;
+                }
+            }
+            .item_label{
+                vertical-align:top;
+            }
+        }
+        .joblink_session{
+            margin-top:2em;
+
+            .joblink{
+                display:flex;
+                align-items:center;
+
+                img{
+                    max-height:100px;
+                    max-width:100px;
+                    padding:10px;
+                    background:white;
+                    margin-right:20px;
+                }
+            }
+        }
+    }
+    .modal_content.formation{
+        .middle{
+            .exposant_title{
+                color:@other_event;
+            }
+        }
+
+        .float_container{
+            .fa-remove{
+                background-color:@other_event;
+            }
+        }
+        .sites{
+            .site{
+                a{
+                    text-decoration:none;
+                    color:@other_event;
+                }
+            }
+        }
+        .secondary{
+            .field_container{
+                .field_title{
+                    color:@other_event;
+                }
+            }
+        }
+        .navigation{
+            .fa{
+                color:@other_event;
+            }
+            .company{
+                color:@other_event;
+            }
+        }
+    }
+}
+////////////////////////////////////////////////
+/////////////// logos list /////////////////////
+////////////////////////////////////////////////
+@square_width: 200px;
+.grid_container{
+    text-align:center;
+    width:990px;
+    margin-bottom:3em;
+
+}
+.grid {
+
+    a:focus,a:hover{
+        text-decoration:none;
+        outline:none;
+    }
+
+    .grid-item{
+        display:inline-block;
+        height: @square_width;
+        width: @square_width;
+        padding: 20px;
+        line-height: @square_width;
+        overflow: hidden;
+        vertical-align: middle;
+        text-align:center;
+        background-color: #ffffff;
+        text-align: center;
+        margin-bottom:1%;
+
+        img{
+            vertical-align: middle;
+            max-width:100%;
+            max-height:100%;
+            width:auto;
+            height:auto;
+       }
+    }
+    .triangle{
+        display: inline-block;
+        margin-left: -35px;
+        margin-bottom:1%;
+        width: 0;
+        height: 0;
+        border-bottom: 30px solid @event_color;
+        border-left: 30px solid transparent;
+        vertical-align:bottom;
+
+        .fa{
+            margin-left: -17px;
+            color: white;
+            font-size: 0.8em;
+            margin-top:15px;
+        }
+    }
+    .triangle.emploi{
+        border-bottom: 30px solid @event_color_2;
+    }
+    .triangle.formation{
+        border-bottom: 30px solid @other_event;
+    }
+    .premium{
+        .grid-item{
+            border: 2px solid orange;
+            width:196px;
+        }
+
+        .triangle{
+
+            margin-left: -46px;
+            border-bottom: 40px solid @orange_premium;
+            border-left: 40px solid transparent;
+
+            .fa{
+                margin-left: -22px;
+                font-size: 1em;
+                margin-top:19px;
+            }
+        }
+    }
+}
+@square_width_mini:100px;
+.grid_container.joblink_session {
+
+    .grid {
+
+        a:focus, a:hover {
+            text-decoration: none;
+            outline: none;
+        }
+
+        .grid-item {
+            height: @square_width_mini;
+            width: @square_width_mini;
+            line-height: @square_width_mini;
+        }
+    }
+}
+.displayAt{
+    margin:80px 0;
+    font-size:1.1em;
+    text-align:center;
+}
+////////////////////////////////////////////////
+///////////// infos pratiques //////////////////
+////////////////////////////////////////////////
+#infos.content{
+    max-width:inherit;
+}
+#infos{
+    .leaflet-popup-tip-container{
+        display:none;
+    }
+    .leaflet-popup-content-wrapper{
+        border-radius:0;
+        padding:5px;
+    }
+    .leaflet-container{
+        a.leaflet-popup-close-button{
+            display:none;
+        }
+    }
+    font-family: 'Eurostile';
+
+    #google_map, #leafletmap{
+        margin-top:1em;
+        margin-bottom:3em;
+        width:100%!important;
+        height:400px;
+      /* Préfixes vendeurs */
+        -webkit-filter: grayscale(100%);
+        -moz-filter: grayscale(100%);
+        -o-filter: grayscale(100%);
+        -ms-filter: grayscale(100%);
+        filter: grayscale(100%);
+        border-top: 1px solid #8d8d8d;
+        border-bottom: 1px solid #8d8d8d;
+    }
+    p{
+        margin:0;
+        color:#938f8c;
+    }
+
+    .subtitle{
+        font-weight: bold;
+        font-size: 1.5em;
+        text-transform: uppercase;
+        color: #534b48;
+        margin-bottom: 5px;
+    }
+    .hours{
+        margin: 10px 0 20px;
+        font-weight: bold;
+    }
+
+    .left{
+        display:inline-block;
+        width:49%;
+    }
+    .right{
+        display: inline-block;
+        width: 44%;
+        border-left: 1px solid #938f8c;
+        padding-left: 5%;
+        margin-left: 1%;
+        vertical-align: top;
+        p{
+            margin-bottom:10px;
+        }
+
+        .subtitle{
+            text-transform:uppercase;
+            font-weight:bold;
+        }
+    }
+}
+#rgpd{
+    p{
+        font-size: .9em;
+        font-style: italic;
+        margin-bottom: .4em;
+    }
+}
+#contact, #registration{
+    label{
+        font-weight:normal;
+    }
+}
+#registration, #contact{
+    .btn-success{
+        margin:1em 0;
+        padding:0.5em 3em;
+    }
+    .btn-success:focus{
+        outline:none;
+    }
+}
+#contact_message{
+    height:10em;
+}
+#btn_top {
+    display:none;
+    width: 3em;
+    height: 3em;
+    background: @event_color;
+    -moz-border-radius: 50px;
+    -webkit-border-radius: 50px;
+    border-radius: 50px;
+    position:fixed;
+    bottom: 3em;
+    right: 4em;
+    z-index: 1000000;
+
+    .fa{
+        font-size: 1.5em;
+        top: 10px;
+        left: 12px;
+        color: white;
+    }
+}
+ #btn_top:hover{
+    background-color: darken(@event_color,20%);
+    cursor:pointer;
+}
+.btn-success{
+        color: #fff;
+    background-color: #5cb85c;
+    border-color: #4cae4c;
+    display: inline-block;
+    margin-bottom: 0;
+    font-weight: normal;
+    text-align: center;
+    vertical-align: middle;
+    touch-action: manipulation;
+    cursor: pointer;
+    background-image: none;
+    border: 1px solid transparent;
+    white-space: nowrap;
+    padding: 6px 12px;
+    font-size: 1.2em;
+    line-height: 1.42857143;
+
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+////////////////////////////////////////////////
+///////////// sections /////////////////////////
+////////////////////////////////////////////////
+.section_description{
+    text-align:justify;
+    margin-bottom:2em;
+}
+.section_img_container{
+    text-align:center;
+     margin-bottom:2em;
+
+     img{
+        max-width:100%;
+     }
+}
+////////////////////////////////////////////////
+////// partners participants joblinks section //
+////////////////////////////////////////////////
+
+#partners_container, #participants_container{
+    display: -webkit-box;      /* OLD - iOS 6-, Safari 3.1-6 */
+    display: -moz-box;         /* OLD - Firefox 19- (buggy but mostly works) */
+    display: -ms-flexbox;      /* TWEENER - IE 10 */
+    display: -webkit-flex;
+    display: flex;
+    flex-wrap: wrap;
+     -webkit-flex-wrap: wrap;
+    -moz-flex-wrap: wrap;
+    -ms-flex-wrap: wrap;
+    -webkit-box-direction: normal;
+  -moz-box-direction: normal;
+  -ms-flex-direction: row;
+  -webkit-flex-direction: row;
+    flex-direction: row;
+
+    .flex-item{
+        display: flex;
+        flex-direction: column;
+        height: 200px;
+        width: 200px;
+        padding: 10px;
+        overflow: hidden;
+        background-color: #ffffff;
+        align-items: center;
+        justify-content: center;
+        margin: 0 15px 15px 0;
+        border: 1px solid #938f8c;
+
+        img{
+            max-width:100%;
+            max-height:100%;
+            object-fit: contain;
+        }
+    }
+}
+#joblinks_container{
+    .flex-item{
+        border-radius:200px;
+        background-color:@event_color;
+
+        img{
+            max-width:75%;
+            max-height:75%;
+        }
+        .joblink_name{
+            height: 25%;
+            align-content: center;
+            align-items: center;
+            display: flex;
+            color: white;
+            text-transform: uppercase;
+            font-weight: bold;
+        }
+    }
+}
+////////////////////////////////////////////////
+///////////// section agenda ///////////////////
+////////////////////////////////////////////////
+
+#agendas_container{
+
+    .agenda_container{
+        margin-bottom:3em;
+        display: flex;
+        align-items: center;
+
+        .main {
+            font-size:1.1em;
+            line-height:1.2em;
+            display:inline-block;
+            margin-left:1em;
+
+            .title{
+                display:block;
+            }
+            .hours{
+                //font-size:0.9em;
+            }
+        }
+        @agenda_width:100px;
+        .img_container{
+
+            display: flex;
+            height: @agenda_width;
+            width: @agenda_width;
+            min-height: @agenda_width;
+            min-width: @agenda_width;
+            line-height:@agenda_width;
+            padding: 15px;
+            overflow: hidden;
+            background-color: #ffffff;
+            text-align: center;
+            box-sizing:content-box;
+            display:flex;
+
+            img{
+                max-width:@agenda_width;
+                max-height:@agenda_width;
+                object-fit: contain;
+            }
+
+            .logoText{
+                display:inline-block;
+                width:90px;
+                margin-left:-15px;
+                font-size:0.8em;
+            }
+        }
+        .triangle{
+            width: 0;
+            height: 0;
+            border-bottom: 30px solid @blue;
+            border-left: 30px solid transparent;
+            margin-top: -30px;
+            margin-left: 100px;
+
+            .fa{
+                margin-left: -13px;
+                color: white;
+                font-size: 0.7em;
+                margin-top:15px;
+            }
+        }
+        // .img_container.description:hover{
+        //     cursor:pointer;
+        // }
+    }
+    [id^="myModal_agenda"]{
+        .modal_content{
+            .img_container{
+                display:inline-block;
+            }
+            .float_container{
+                .fa-remove{
+                    background-color:@blue;
+                }
+            }
+        }
+    }
+}
+
+////////////////////////////////////////////////
+///////////// section sector ///////////////////
+////////////////////////////////////////////////
+#sectors{
+    .section_img_container{
+        display:inline-block;
+    }
+    #sectors_container{
+        display:inline-block;
+        margin-left:2em;
+        vertical-align:top;
+        margin-top:5px;
+        font-size: 1.2em;
+        line-height: 1.4em;
+    }
+}
+
+////////////////////////////////////////////////
+////////////// bilan  //////////////////////////
+////////////////////////////////////////////////
+#bilan, #bilan_public{
+
+    .file_container{
+        text-align:center;
+        margin-bottom: 4em;
+
+        .title{
+            font-size: 1.1em;
+            margin-bottom: 1em;
+        }
+
+        audio{
+            width:640px; /* = iframe and video width */
+        }
+    }
+    .file_container.pdf{
+        text-align:left;
+        display:inline-block;
+
+        .fa-download{
+            font-size:1.3em;
+        }
+        // .title::before{
+        //     content:"⚫";
+        // }
+        .title{
+            display: inline-block;
+            margin-left:0.5em;
+        }
+        .file{
+            display:inline-block;
+            margin-right:2em;
+        }
+    }
+    iframe{
+        border:none;
+    }
+
+}
+////////////////////////////////////////////////
+///////////// candidate registration ///////////
+/////////////// and edit profile ///////////////
+////////////////////////////////////////////////
+form[name="registration"]{
+    #search_results{
+        background-color: white;
+        line-height: 1.42857143;
+        color: #555555;
+        background-color: #fff;
+        background-image: none;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+
+        .city_item{
+            padding: 0.5em 1em;
+        }
+        .city_item:hover{
+            cursor:pointer;
+            background-color:  #4495d1;
+            color:white;
+        }
+    }
+    .sectors-list>div{
+        font-size: 14px;
+        line-height: 1.42857143;
+        color: #555555;
+        background-color: #fff;
+        background-image: none;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        padding: 6px 12px;
+        max-height: 400px;
+        overflow: scroll;
+    }
+    .sectors-list{
+        margin-bottom:2em;
+    }
+    // #sectors_select{
+    //     line-height:1.7;
+    //     margin-bottom:0;
+
+    //     .fa{
+    //         margin-left:0.5em;
+    //     }
+    // }
+    //  #sectors_select:hover{
+    //     cursor:pointer;
+    //  }
+    #incorrect_email{
+        display: inline-block;
+        background-color: #f2dede;
+        border-color: #ebccd1;
+        color: #a94442;
+        padding: 15px;
+        margin-bottom: 20px;
+        border: 1px solid transparent;
+        margin-left: 1em;
+    }
+}
+
+form[name="job"]{
+    #search_results{
+        background-color: white;
+        line-height: 1.42857143;
+        color: #555555;
+        background-color: #fff;
+        background-image: none;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+
+        .city_item{
+            padding: 0.5em 1em;
+        }
+        .city_item:hover{
+            cursor:pointer;
+            background-color:  #4495d1;
+            color:white;
+        }
+    }
+    .sectors-list>div{
+        font-size: 14px;
+        line-height: 1.42857143;
+        color: #555555;
+        background-color: #fff;
+        background-image: none;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        padding: 6px 12px;
+        max-height: 400px;
+        overflow: scroll;
+    }
+    .sectors-list{
+        margin-bottom:2em;
+    }
+    // #sectors_select{
+    //     line-height:1.7;
+    //     margin-bottom:0;
+
+    //     .fa{
+    //         margin-left:0.5em;
+    //     }
+    // }
+    //  #sectors_select:hover{
+    //     cursor:pointer;
+    //  }
+    #incorrect_email{
+        display: inline-block;
+        background-color: #f2dede;
+        border-color: #ebccd1;
+        color: #a94442;
+        padding: 15px;
+        margin-bottom: 20px;
+        border: 1px solid transparent;
+        margin-left: 1em;
+    }
+}
+
+//menu bar
+header{
+    #menu_fix{
+        .fa-close{
+            display:none;
+            color:white;
+            font-size: 1.8em;
+        }
+    }
+
+    .menu_item_container{
+        display:none;
+        height: 100%;
+        position: fixed;
+        z-index: 100000;
+        background: rgba(0, 0, 0, 0.9);
+        width: 100%;
+        overflow:auto;
+
+        .menu_item{
+            display: flex;
+            align-items: center;
+            flex-direction: column;
+            justify-content: center;
+            align-self: flex-start;
+            min-height: 100%;
+
+            a{
+                text-transform:uppercase;
+                margin: 1em 0 0.4em;
+                font-size: 1.25em;
+                color:white;
+            }
+            a:hover{
+                    text-decoration:none;
+                }
+            a:after{
+                width: 100%;
+                max-width: 100px;
+                /* border-bottom: 1px solid red; */
+                border-bottom: 1px solid @event_color;
+                content: "";
+                display: block;
+                margin: 1em auto 0 auto;
+            }
+            a:visited, a:focus{
+                text-decoration:none;
+            }
+        }
+    }
+
+
+}
+////////////////////////////////////////////////
+///////////////// footer ///////////////////////
+////////////////////////////////////////////////
+footer{
+
+    a{
+       color:@event_color;
+    }
+    a:hover,#presse:hover{
+        color:#686868;
+        text-decoration:none;
+    }
+
+    #presse{
+        color:@event_color;
+        float:right;
+
+        .fa{
+            font-size:1.4em;
+        }
+    }
+    #social_mobile{
+        display:none;
+    }
+    p{
+        margin:0;
+    }
+    .organizer{
+        margin-bottom:0.5em;
+    }
+    .places{
+        font-style: italic;
+    }
+}
+
+////////////////////////////////////////////////
+///////////////// loader ///////////////////////
+////////////////////////////////////////////////
+
+.simple_loader {
+    display:none;
+    border: 6px solid #f3f3f3; /* Light grey */
+    border-top: 6px solid #3498db; /* Blue */
+    border-radius: 50%;
+    width: 25px;
+    height: 25px;
+    animation: spin 2s linear infinite;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+
+////////////////////////////////////////////////
+///////////////// print ////////////////////////
+////////////////////////////////////////////////
+@media print {
+   a[href]:after {
+      display: none;
+      visibility: hidden;
+   }
+}

@@ -1,0 +1,33 @@
+{% extends 'admin_base.html.twig' %}
+
+{% block content %}
+	<div class="container">
+		<h1> {{ro}} </h1>
+		<p class="title">
+			Événement(s)
+		</p>
+		<ul>
+			{% for event in ro.events %}
+				<li>
+					{{helper.getAdminEventLink(event)|raw}}
+				</li>
+			{% endfor %}
+		</ul>
+
+		<p class="title">
+			Utilisateur(s)
+		</p>
+		<ul>
+			{% for rh in ro.rhs %}
+				<li>
+					{{rh}} - {{ rh.email }} {%  if is_granted("ROLE_SUPER_ADMIN") %}- {{ rh.username }} {%  endif %}
+				</li>
+			{% endfor %}
+		</ul>
+
+		{#<a href="{{path('recruitment_office_admin_add_rh', {'id' : ro.id})}}" class="btn btn-primary">#}
+			{#<i class="fa fa-plus"></i>#}
+			{#Ajouter un utilisateur#}
+		{#</a>#}
+	</div>
+{% endblock %}

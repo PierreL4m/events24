@@ -1,0 +1,102 @@
+{% extends 'public_base.html.twig' %}
+{% block custom_stylesheets %}
+	<style>
+	body{
+		margin: 0;
+	}
+	.container{
+ 		max-width: 980px;
+	    margin: auto;
+	    font-size: 1em;
+ 	}
+ 	.logo_container{
+ 		background: #2484c6;
+ 		text-align:center;
+ 	}
+ 	.logo_container > img{
+ 		max-height:200px;
+ 	}
+ 	.container{
+ 		max-width:800px;
+ 	}
+ 	.container > .readable{
+ 		text-align:left;
+ 		background: inherit;
+ 		width:100%;
+ 		max-width:800px;
+ 		margin:2em 0;
+ 		box-sizing: border-box;
+ 	}
+ 	
+ 	.container > .home{
+ 		text-align:center;
+ 	}
+ 	.container .home a{	 		    
+ 		color: #fff;
+	    background-color: #2484c6;
+	    text-decoration: none;
+	    display: inline-block;
+	    margin-bottom: 0;
+	    font-weight: 400;
+	    text-align: center;
+	    vertical-align: middle;
+	    touch-action: manipulation;
+	    cursor: pointer;
+	    background-image: none;
+	   
+	    white-space: nowrap;
+	    padding: 12px 50px;
+	    line-height: 1.42857143;
+	    -webkit-user-select: none;
+	    -moz-user-select: none;
+	    -ms-user-select: none;
+	    user-select: none;
+ 	}
+ 		.readable{
+	 		background-color: #f2dede;
+	 		font-size: 1.2em;
+    		padding: 1em;
+    		display:inline-block;
+	 	}	 		
+	</style>
+{% endblock %}
+
+{% block body %}
+	<header>							
+		{% if "24h" in app.request.host or app.environment != 'prod' %}
+				{% set slug = "24" %}			
+		{% elseif "48h" in app.request.host %}
+			{% set slug = "48" %}
+		{% endif %}	
+		<div class="logo_container">
+			<img src="{{asset('images/logo_' ~ slug ~ '.png')}}" alt="logo">
+		</div>					
+	</header>
+	<div class="container">
+		<div class="readable">
+			<p> 				
+				{% if candidate or success %}
+					Bonjour {%if candidate %}{{candidate[0]}}{% endif %},
+				</p>
+				<p>
+					Vous désinscription a bien été prise en compte.
+				</p>
+				<p>
+					{% if type == 'evenements' %}
+					Vous ne serez plus informé des événements de votre région sur l'adresse :
+					{% elseif type == 'info' %}
+					Vous ne serez plus informé de l'actualité des événements auxquels vous vous inscrivez sur l'adresse :
+					{% else %}
+					Vous ne recevrez plus de mails d'information sur l'adresse :
+					{% endif %}
+					<strong> {{email}} </strong>
+				{% else %}
+					Nous n'avons trouvé aucun compte associé à l'adresse email <strong> {{email}} </strong>
+				{% endif %}
+			</p>
+		</div>
+		<div class="home">
+			<a href="{{app.request.scheme ~ '://' ~ app.request.host}}"><i class="fa fa-arrow-left"></i> Retour à la page d'accueil</a>
+		</div>
+	</div>
+{% endblock %}

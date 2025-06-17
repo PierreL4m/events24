@@ -1,0 +1,17 @@
+<p>
+    Bonjour,
+</p>
+<p>
+    Comme vous le savez, l'édition du salon « <strong>24H pour l’Emploi et la Formation </strong> » à {{participation.event.getPlace}} aura lieu le {{participation.event.getDate|format_date('none', 'EEEE', null, 'gregorian', 'fr')}} {{participation.event.getDate|format_date('none', 'dd', null, 'gregorian', 'fr')}} {{participation.event.getDate|format_date('none', 'MMMM', null, 'gregorian', 'fr')}}.
+</p>
+<p>
+    La campagne de communication autour de l’événement s’intensifie !
+</p>
+<p>
+Nous vous invitons, si vous le désirez, à communiquer également de votre côté sur votre présence lors de ce salon grand public.
+Pour cela, vous trouverez ci-joint plusieurs visuels web adaptés à des publications sur vos réseaux sociaux et autre support web.
+</p>
+<p>Vous pouvez également générer dès à présent votre accréditation et celles de vos collègues qui participeront à l’événement le jour J via ce lien : <a href="https://www.24h-emploi-formation.com/{{participation.event.slug}}#/accreditations/{{participation.event.id}}?participation={{participation.id}}">Cliquez ici</a></p>
+<p>En restant à votre disposition si besoin,</p>
+Bonne réception et à très bientôt,
+{% include 'emails/signature.html.twig' %}

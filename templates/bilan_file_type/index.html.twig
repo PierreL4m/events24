@@ -1,0 +1,42 @@
+{% extends 'admin_base.html.twig' %}
+
+{% block title %}BilanFileType index{% endblock %}
+
+{% block content %}
+	<div class="container">
+    <h1>BilanFileType index</h1>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Label</th>
+                <th>Name</th>
+                <th>Type</th>
+                <th>Slug</th>
+                <th>actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for bilan_file_type in bilan_file_types %}
+            <tr>
+                <td>{{ bilan_file_type.id }}</td>
+                <td>{{ bilan_file_type.label }}</td>
+                <td>{{ bilan_file_type.name }}</td>
+                <td>{{ bilan_file_type.type }}</td>
+                <td>{{ bilan_file_type.slug }}</td>
+                <td>
+                    <a href="{{ path('bilan_file_type_show', {'id': bilan_file_type.id}) }}">show</a>
+                    <a href="{{ path('bilan_file_type_edit', {'id': bilan_file_type.id}) }}">edit</a>
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="4">no records found</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <a href="{{ path('bilan_file_type_new') }}">Create new</a>
+{% endblock %}

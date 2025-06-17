@@ -1,0 +1,12 @@
+<br>
+{% if participation.comesFrom == 'l4m' %}
+	<img src="{{asset('images/l4mmini.png')}}">
+{% elseif participation.comesFrom == 'appli' %}
+	<img src="{{asset('images/applimini.jpg')}}">
+{% elseif participation.comesFrom == 'linkedin' or participation.comesFrom == 'viadeo' or participation.comesFrom == 'facebook' or participation.comesFrom == 'twitter' %}
+	<i class="{{'fa fa-' ~ participation.comesFrom}}" ></i>
+{% elseif participation.handledBy.recruitmentOffice is defined %}
+	{{ participation.handledBy.recruitmentOffice|capitalize }}
+{%  else %}
+	{{participation.comesFrom}}
+{% endif %}

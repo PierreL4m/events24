@@ -1,0 +1,53 @@
+{% extends 'admin_base.html.twig' %}
+
+{% block title %}Joblink{% endblock %}
+
+{% block content %}
+    <div class="container">
+    <h1>Joblink</h1>
+    <a class="btn btn-info" href="{{ path('joblink_index') }}">Retour</a>
+
+    <table class="table">
+        <tbody>
+            <tr>
+                <th>Id</th>
+                <td>{{ joblink.id }}</td>
+            </tr>
+            <tr>
+                <th>Nom</th>
+                <td>{{ joblink.name }}</td>
+            </tr>
+            <tr>
+                <th>Slug</th>
+                <td>{{ joblink.slug }}</td>
+            </tr>
+            {% for event_job in event_jobs %}
+            <tr>
+                <th>Type</th>
+                <td>{{ event_job.type }}</td>
+            </tr>    
+            <tr>
+                <th>Manager</th>
+                <td>{{ event_job.manager }}</td>
+            </tr>
+            <tr>
+                <th>Date</th>
+                <td>{{ event_job.date | date('d/m/Y H:i') }} - {{ event_job.closingAt | date('H:i') }}</td>
+            </tr>    
+            {% endfor %}
+            <tr>
+                <th>Description</th>
+                <td>{{ joblink.description|raw }}</td>
+            </tr>
+            <tr>
+                <th>PdfPath</th>
+                <td>{{ joblink.pdfPath }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <a class="btn btn-info" href="{{ path('joblink_edit', {'id': joblink.id, 'event_id': event.id}) }}">Modifier</a>
+
+    {{ include('joblink/_delete_form.html.twig') }}
+</div>
+{% endblock %}

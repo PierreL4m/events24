@@ -1,0 +1,46 @@
+{% extends 'admin_base.html.twig' %}
+
+{% block content %}
+	<div id="form_template" class="container">
+		<h1 class="title">
+			Envoi d'un mail à tous les {{email.emailType.label|lower}}
+			<br>
+			{{helper.getAdminEventLink(email.event)|raw}}
+		</h1>
+		{% block form %}
+			{{ form_start(form) }}
+			    {{ form_row(form.subject) }}
+			    {{ form_row(form.body) }}
+			    {{form_row(form.attachmentFile)}}
+			    {% include 'emails/signature.html.twig' %}
+			    <div class="clear2"></div>
+			    {% include 'partials/missingResponsable.html.twig' with {'event' : email.event} %}
+					<p>Il y a {{nbSending}} déstinataires au total</p>
+			    <div class="form-group">
+				    {{form_label(form.recipients)}}
+				    {% for recipient in form.recipients %}
+				    	{{form_widget(recipient)}}
+
+				    	{% if recipient.responsable is defined %}
+				    		<ul>
+				    			<li>{{recipient.vars.responsable.email}}</li>
+				    		</ul>
+				    	{% endif %}
+				    {% endfor %}
+				</div>
+
+			    <button class="btn btn-success" id="{{button_id|default('save')}}">
+			    	<i class="fa fa-envelope"></i>
+			    	Envoyer l'email
+			    </button>
+
+			{{ form_end(form) }}
+		{% endblock %}
+
+	{% if app.environment != 'prod' and is_granted('ROLE_SUPER_ADMIN') %}
+		<a href="#" id="fill"> fill </a>
+	{% endif %}
+
+		{{helper.getReturnButton()|raw}}
+	</div>
+{% endblock %}

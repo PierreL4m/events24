@@ -1,0 +1,13 @@
+{% extends 'admin_base.html.twig' %}
+
+{% block content %}
+	<div id="form_template" class="container">
+		<h1 class="title">Ajout d'un candidat {{event}} </h1>
+		<label for="addCandidatByMail">Chercher un candidat déjà inscrit via son mail</label>
+		<input type="text" name="addCandidatByMail" id="searchCandidatTxt" value=""><button event="{{event.id}}" class="btn btn-success searchCandidat"><i class="fa fa-check"></i></button><br>
+		{{helper.getReturnButton|raw}}
+
+		{% include 'public/partials/registration_form.html.twig' %}
+
+	</div>
+{% endblock %}

@@ -1,0 +1,30 @@
+<L4M>
+    {% for job in jobs %}
+        <OFFRE>
+            <REFERENCE>{{job.id}}</REFERENCE>
+            <STRUCTURE>{{job.participation.event.type.fullName|upper}} - {{job.participation.event.place.city|upper}}</STRUCTURE>
+            <DOSSIER>{{job.participation.event.date|date("Ym")}} - {{job.participation.event.place.city|upper}}</DOSSIER>
+            <INTITULE>{{job.name}}</INTITULE>
+            <DESC>
+                <![CDATA[
+                    <p>Le poste est à pourvoir lors de l'événement "{{job.participation.event.type.fullName|upper}}" qui aura lieu le {{job.participation.event.date|format_datetime('full', 'none', locale='fr')}}</p>
+                    <p>{{job.participation.event.place.name}} - {{job.participation.event.place.city}}.</p>
+                    {{job.presentation|raw}}
+                ]]>
+            </DESC>
+            <CONTRAT>{{job.contractType.name}}</CONTRAT>
+            <METIER>{{job.jobType.name}}</METIER>
+            <CP>{{job.city.cp}}</CP>
+            <VILLE>{{job.city.name}}</VILLE>
+            {% if job.participation.event.type.mandatoryregistration == 0 %}
+                <INFOS>
+                    <![CDATA[
+                        <p>Pour candidater, merci de vous inscrire à l'événement en cliquant sur le bouton "Postuler".</p>
+                        <p>Vous recevrez par mail l'invitation personnelle à présenter à l'accueil du salon.</p>
+                    ]]>
+                </INFOS>
+                <URL>https://{{ host }}/{{ job.participation.event.slug }}#/Exposant/{{ job.participation.id }}/{{ job.id }}</URL>
+            {% endif %}
+        </OFFRE>
+    {% endfor %}
+</L4M>

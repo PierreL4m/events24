@@ -1,0 +1,26 @@
+{% extends 'admin_base.html.twig' %}
+
+{% block content %}
+    <div class="container">
+        <h1> Sites bilan </h1>
+        <table class="table table-striped">
+            <tbody>
+                {% for event in events %}
+                    <tr>
+                        <td>
+                            <a href="{{ path('bilan_file_index', {'id': event.id}) }}">
+                                {{event}}
+                            </a>
+                                           
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        <div class="navigation">
+            {{ knp_pagination_render(events) }}
+        </div>
+
+     
+    </div>
+{% endblock %}

@@ -1,0 +1,23 @@
+<h4> Bonjour {{responsable}}</h4>
+<p>
+    Vous avez parfaitement rempli et complété la fiche de présentation de votre strucure pour l'événement de
+    {{ participation.event.place.city}} qui se tiendra le {{participation.event.date|date('d/m')}}
+</p>
+<p>
+    Je vous invite désormais à ajouter vos offres (emploi/stage/alternance/formation) afin que
+    les visiteurs puissent en avoir connaissance avant de venir sur le salon.<br>
+</p>
+<p>
+    Je vous invite à cliquer sur ce lien pour ajouter vos offres :
+    <a href="{{ url('exposant_jobs_list_show',{'id':participation.id}) }}">Ajoutez vos offres</a><br>
+</p>
+<p>
+    Vous pouvez également m'adresser par retour de mail vos fiches de postes ou liens vers vos offres pour que je saisisse moi-même les informations afin de vous faire gagner du temps.
+</p>
+<p>
+    N'hésitez pas à me contacter si vous désirez de l'aide.<br>
+</p>
+<p>
+    Excellente journée.
+</p>
+{% include ('emails/signature.html.twig') %}

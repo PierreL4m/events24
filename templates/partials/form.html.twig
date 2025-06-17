@@ -1,0 +1,37 @@
+{% extends 'admin_base.html.twig' %}
+{% block custom %}{% endblock %}
+{% block content %}
+	<button style="font-size:50px;width:70px;height:70px;border-radius:70px;background:none;position:fixed;bottom:100px;right:50px" id="toTopExposant"><i class="fa fa-arrow-down"></i></button>
+	<div id="form_template" class="container">
+		<h1 class="title">{% block title %} {% endblock %} </h1>
+		{% block preform %} {% endblock %}
+
+		{% if app.environment != 'prod' or is_granted('ROLE_SUPER_ADMIN') %}
+			<a href="#" id="fill"> fill </a>
+		{% endif %}
+
+		{% block form %}
+			{{ form_start(form) }}
+			    {{ form_widget(form) }}
+			    <button class="btn btn-success" id="{{button_id|default('save')}}">{{ button_label|default('Enregistrer') }}</button>
+			    {% if notice is defined %}
+			    	<p class="user_new_notice">
+			    		Le mail "Compléter votre fiche exposant" avec son mot de passe va lui être envoyé. Ou juste son mot de place pour un utilisateur L4M ou un rh.
+			    	</p>
+			    {% endif %}
+			{{ form_end(form) }}
+			{% if form_list is defined %}
+				<h1> Choisir un responsable existant</h1>
+				{{form_start(form_list)}}
+					{{form_widget(form_list)}}
+					<button class="btn btn-success" id="save_list" name="save_list" style="margin-bottom : 10px;">Enregistrer</button>
+				{{form_end(form_list)}}
+			{% endif %}
+		{% endblock %}
+
+		{% block notice %} {% endblock %}
+
+		{% block post_form %} {% endblock %}
+		{{helper.getReturnButton()|raw}}
+	</div>
+{% endblock %}

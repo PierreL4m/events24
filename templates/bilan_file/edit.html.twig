@@ -1,0 +1,5 @@
+{% extends 'partials/form.html.twig' %}
+{% block title %} 
+	Édition du fichier {{bilan_file.bilanFileType|lower}} {{bilan_file}} <br>
+    {{helper.getAdminEventLink(bilan_file.event)|raw}}
+{% endblock %}

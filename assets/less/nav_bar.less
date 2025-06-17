@@ -1,0 +1,89 @@
+
+@bright_black:#282828;
+@grey_header: #959595;
+@nav_height:50px;
+@event_color: #4b8dcb;
+
+header{
+    nav{
+        position:fixed;
+        top: 0;
+        right:0;
+        left:0;
+        background-color:@bright_black;
+        //height:85px;
+        height:@nav_height;
+        z-index: 10000;
+    }
+    #user{
+        top: @nav_height/2;
+        transform: translateY(-50%);
+        position: fixed;
+        z-index: 90000;
+        right: @nav_height + 25;
+        /* margin-right: 100px; */
+        //top: 0;
+        //padding: 0.5em 2em;
+        color: @grey_header;
+        text-transform:uppercase;
+        font-family:'Open Sans';
+        
+        a{
+           color: @grey_header; 
+        }
+        .fa-sign-out{
+            margin-left:1.5em;
+        }
+    }
+    #menu_fix{
+        position:fixed;
+        right:0;
+        top:0;
+        //padding: 20px 30px;        
+        background-color: @event_color;       
+        padding: 16px 12px;
+        //background-color:@grey_header;
+        border: 1px solid transparent;
+        z-index: 1000000;
+        font-size:0.75em;
+        // height:43px;
+        // width:26px;
+        height:50px;
+        width:50px;
+        box-sizing:border-box;
+
+        
+        text-align:center;
+
+        .menu-bar{
+            display: block;
+            width: 100%;
+            border-bottom: 2.5px solid #fff;
+            margin-bottom: 3.5px;
+            margin-left:1px;
+        }
+        .menu{
+            letter-spacing: -1px;
+            color: #fff;
+            margin-bottom: 5px;
+            margin-top: 5px;
+            display: block;
+            margin-left: -3px;
+            font-weight: 600;
+        }
+    }
+    #menu_fix:hover{
+        cursor:pointer;
+    }
+}
+////////////////////////////////////////////////
+///////////// media queries ////////////////////
+////////////////////////////////////////////////
+@media screen and (max-width: 584px) {
+    #nav_picto_user{
+        display:inline!important;
+    }
+    #nav_username{
+        display:none;
+    }
+}    

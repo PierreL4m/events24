@@ -1,0 +1,60 @@
+{% extends 'base.html.twig' %}
+
+{% block title %} Administration{% endblock %}
+
+{% block custom_stylesheets %}
+{#  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">#}
+    <link rel="stylesheet" href="{{ asset('build/css/app.css') }}">
+{% endblock %}
+
+{% block body %}
+    {% block header %}
+        {% if participation is defined and participation is not null %}
+            {% set event_type = participation.event.type %}
+        {% elseif event is defined and event is not null %}
+            {% set event_type = event.type %}
+        {% endif %}
+        <header {% if event_type is defined and event_type is not null %}class="event_{{event_type.getShortName()}}"{% endif %} id="header_{% if is_granted('ROLE_CANDIDATE')%}candidate{% elseif is_granted('ROLE_VIEWER')%}l4m{% elseif is_granted('ROLE_EXPOSANT_SCAN')%}client{% endif %}">
+            {% set admin = true %}
+
+            {% if is_granted('ROLE_EXPOSANT_SCAN') %}
+            <a href="{{path('exposant_participation_list')}}">
+                {% endif %}
+
+                {% if event_type is defined and event_type is not null and event_type.header and event_type.header.path %}
+                    <img src="{{event_type.getHeaderSrc()}}" alt="{{event_type.getFullName()}}" id="logo_header">
+                {% else %}
+                    <img src="{{asset('images/header.png')}}" alt="Événements L4M" id="logo_header">
+                {% endif %}
+
+                {% if is_granted('ROLE_EXPOSANT_SCAN') %}
+            </a>
+            {% endif %}
+
+            {% include 'partials/menu_bar.html.twig' %}
+        </header>
+    {% endblock %}
+
+    <div class="top_clearer"></div>
+
+    {% block content %} {% endblock %}
+
+    {% block footer %}
+        {% include 'partials/footer.html.twig' %}
+    {% endblock %}
+
+{% endblock %}
+
+{% block custom_javascript %}
+    <script
+            src="https://code.jquery.com/jquery-3.4.1.min.js"
+            integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo="
+            crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/html5-qrcode/2.3.7/html5-qrcode.min.js" integrity="sha512-dH3HFLqbLJ4o/3CFGVkn1lrppE300cfrUiD2vzggDAtJKiCClLKjJEa7wBcx7Czu04Xzgf3jMRvSwjVTYtzxEA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="https://docs.opencv.org/4.7.0/opencv.js" async></script>
+    <script src="https://cdn.jsdelivr.net/gh/ColonelParrot/jscanify@master/src/jscanify.min.js"></script>
+    <script src="{{ asset('build/js/app.js') }}"></script>
+    <script src="{{ asset('build/js/app_public.js') }}"></script>
+{% endblock %}

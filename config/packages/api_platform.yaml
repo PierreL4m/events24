@@ -1,0 +1,26 @@
+api_platform:
+    metadata_backward_compatibility_layer: false
+    title: 'API JobFlix'
+    description: 'API pour Jobflix'
+    version: '2.6.4'
+    mapping:
+        paths: ['%kernel.project_dir%/src/Entity', '%kernel.project_dir%/config/packages/api_plateform']
+    formats:
+        json: [ 'application/json' ]
+    patch_formats:
+        jsonpatch: [ 'application/merge-patch+json' ]
+        json: [ 'application/json' ]
+    swagger:
+        api_keys:
+            apiKey:
+                name: Authorization
+                type: header
+    exception_to_status:
+        App\Exception\RegistrationFormException: !php/const Symfony\Component\HttpFoundation\Response::HTTP_UNPROCESSABLE_ENTITY
+services:
+    'App\Serializer\CustomItemNormalizer':
+        decorates: 'api_platform.problem.normalizer.error'
+        arguments: [ '@App\Serializer\CustomItemNormalizer.inner' ]
+    'App\Serializer\SnakeCaseItemNormalizer':
+        decorates: 'api_platform.serializer.normalizer.item'
+        arguments: [ '@request_stack', '@App\Serializer\SnakeCaseItemNormalizer.inner' ]

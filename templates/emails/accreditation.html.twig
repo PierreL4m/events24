@@ -1,0 +1,20 @@
+{% if accreditation is defined %}
+    {% set candidate = accreditation.participation %}
+    {% set event = accreditation.event %}
+{% endif %}
+
+<h4>Bonjour {{accreditation.firstname}} {{accreditation.lastname}}</h4>
+
+<p>
+    Nous avons le plaisir de vous transmettre {% if recall %}à nouveau {% endif %}en pièce jointe votre accréditation à l'événement  {{event.getTypeCityAndDate}} {% if h48_helper.is48(event) and h48_helper.second48(event) %}et le {{h48_helper.getSecond48(event).date|date('d/m/Y')}}
+    {% endif %}.
+</p>
+<p>
+    Informations pratiques:<br>
+    {{event.place.name}}<br>
+    {{event.place.address}}<br>
+    {{event.place.cp}} {{event.place.city}}
+</p>
+<p>A votre disposition,</p>
+
+{% include 'emails/signature.html.twig' with {'team' : true } %}

@@ -1,0 +1,113 @@
+{% extends 'admin_base.html.twig' %}
+
+{% block title %}Section index{% endblock %}
+
+{% block content %}
+    <div class="container" id="sections">
+        <h1>Rubriques {{helper.getAdminEventLink(event)|raw}}</h1>
+
+         {{ helper.getPreviewLink(event)|raw }} <a class="btn btn-info" href="{{path('event_show', {'id': event.id})}}">Retour</a>
+         <div class="clear1"></div>
+        <p>
+            <i> Info : les rubriques "Partenaires" et "Contact" ne sont pas affichées dans l'appli</i>
+        </p>
+        <p>
+            Vous pouvez changer l'ordre d'affichage des rubriques <a href="{{path('section_type_index')}}"> via les types de rubriques </a> puis en bas, cliquez sur "Changer l'ordre d'affichage"
+        </p>
+        {% if h48_helper.is48(event) and h48_helper.is48Formation(event) %}
+            <p>
+                Vous ne pouvez pas changer l'ordre d'affichage de l'agenda lomme formation
+            </p>
+        {% endif %}
+        <div class="clear1"></div>
+        <table id="sortable" class="table table-striped">
+            <thead>
+                <tr>
+                    {% if is_granted('ROLE_SUPER_ADMIN') %}
+                        <th>Id</th>
+                        <th>Slug</th>
+                        <th>Ordre d'affichage</th>
+                    {% endif %}
+                    <th>Titre</th>
+                    <th>Titre menu</th>
+                    <th>Titre appli</th>
+                    <th class="text-center">Site public</th>
+                    <th class="text-center">page ville</th>
+                    <th class="text-center">Site bilan</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody class="ui-sortable">
+            {% for section in sections %}
+                <tr class="ui-sortable-handle" value="{{ section.id }}" event="{{ event.id }}">
+                    {% if is_granted('ROLE_SUPER_ADMIN') %}
+                        <td>{{ section.id }}</td>
+                        <td>{{ section.slug }}</td>
+                        <td>{{ section.sOrder }}</td>
+                    {% endif %}
+                    <td>
+                        <a href="{{ path('section_show', {'id': section.id}) }}">
+                            <i class="fa fa-eye"></i>
+                            {{ section.title }}
+                        </a>
+                    </td>
+                    <td>
+                        {% if section.menuTitle != section.title %}
+                            {{ section.menuTitle }}
+                        {% endif %}
+                    </td>
+                    <td>
+                        {% if section.title != section.apiTitle %}
+                            {{ section.apiTitle }}
+                        {% endif %}
+                    </td>
+                    {% if section.title == 'Inscription'%}
+                      <td class="text-center">
+                      {% if section.onPublic %}
+                        <i class="fa fa-check-circle"></i>
+                      {% else %}
+                        <button value="{{section.id}}" id="sendRecallSubscribe"><i style="color:#286090" class="fa fa-envelope"></i></button>
+                      {% endif %}
+                      </td>
+                    {% else %}
+                      <td class="text-center">{{ section.onPublic ? '<i class="fa fa-check-circle"></i>'|raw : '<i class="fa fa-minus-circle"></i>'|raw }}</td>
+                    {% endif %}
+                    <td class="text-center">{{ section.onCity ? '<i class="fa fa-check-circle"></i>'|raw : '<i class="fa fa-minus-circle"></i>'|raw }}</td>
+                    <td class="text-center">{{ section.onBilan ? '<i class="fa fa-check-circle"></i>'|raw : '<i class="fa fa-minus-circle"></i>'|raw }}</td>
+                    <td>
+                        <a href="{{ path('section_edit', {'id': section.id}) }}">
+                            <i class="fa fa-edit"></i>
+                        </a>
+                    </td>
+                </tr>
+            {% else %}
+                <tr>
+                    <td colspan="8">Pas de rubriques </td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+
+        <a href="{{ path('section_add', {'id' : event.id }) }}" class="btn btn-primary">
+            <i class="fa fa-plus"></i>
+            Ajouter une rubrique
+        </a>
+        <a href="{{ path('key_number_add', {'id' : event.id }) }}" class="btn btn-primary">
+            Définir les chiffres clés
+        </a>
+        <div class="clear1"></div>
+        <a href="{{ path('section_remove', {'id' : event.id }) }}" class="btn btn-danger">
+            <i class="fa fa-remove"></i>
+            Supprimer une rubrique
+        </a>
+        <div class="clear1"></div>
+        <a href="{{ path('press_file_index', {'id' : event.id }) }}" class="btn btn-primary">
+            <i class="fa fa-file-text"></i>
+            Kit presse
+        </a>
+        <div id="test"></div>
+    </div>
+    <script type="text/javascript">
+        $('tbody').sortable();
+    </script>
+{% endblock %}

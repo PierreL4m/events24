@@ -1,0 +1,25 @@
+{% extends 'admin_base.html.twig' %}
+
+{% block content %}
+    <div class="container organizations_view">
+        <h1>
+        	Contact
+		</h1>
+		<div class="row">
+			<div class="col-md-6">
+				<p><strong> Une question?</strong></p>
+				<p> <span style="text-transform: capitalize">{{user.firstName}}</span> {{user.lastName}} <br>
+					{{user.position}}<br>
+					{{user.phone}}<br>
+					<a href="mailto:{{user.email}}?Subject=admin_events" class="btn btn-primary" target="_top"><i class="fa fa-envelope"></i> Contacter par email</a>
+				</p>
+			</div>
+			<div class="col-md-6">
+				<p><strong> Un bug?</strong></p>
+				<p> Merci de décrire le plus précisément le problème rencontré pour une résolution plus rapide.<br>
+				<i>(Action effectuée avant la survenue du bug, message d'erreur ...)</i></p>
+				<a href="mailto:webmaster@l4m.fr?Subject=bug_admin_events" class="btn btn-primary" target="_top"><i class="fa fa-envelope"></i> Envoyer un rapport de bug</a>
+			</div>
+		</div>
+	</div>
+{% endblock %}

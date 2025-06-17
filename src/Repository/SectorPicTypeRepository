@@ -1,0 +1,34 @@
+<?php
+
+namespace App\Repository;
+
+use App\Entity\SectorPicType;
+use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\Persistence\ManagerRegistry;
+
+/**
+ * @method SectorType|null find($id, $lockMode = null, $lockVersion = null)
+ * @method SectorType|null findOneBy(array $criteria, array $orderBy = null)
+ * @method SectorType[]    findAll()
+ * @method SectorType[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
+ */
+class SectorTypeRepository extends ServiceEntityRepository
+{
+    public function __construct(ManagerRegistry $registry)
+    {
+        parent::__construct($registry, SectorType::class);
+    }
+
+    /*
+    public function findBySomething($value)
+    {
+        return $this->createQueryBuilder('sp')
+            ->where('sp.something = :value')->setParameter('value', $value)
+            ->orderBy('sp.id', 'ASC')
+            ->setMaxResults(10)
+            ->getQuery()
+            ->getResult()
+        ;
+    }
+    */
+}

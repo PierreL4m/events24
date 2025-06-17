@@ -1,0 +1,27 @@
+{% if candidateParticipation.slot is not null %}
+    <h4>Bonjour {{candidat.firstname}} {{candidat.lastname}}</h4>
+
+    <p> Nous vous rappelons la participation à  "{{candidateParticipation.event.getTypeCityAndDate}}" de
+        {{ candidateParticipation.slot.beginSlot|date('H') }} h  {{ candidateParticipation.slot.beginSlot|date('i') }} à
+        {{ candidateParticipation.slot.endingSlot|date('H') }} h {{ candidateParticipation.slot.endingSlot|date('i') }}
+    </p>
+    <p>
+    Pour votre sécurité et celle des autres, nous vous invitons à respecter les mesures suivantes:
+    </p>
+    <p>
+        -Se présenter à l’accueil du salon 5 minutes avant le début du créneau («créneau choisi»). L’entrée du salon en dehors de votre créneau horaire pourra vous être refusée,
+    </p>
+    <p>
+        -Présenter son QR Code ou donner son numéro sur les stands pour éviter l’échange manuel de CV.Si vous êtes malade ou présentez des symptômes, merci de ne pas vous déplacer.
+    </p>
+    <p>
+        Suivez l'actualité de l'événement sur les réseaux sociaux.
+    </p>
+{% else %}
+    <h4> Bonjour {{candidat}}</h4>
+
+    <p> Nous vous rappelons que vous n'avez toujours pas choisi de créneau pour l'événement  "{{candidateParticipation.event.getTypeCityAndDate}}"</p>
+{% endif %}
+
+
+{% include ('emails/signature.html.twig') %}

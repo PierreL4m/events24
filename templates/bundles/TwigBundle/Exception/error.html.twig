@@ -1,0 +1,148 @@
+{% if is_granted('ROLE_EXPOSANT_SCAN') or is_granted('ROLE_VIEWER') %}
+	{% set base_name = 'admin' %}
+{% else %}
+	{% set base_name = 'public' %}	
+{% endif %}
+{% extends base_name ~'_base.html.twig' %}
+
+{% block custom_style %} 
+ 	<style>
+ 		.oops{
+ 			width:20%;
+ 			display:inline-block;
+ 			vertical-align: top;
+		}
+		.oops > img{
+			max-width:100%;
+		}
+		.text{
+ 			width:79%;
+ 			display:inline-block;
+		}
+		.error_page{
+			margin-top:3em;
+		}
+	 	.readable{
+	 		background-color: #f2dede;
+	 		font-size: 1.2em;
+    		padding: 1em;
+    		display:inline-block;
+    		width:79%;
+	 	}
+	 	.l4m{
+	 		text-align:center;
+	 	}
+	 	.l4m > p{
+	 		margin-top:1em;
+	 		font-weight:bold;
+	 	}
+	 	.anonymous{
+	 		max-width: 980px;
+		    margin: auto;
+		    font-size: 1em;
+	 	}
+	 	.anonymous_logo_container{
+	 		background: #2484c6;
+	 		text-align:center;
+	 	}
+	 	.anonymous_logo_container > img{
+	 		max-height:200px;
+	 	}
+	 	.anonymous{
+	 		max-width:800px;
+	 	}
+	 	.anonymous > .readable{
+	 		text-align:center;
+	 		background: inherit;
+	 		width:100%;
+	 		max-width:800px;
+	 		margin:2em 0;
+	 		box-sizing: border-box;
+	 	}
+	 	.anonymous .readable .url{
+	 		font-size:0.8em;
+	 		display:block;
+	 		margin-top:0.5em;
+	 	}
+	 	.anonymous > .home{
+	 		text-align:center;
+	 	}
+	 	.anonymous .home a{	 		    
+	 		color: #fff;
+		    background-color: #2484c6;
+		    
+		    display: inline-block;
+		    margin-bottom: 0;
+		    font-weight: 400;
+		    text-align: center;
+		    vertical-align: middle;
+		    touch-action: manipulation;
+		    cursor: pointer;
+		    background-image: none;
+		   
+		    white-space: nowrap;
+		    padding: 12px 50px;
+		    line-height: 1.42857143;
+		    -webkit-user-select: none;
+		    -moz-user-select: none;
+		    -ms-user-select: none;
+		    user-select: none;
+	 	}	 	
+ 	</style>
+
+ 	{% include 'bundles/TwigBundle/Exception/error_style.html.twig' %}
+{% endblock %}
+
+{% block content %}
+	{# {% if app.user is null or is_granted('ROLE_CANDIDATE') or is_granted('ROLE_EXPOSANT_SCAN') %}
+		{% set anonymous = true %}
+	{% else %}
+		{% set anonymous = false %}
+	{% endif %}
+ #}
+
+ {% set anonymous = true %}
+		
+	<div class="container error_page {% if anonymous %} anonymous {% endif %}">
+		
+		
+		{% if not anonymous %}
+			<div class="oops">
+				<img src="{{asset('images/oops.jpg')}}" alt="erreur">
+			</div>
+		{% endif %}
+		
+		{% include 'bundles/TwigBundle/Exception/error_readable.html.twig' %}
+
+		{% if is_granted('ROLE_VIEWER') or app.environment == 'dev' %}
+			<div class="l4m">
+				<img style="width:30%" src="{{asset('images/error_love.gif')}}">
+				<p> L'erreur m'a été envoyée par mail je la corrige dès que possible merci :)</p>
+			</div>
+			{% include 'bundles/TwigBundle/Exception/error_custom_dump.html.twig' %}
+			
+		{% endif %}
+		
+		{% if is_granted('ROLE_SUPER_ADMIN') or app.environment == 'dev' %}
+			{% include 'bundles/TwigBundle/Exception/error_trace.html.twig' %}
+		{% endif %}
+
+		{% if anonymous %}
+			<div class="home">
+				{% if is_granted('ROLE_EXPOSANT_SCAN') %}
+					{% set url = path('exposant_index') %}
+				{% else %}
+					{% set url = app.request.scheme ~ '://' ~ app.request.host %}
+				{% endif %}
+
+				<a href="{{url}}"><i class="fa fa-arrow-left"></i> Retour à la page d'accueil</a>
+			</div>
+		{% else %}
+			<div class="home">
+				{{helper.getReturnButton|raw}}
+			</div>
+		{% endif %}
+			
+	</div>
+		
+{% endblock %}

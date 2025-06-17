@@ -1,0 +1,10 @@
+twig:
+    paths: ['%kernel.project_dir%/templates']
+    debug: '%kernel.debug%'
+    strict_variables: '%kernel.debug%'
+    globals:
+        helper: '@twig.helper'
+        remove_helper: '@remove.helper'
+        base_url: '%base_url%'
+        h48_helper: '@h48.helper'
+    form_themes: ['bootstrap_4_layout.html.twig']

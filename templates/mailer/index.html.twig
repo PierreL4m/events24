@@ -1,0 +1,36 @@
+{% extends 'admin_base.html.twig' %}
+
+{% block content %}
+    <div class="container" id="arnaud_index">       
+        {% for event in events %}
+            <div class="main bordered">                  
+        		<div class="first_line">
+                    <a href="{{ path('event_show', {'id': event.id}) }}" class="title">
+                        {{event}}
+                    </a>
+                    <span class="type">
+                        {{event.getFullType()}}
+                    </span>
+                    
+                    {{ helper.getPreviewLink(event,"pull-right preview")|raw }}
+                    
+                    <a href="{{path('bilan_show_arnaud', {'slug': event.slug})}}" class="btn btn-primary pull-right" target="_blank">
+                    	<i class="fa fa-search"></i>
+                        Site bilan
+                    </a>
+                </div>
+                <div class="second_line">  
+                    {% for email_type in email_types %}
+                	   {% include 'mailer/emails_btn.html.twig' with {'slug' : email_type.slug} %}
+                    {% endfor %}
+                </div> 
+           </div>
+        {% endfor %}
+           
+        <div class="navigation">
+            {{ knp_pagination_render(events) }}
+        </div>
+
+        <a href="{{ path('event_place') }}" class="btn btn-primary">Nouvel événement</a>
+    </div>
+{% endblock %}

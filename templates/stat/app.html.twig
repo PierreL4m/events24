@@ -1,0 +1,194 @@
+{% extends 'admin_base.html.twig' %}
+
+{% block content %}
+    {# to do clean this up ! #}
+    <div class="container" id="app_stats">
+    	<h1> Statistiques {{helper.getAdminEventLink(event)|raw}} </h1>
+        <div class="clear1"></div>
+    	<table class="table table-striped">    		
+    		<tr>
+    			<th colspan="2"> Candidats </th>
+    		</tr>
+    		<tr>
+    			<td>Inscrits</td>
+    			<td>{{event.candidateParticipations|length}}</td>
+    		</tr>       		
+    		<tr>
+    			<td>Scannés à l'entrée</td>
+    			<td>{{helper.countHaveCome(event)}}</td>
+    		</tr>
+    		<tr>
+    			<td>Total nombre de scan par exposants</td>
+    			<td>{{candidate_comments}}</td>
+    		</tr>   		
+    		{# <tr>
+    			<td>Scannés au moins une fois</td>
+    			<td>{{scanned_once}}</td>
+    		</tr> #}
+    		{# <tr>
+    			<td>Téléchargements pour cet événement</td>
+    			<td>{{event_candidate_dwd}}</td>
+    		</tr>  
+    		<tr>
+    			<td>ios</td>
+    			<td>{{candidate_ios}}</td>
+    		</tr>
+    		<tr>
+    			<td>android</td>
+    			<td>{{candidate_android}}</td>
+    		</tr> #}
+    	
+    		{# <tr>
+    			<th colspan="2"> Exposants </td>
+    		</tr>
+    		<tr>
+    			<td>Au moins un scan de candidat</td>
+    			<td>{{had_scan_once}}</td>
+    		</tr>    		 #}
+            </table>    		
+    <div class="clear1"></div>
+        <table class="table table-striped">
+    		<tr>
+    			<th colspan="2"> Tous les événements </th>
+    		</tr>
+    		<tr>
+    			<td>Téléchargements candidats inscris</td>
+    			<td>{{total_candidate_dwd}}</td>
+    		</tr>
+    		<tr style="margin-left:4em">
+    			<td>ios</td>
+    			<td>{{total_candidate_ios}}</td>
+    		</tr> 
+    		<tr>
+    			<td>android</td>
+    			<td>{{total_candidate_android}}</td>
+    		</tr> 
+    		<tr>
+    			<td>Téléchargements exposants <br>
+    				<i>(= Nombre de téléchargement par entreprise. Si 2 téléchargements pour la même entreprise, compté 1)</i></td>
+    			<td>{{total_exposant_dwd}}</td>
+    		</tr>
+    		<tr>
+    			<td>ios</td>
+    			<td>{{exposant_ios}}</td>
+    		</tr> 
+    		<tr>
+    			<td>android</td>
+    			<td>{{exposant_android}}</td>
+    		</tr>
+    	</table>
+
+        <div class="clear1"></div>
+        <h2>
+            Clic pubs
+        </h2>
+        <table class="table table-striped">            
+            {% for participation in participation_has_pub %}
+                <tr>
+                    <td>{{participation.organization}}</td>
+                    <td>du {{participation.startPub|date('d-m-Y')}} au {{participation.endPub|date('d-m-Y')}}</td>
+                    <td>{{participation.pubCount}}</td>
+                </tr>
+            {% endfor %}
+        </table>
+
+		{% set use = 0 %}
+        {% set no_use = 0 %}
+        <div class="clear1"></div>
+    	<h2> Nombre de scan par exposant (tests compris)</h2>
+		<table class="table table-striped">
+			{% for participation in participations %}
+				{% if participation.candidateComments|length > 0 %}
+		    		<tr>
+		    			<td>{{participation}}</td>
+		    			<td>		    				
+		    				{% if participation.candidateComments|length == 1 %}
+		    					{% set candidate = participation.candidateComments[0].candidateParticipation.candidate %}
+		    					{{candidate}}
+		    					{% if 'Candidat' not in candidate.firstname %}
+		    						{% set use = use + 1 %}
+                                {% else %}
+                                    {% set no_use = no_use + 1 %}
+		    					{% endif %}
+		    				{% else %}
+		    					{{participation.candidateComments|length}}
+		    					{% set use = use + 1 %}
+		    				{% endif %}
+		    			</td>		    			
+		    		</tr>
+                {% else %}
+                    {% set no_use = no_use + 1 %}
+		    	{% endif %}
+	    	{% endfor %}    		
+    	</table>    	
+
+        <div class="clear1"></div>
+    	<h2>
+    		Exposant ayant utilisé l'appli <strong>{{use}} / {{event.participations|length}}</strong>
+    	</h2>
+    	
+		<table class="table table-striped">
+			{% for participation in participations %}
+				{% if participation.candidateComments|length > 0 %}
+                    {% set display = true %}
+                    {% if participation.candidateComments|length == 1 %}
+                        {% set candidate = participation.candidateComments[0].candidateParticipation.candidate %}
+                        {% if 'Candidat' in candidate.firstname %}
+                            {% set display = false %}
+                        {% endif %}
+                    {% endif %}
+                    {% if display %}
+    		    		<tr>
+
+    		    			<td>
+                                {{participation}}
+                                {% if is_granted('ROLE_SUPER_ADMIN') %}
+                                    <span class="donotprint">
+                                        participation_id = {{participation.id}}
+                                    </span>
+                                {% endif %}
+                            </td>
+                            <td> 
+                                {% set exposant_scan = participation.organization.exposantScanUser %}
+                                
+                               {#  Dernière connexion : {{exposant_scan ? exposant_scan.lastLogin|date('d-m-Y H:i') : 'jamais connecté'}} #}
+                                
+                            </td>
+    		    			<td>
+    	    					<table>		    						
+    	    						{% for c in participation.candidateComments %}
+                                        {% if 'Candidat' not in c.candidateParticipation.candidate.firstname %}
+        	    							<tr>
+        	    								<td> 
+        	    									{{c.candidateParticipation.candidate}} 
+
+                                                    {% if is_granted('ROLE_SUPER_ADMIN') %}
+                                                        <span class="donotprint">
+                                                            comment_id = {{c.id}}
+                                                        </span>
+                                                    {% endif %}
+        	    								</td>
+        	    							</tr>
+                                        {% endif %}
+    	    						{% endfor %}		    						
+    	    					</table>
+    		    			</td>
+    		    		</tr>
+                    {% endif %}                    
+		    	{% endif %}
+	    	{% endfor %}    		
+    	</table>
+
+        <div class="clear1"></div>
+        <h2> Exposant qui n'ont pas utilisé l'appli <strong>{{no_use}}/{{event.participations|length}}</strong></h2>
+        <table class="table table-striped">
+            {% for participation in participations %}
+                {% if participation.candidateComments|length == 0 %}
+                    <tr>
+                        <td>{{participation}}</td>                      
+                    </tr>
+                {% endif %}
+            {% endfor %}            
+        </table>	    	
+    </div>
+{% endblock %}

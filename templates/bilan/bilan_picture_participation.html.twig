@@ -1,0 +1,65 @@
+{% extends 'bilan/show.html.twig' %}
+{% block js_head %}
+	<script type='text/javascript' src='/unitegallery/js/jquery-11.0.min.js'></script>
+	<script type='text/javascript' src='/unitegallery/js/unitegallery.min.js'></script> 
+	
+	<link rel='stylesheet' href='/unitegallery/css/unite-gallery.css' type='text/css' /> 
+	<script type='text/javascript' src='/unitegallery/themes/default/ug-theme-default.js'></script> 
+	<link rel='stylesheet' href='/unitegallery/themes/default/ug-theme-default.css' type='text/css' /> 
+{% endblock %}
+
+{% block menu_items %}
+	<div class="ie_fix"></div>
+	<a href="{{path('bilan_show',{'slug' : event.slug})}}#photos" class="item" data-scroll="#photos">
+		Photos
+	</a>		
+	{% for item in helper.getBilanMenuItems(event) %}		
+		<div class="ie_fix"></div>
+		<a href="{{path('bilan_show',{'slug' : event.slug})}}#{{item.slug}}" class="item" data-scroll="#{{item.slug}}">
+			{{item.label}}
+		</a>		
+	{% endfor %}
+	{% for section in helper.getBilanSections(event) %}		
+		<div class="ie_fix"></div>
+		<a href="{{path('bilan_show',{'slug' : event.slug})}}#{{section.sectionType.slug}}" class="item" data-scroll="#{{section.sectionType.slug}}">
+			{{section.menuTitle}}
+		</a>		
+	{% endfor %}
+{% endblock %}
+
+{% block page %}
+	<div class="content">
+		<h2 class="title" id="photos">
+			{{participation}}
+		</h2>
+	</div>
+	<div id="gallery" style="display:none;" class="content">
+
+		{% for pic in participation.bilanPictures %}		
+			<img alt="{{participation}}" src="/uploads/bilan_pictures/{{pic.getPath}}"
+				data-image="/uploads/bilan_pictures/{{pic.getPath}}"
+				data-description="{{participation}}">
+			{% endfor %}
+		</div>
+		
+	<div id="bilan_public_pictures" class="content">
+		<a href="{{path('bilan_show', {'slug' : event.slug})}}#photos" class="return_btn"> 
+			<i class="fa fa-arrow-left"></i>
+			Retour au site bilan
+		</a>
+	</div>
+{% endblock %}
+
+{% block js_dev %}
+	<script type="text/javascript"> 
+		jQuery(document).ready(function(){ 
+			jQuery("#gallery").unitegallery({
+				theme_enable_text_panel: false,
+				slider_scale_mode: "fit",
+				thumb_fixed_size:false,
+				gallery_width:980,
+				gallery_height:600,				
+			}); 
+		}); 		
+	</script>
+{% endblock %}

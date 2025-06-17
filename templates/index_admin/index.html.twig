@@ -1,0 +1,36 @@
+{% extends 'admin_base.html.twig' %}
+
+{% block content %}
+	<div class="container" id="admin_index">
+		<h1>Événements en cours</h1>
+		{% if current_events|length > 0 %}
+			{% for event in current_events %}
+				{% include 'index_admin/event_list.html.twig' %}
+			{% endfor %}
+		{% else %}
+			<p> Pas d'événements en cours</p>
+		{% endif %}
+
+		<h1>Derniers événements passés</h1>
+		{% for event in past_events %}
+			{% include 'index_admin/event_list.html.twig' %}
+		{% endfor %}
+
+		<h1> Dernières participations ajoutées </h1>
+
+		{% for participation in participations %}
+			{% include 'partials/participation.html.twig' %}
+		{% endfor %}
+
+		<h1>Derniers exposants créés </h1>
+		{% for organization in organizations %}
+			<div class="row">
+				<div class="col-md-12">
+					<a href="{{path('organization_show',{'id':organization.id})}}">
+						{{organization.name}}
+					</a>
+				</div>
+			</div>
+		{% endfor %}
+	</div>
+{% endblock %}

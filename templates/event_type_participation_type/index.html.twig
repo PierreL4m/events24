@@ -1,0 +1,42 @@
+{% extends 'admin_base.html.twig' %}
+
+
+
+{% block content %}
+    <div class="container">
+    <h1>EventTypeParticipationType index</h1>
+
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>Id</th>
+                    <th>Event Type</th>
+                    <th>Organization Type</th>
+                    <th>ParticipationClass</th>
+                    <th>actions</th>
+                </tr>
+            </thead>
+            <tbody>
+            {% for event_type_participation_type in event_type_participation_types %}
+                <tr>
+                    <td>{{ event_type_participation_type.id }}</td>
+                   
+                    <td>{{ event_type_participation_type.eventType }}</td>
+                    <td>{{ event_type_participation_type.organizationType }}</td>
+                     <td>{{ event_type_participation_type.participationClass }}</td>
+                    <td>
+                        <a href="{{ path('event_type_participation_type_show', {'id': event_type_participation_type.id}) }}">show</a>
+                        <a href="{{ path('event_type_participation_type_edit', {'id': event_type_participation_type.id}) }}">edit</a>
+                    </td>
+                </tr>
+            {% else %}
+                <tr>
+                    <td colspan="3">no records found</td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+
+        <a href="{{ path('event_type_participation_type_new') }}">Create new</a>
+    </div>
+{% endblock %}

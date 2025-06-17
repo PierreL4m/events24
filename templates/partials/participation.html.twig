@@ -1,0 +1,255 @@
+
+<div class="participation_container {% if participation.premium %}premium{% endif %}">
+	<div class="row">
+		<div class="col-md-9">
+			<h2>
+				<a href="{{path('participation_show',{'id':participation.id})}}" id="{{participation.id}}">
+					{{participation.companyName}}
+				</a>
+
+				{% if participation.premium %}
+					<span class="premium">
+						<i class="fa fa-star"></i>
+						Premium
+					</span>
+				{% endif %}
+			</h2>
+
+		</div>
+		<div class="col-md-3">
+			<div class="row icons">
+				<div class="col-md-1">
+					<a href="{{path('participation_show',{'id':participation.id})}}">  <i class="fa fa-eye"></i></a>
+				</div>
+				<div class="col-md-1">
+					<a href="{{path('exposant_jobs_list_show',{'id':participation.id})}}">  <i class="fa fa-clipboard"></i></a>
+				</div>
+				<div class="col-md-1">
+					<a href="/{{ participation.event.slug }}#/accreditations/{{ participation.event.id }}?participation={{ participation.id }}" target="blank_"> <i class="fa fa-address-card"></i></a>
+				</div>
+				{% if remove_helper.canDelete(participation) %}
+					<div class="col-md-1">
+						<a href="{{path('participation_edit',{'id':participation.id})}}"> <i class="fa fa-edit"></i></a>
+					</div>
+					<div class="col-md-1">
+						<a href="{{path('participation_delete',{'id':participation.id})}}" class='a_confirm' data-msg="la participation de {{participation.companyName}} ?"> <i class="fa fa-remove"></i></a>
+					</div>
+				{% endif %}
+			</div>
+		</div>
+	</div>
+	{% if is_granted('ROLE_VIEWER') %}
+		<div class="row bordered">
+			<div class="col-md-12">
+				<p class="type">{{participation.getType}}
+				<a class="btn btn-primary" href="{{path('participation_change_type', {'id' : participation.id})}}">
+					<i class="fa fa-random"></i>
+					Changer le type de fiche
+				</a>
+				</p>
+				Création {% include 'partials/created.html.twig' with {'entity' : participation} %}
+			</div>
+		</div>
+	{% endif %}
+	<div class="row resume bordered">
+		<div class="col-md-4">
+			{% if participation.logo and participation.logo.path %}
+				{% set logo = participation.logo %}
+				{# {% set dir = logo.getUploadDirPath|replace({'/' : "___"}) %} #}
+				{% set filename = "/uploads/"~participation.logo.getPath %}
+				<img src={{"/uploads/"~participation.logo.getPath}} alt="{{participation.companyName}}">
+				<a href="{{path('file_download', {'id' : participation.id} ) }}">
+					<span class="glyphicon glyphicon-hd-video" aria-hidden="true"></span>
+				</a>
+			{% endif %}
+		</div>
+		<div class="col-md-5">
+			<div class="address">
+				<span>{{participation.addressL1}}</span>
+				<span>{{participation.addressNumber}} {{participation.street}} {{participation.addressL2}}</span>
+				<span>{{participation.addressL3}}</span>
+				<span>{{participation.cp}} {{participation.city}}</span>
+			</div>
+			<div class="web">
+				{% for site in participation.sites %}
+					<a href="{{site.url}}">{{site.label ? site.label : site.url}}</a>
+				{% endfor %}
+			</div>
+			<div class="stand">
+				{% if participation.standNumber %}
+					Stand n° : <strogn>{{participation.standNumber}}</strogn>
+				{% else %}
+					<p class="text-danger">
+						<i class="fa fa-warning"></i>
+						Le stand n'a pas été numéroté
+					</p>
+				{% endif %}
+			</div>
+			{% set obj = [] %}
+			{% if jobs is defined%}
+				{% for job in jobs %}
+					{% if job.participation.id == participation.id %}
+						{% set obj = obj|merge([job.name]) %}
+					{% endif %}
+				{% endfor %}
+			{% endif %}
+			{% if obj|length == 0 %}
+				<a style="width:100%;margin-top:10px"  class="btn btn-info" href="{{path('recall_offers',{'id':participation.id})}}" target="_blank">
+					<i class="fa fa-envelope"></i>
+					Envoyer le mail <b>RENSEIGNER DES OFFRES</b>
+				</a>
+			{% endif %}
+			<a style="width:50%;margin-top:10px"  class="btn btn-info" href="{{path('exposant_jobs_list_show',{'id':participation.id})}}" target="_blank">
+				<i class="fa fa-clipboard"></i>
+				Voir les offres ({{ obj|length }})
+			</a>
+			{% if participation.batValid is null  %}
+				<a style="width:50%;margin-top:10px"  class="btn btn-success" href="{{path('valid_bat',{'id':participation.id})}}">
+					<i class="fa fa-check"></i>
+					Valider le BAT
+				</a>
+				{% else %}
+				<p style="background-color: #1da51d; color:white; width:fit-content; padding:15px; height:50px; margin-top:15px">
+					Dernière validation BAT le {{participation.batValid|format_datetime(locale='fr',pattern="EEEE dd MMMM YYYY à HH:mm")}}
+				</p>
+			{% endif %}
+		</div>
+	</div>
+	{% if participation.joblink is defined and participation.joblink %}
+		<div class="row bordered">
+			<div class="col-md-12">
+				to do display joblink
+			</div>
+		</div>
+	{% endif %}
+
+	{% if participation.responsable %}
+		<div class="row bordered">
+			<div class="col-md-4">
+				{% set responsable = participation.responsable %}
+				{% include 'user/user.html.twig' with {'user' : participation.responsable} %}
+			</div>
+
+			<div class="col-md-8">
+				{% include 'partials/btn_edit_responsable.html.twig' %}
+			</div>
+		</div>
+		<div class="row bordered">
+			<div class="col-md-6 last_login">
+				<strong>Dernière connexion :</strong>
+				<span id="{{responsable.id ~ 'login'}}">
+					{% if helper.responsableConnectedAfterGeneration(participation) and responsable.lastLogin %}
+						{{responsable.lastLogin|date('d/m/Y à H:i')}}
+					{% else %}
+						Jamais connecté
+					{% endif %}
+				</span>
+				<br>
+				<strong>Fiche validée : </strong>
+				{% include 'partials/updated.html.twig' with {'entity' : participation, 'no' : true} %}
+				<p class="recall" id="{{participation.id ~ 'recall'}}">
+					{% if participation.recall %}
+						La fiche a été remise dans les mails de relance
+					{% endif %}
+				</p>
+			</div>
+			<div class="col-md-6">
+				{% if helper.responsableConnectedAfterGeneration(participation) and responsable.lastLogin %}
+					<button class="btn btn-default reset_last_login" data-id="{{responsable.id}}">Remettre la dernière connexion à "jamais connecté"</button>
+					<br>
+				{% endif %}
+				{% if participation.timestamp and participation.timestamp.updated and not participation.recall %}
+					<button class="btn btn-default reset_updated" data-id="{{participation.id}}">Remettre la fiche dans les mail de relance</button>
+				{% endif %}
+			</div>
+		</div>
+		<div class="row bordered">
+			<div class="col-md-6" id="{{participation.id ~ 'sentOn'}}">
+				{% if participation.fillSent %}
+					Le mail de notification est parti le <strong>{{participation.fillSent|date('d/m/Y à H:i')}} </strong>
+				{% else %}
+					Le mail de notification n'est pas encore parti
+				{% endif %}
+			</div>
+			<div class="col-md-6">
+				<button class="btn btn-default send_fill" data-id="{{participation.id}}">
+					<i class="fa fa-envelope"></i> Envoyer {% if participation.fillSent %}de nouveau{% endif %} le mail de notification
+				</button>
+
+				<button class="btn btn-default send_fill_to_me" data-id="{{participation.id}}" id="{{participation.id ~ 'sent_to_me'}}">
+					<i class="fa fa-envelope"></i> M'envoyer le mail de notification
+				</button>
+			</div>
+		</div>
+	{% else %}
+		<div class="row bordered">
+			<div class="col-md-4">
+				<img src="{{asset('images/ghost_buster.jpg')}}">
+			</div>
+			<div class="col-md-8">
+				<a href="{{path('user_new', {'type' : 'exposant', 'id' : participation.id})}}" class="btn btn-danger">
+					<i class="fa fa-warning"></i> Vous devez définir un responsable !
+				</a>
+			</div>
+		</div>
+	{% endif %}
+
+	{%  if participation.joblinkSessions is defined and participation.joblinkSessions|length > 0 %}
+	<div class="row bordered">
+		<div class="col-md-12">
+			<p>
+				<strong>Joblinks : </strong><i>(voir rubriques > joblinks pour details)</i>
+				<ul>
+					{%  for joblinkSession in participation.joblinkSessions %}
+						<li>{{ joblinkSession }}</li>
+					{%  endfor %}
+				</ul>
+			</p>
+		</div>
+	</div>
+	{%  endif %}
+	<div class="row">
+		<div class="col-md-12">
+			{%  if not participation.organization %}
+				<p class="text-danger"> Attention pas d'entreprise liée à cette fiche de participation</p>
+			{%  else %}
+				<p>
+					Identifiants de connexion à l'appli :
+
+					{% if participation.organization.exposantScanUser %}
+						{% set exposant_scan_user = participation.organization.exposantScanUser %}
+							<strong>
+								{{exposant_scan_user.username}} / {{exposant_scan_user.savedPlainPassword}}
+							</strong>
+
+							{% if is_granted('ROLE_SUPER_ADMIN') %}
+								user_id = {{exposant_scan_user.id}}
+							{% endif %}
+
+							{% if participation.event %}
+								<a href="{{path('exposant_scan_user_edit',{'id' : exposant_scan_user.id})}}" class="edit_username">
+									<i class="fa fa-edit"></i>
+								</a>
+							{% else %}
+								<p> Participation "back up" suites aux problème rencontrés </p>
+							{% endif %}
+							 <div>
+								Dernière connexion : {{exposant_scan_user.lastLogin ? exposant_scan_user.lastLogin|date('d/m/Y à H:i') : 'jamais connecté (connexion possible avec le compte responsable de la fiche de participation ou problème appli)'}}
+							</div>
+					{% else %}
+						<br>
+						<span class="text-danger">
+							<i class="fa fa-warning"></i>
+							Une erreur s'est produite : Pas de compte scan générique pour cette entreprise.
+							<br>
+							<i class="fa fa-ambulance"></i>
+							Prévenir France !
+							<button style="width:10%" class="btn btn-default reload_scan" data-id="{{participation.organization.id}}" event-id="{{ participation.event.id }}">
+								<i class="fa fa-spinner"></i> Regénerer
+							</button>
+					{% endif %}
+				</p>
+			{%  endif %}
+		</div>
+	</div>
+</div>

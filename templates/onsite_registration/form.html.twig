@@ -1,0 +1,170 @@
+{% extends 'public_base.html.twig' %}
+
+{% block content %}
+    <style>
+        .formContainer {
+            display: flex;
+            justify-content: center;
+            width: 90%;
+            margin: auto;
+        }
+    </style>
+    {% if event.date|date("m/d/Y") > date('now')|date("m/d/Y") or event.date|date("m/d/Y") == date('now')|date("m/d/Y") %}
+        <div id="form_template" class="container" style="margin-top: 20px;display:block">
+        <h1 class="title" style="text-align:center;margin-top:80px;margin-bottom:30px;">Inscription {{event}} </h1>
+        <style media="screen">
+            input[type="checkbox"]{
+                margin:3px -20px 0px;
+            }
+            .form-check{margin-bottom: 20px;}
+        </style>
+            <div class="formContainer">
+                {{form_start(form)}}
+                {% if form.lastname is defined %}
+                    {{form_row(form.lastname)}}
+                {% endif %}
+                {% if form.firstname is defined %}
+                    {{form_row(form.firstname)}}
+                {% endif %}
+                {% if form.email is defined %}
+                    {{form_row(form.email)}}
+                {% endif %}
+                {% if form.sectors is defined %}
+                    {{form_label(form.sectors)}}
+                    <div class="sectors-list">
+                        {{form_widget(form.sectors)}}
+                    </div>
+                {% endif %}
+                {% if form.rhSectors is defined %}
+                    {{form_label(form.rhSectors)}}
+                    <div class="sectors-list">
+                        {{form_widget(form.rhSectors)}}
+                    </div>
+                {% endif %}
+                {% if form.phone is defined %}
+                    {{form_row(form.phone)}}
+                {% endif %}
+                {% if form.job is defined %}
+                    {{ form_row(form.job) }}
+                {% endif %}
+                {% if form.wantedJob is defined %}
+                    {{form_row(form.wantedJob)}}
+                {% endif %}
+                {% if form.working is defined %}
+                    {{form_row(form.working)}}
+                {% endif %}
+                {% if form.city_name is defined %}
+                    {{form_row(form.city_name, {'attr' : {'class' : 'focus-select'}})}}
+                    {{form_row(form.city_id)}}
+                    </datalist>
+                {% endif %}
+                {% if form.mobility is defined %}
+                    {{form_row(form.mobility)}}
+                {% endif %}
+                {% if form.degree is defined %}
+                    {{form_row(form.degree)}}
+                {% endif %}
+                {% if form.file is defined %}
+                    <div class="onSiteFile">
+                        {{form_label(form.file)}}
+                    </div>
+                    {{form_widget(form.file, { 'attr': {'class': 'foo'} })}}
+                {% endif %}
+                <div class="form-group">
+                    <label for="registration_origin">Comment avez-vous eu connaissance de l'événement ?</label>
+                    <select name="registration_origin" id="origin-select">
+                        {% for origin in origins %}
+                            <option value="{{origin.id}}">{{origin.name}}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                {% set dateNow = "now"|date("m/d/Y") %}
+                {% if form.slots is defined %}
+                    {% if h48_helper.48(event) %}
+                        <strong><p style="color:red">Veuillez sélectionner au minimum un créneau d'un des deux jours afin de valider votre participation</p></strong>
+                        {{form_row(form.slots)}}
+                        {{form_widget(form.slotsFull)}}
+                        {{form_row(form.slots_second)}}
+                        {{form_widget(form.slotsFull_second)}}
+                    {% else %}
+                        {{form_row(form.slots)}}
+                        {{form_widget(form.slotsFull)}}
+                    {% endif %}
+                    <div style="height:20px"></div>
+                {% endif %}
+                {% if form.plainPassword is defined %}
+                    {% if pwd_placeholder is not defined %}
+                        {% set pwd_placeholder = "" %}
+                    {% endif %}
+                    {# {{form_row(form.plainPassword.first, {'attr' : {'placeholder' : pwd_placeholder}})}}
+                {{form_row(form.plainPassword.second, {'attr' : {'placeholder' : pwd_placeholder}})}} #}
+                    {{form_row(form.plainPassword, {'attr' : {'placeholder' : pwd_placeholder}})}}
+                {% endif %}
+                {% if form.heardFrom is defined %}
+                    {{form_row(form.heardFrom)}}
+                {% endif %}
+                {% if form.mailingRecall is defined %}
+                    {# <label class="form-check-label" for="registration_mailingEvents">
+                    {{form_widget(form.mailingRecall)}}
+                </label> #}
+                    {{form_widget(form.mailingRecall)}}
+                {% endif %}
+                {% if form.mailingEvents is defined %}
+                    {{form_widget(form.mailingEvents)}}
+                {% endif %}
+                {% if form.phoneRecall is defined %}
+                    {{form_widget(form.phoneRecall)}}
+                {% endif %}
+                {% if is_admin is defined %}
+                <button onclick="this.form.submit(); this.disabled=true; this.innerHTML='Chargement…';" class="btn btn-success" type="submit" id="valid" style="margin:auto;display:block;width:75%;height:75px;margin-top:30px;"><i class="fa fa-check"></i>
+                    {% if edit is defined or is_admin is defined %}
+                        Enregistrer
+                    {% else %}
+                        M'inscrire
+                    {% endif %}</button>
+                {% elseif edit is defined %}
+                <button class="btn btn-success" id="register_action" type="submit"><span>
+                Valider
+            {% else %}
+                        {% if message is not null %}
+                            <p>{{ message }}</p>
+                        {% endif %}
+            <p>
+                    En validant mon inscription, j'accepte que mes données soient visibles des recruteurs participant à l'événement "{{event.getFullType}}".
+                </p>
+            <button class="btn btn-success
+                g-recaptcha"
+                    id="register_action" type="submit"
+                {% if app.environment == 'prod'%}
+                    data-sitekey="6LdpB3AUAAAAAGhw1sTJc0XCUNWKqbbD67b8IXMv"
+                {% else %}
+                    data-sitekey="6LeIxAcTAAAAAJcZVRqyHh71UMIEGNQ_MXjiZKhI"
+                {% endif %}
+                data-callback="recaptcha_check_register">
+                <span>
+                Valider
+                {% endif %}
+                </span>
+            </button>
+        {#  <div class="lds-spinner"><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div></div> #}
+                        {% if admin is defined %}
+                            <span class="text-danger">
+                    <i>Ceci est un aperçu, ce formulaire ne vous inscrit pas.</i>
+                </span>
+                        {% endif %}
+                        {{form_end(form)}}
+            </div>
+        {% if app.environment == 'dev'  %}
+            <a href="#" id="fill"> fill </a>
+        {% endif %}
+        {% else %}
+            <div id="form_template" class="container" style="margin-top: 20px;display:block">
+                <p>La salon est passé, merci d'en choisir un autre en cliquant sur le bouton ci-dessous </p>
+                <a href="{{ path('on_site') }}" style="text-align:center;font-size:20px;border:solid black 1px; width:200px;display:flex;flex-flow: column;padding:30px;align-items: center;">
+                    Liste des salons
+                </a>
+
+            </div>
+            </div>
+    {% endif %}
+{% endblock %}

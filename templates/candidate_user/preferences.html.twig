@@ -1,0 +1,26 @@
+<table class="table candidate_check_box">
+    <tr>
+        <td>
+            Je souhaite recevoir par email des informations relatives aux événements auxquels je m'inscris
+        </td>
+        <td>
+            {{ candidate.mailingRecall ? '<i class="fa fa-check-circle"></i>'|raw : '<i class="fa fa-minus-circle"></i>'|raw }}
+        </td>
+    </tr>
+    <tr>
+        <td>
+            J'accepte de recevoir par email des informations sur les salons emploi/formation à venir dans ma région  
+        </td>
+        <td>
+            {{ candidate.mailingEvents ? '<i class="fa fa-check-circle"></i>'|raw : '<i class="fa fa-minus-circle"></i>'|raw }}
+        </td>
+    </tr>
+    <tr>
+        <td>
+            Je souhaite recevoir un rappel par sms la veille des événements auxquels je m'inscris
+        </td>
+        <td>
+            {{ candidate.phoneRecall ? '<i class="fa fa-check-circle"></i>'|raw : '<i class="fa fa-minus-circle"></i>'|raw }}
+        </td>
+    </tr>
+</table>

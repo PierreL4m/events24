@@ -1,0 +1,231 @@
+{% set candidate = comment.candidateParticipation.candidate %}
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <link href="https://fonts.googleapis.com/css?family=Open+Sans:400,400i,700,700i" rel="stylesheet">
+        <script src="https://kit.fontawesome.com/9920ec656f.js" crossorigin="anonymous"></script>
+        <style>
+            body {
+                margin: auto;
+                background: #e2e5e7;
+                position: relative;
+                font-family: Helvetica Neue,Helvetica,Arial,sans-serif;
+                font-size: 14px;
+                line-height: 1.42857143;
+                color: #333;
+            }
+            #candidate_profile {
+                max-width: 800px;
+            }
+            .container {
+                margin-right: auto;
+                margin-left: auto;
+                padding-left: 15px;
+                padding-right: 15px;
+            }
+            .clear2 {
+                height: 2em;
+            }
+            #candidate_profile h1 {
+                font-weight: 700;
+                font-size: 36px;
+            }
+            #candidate_profile .content-box {
+                background: #fff;
+                padding: 1em 2em;
+            }
+            .candidate_name{
+                width: 50%;
+            }
+            #candidate_profile .candidate_name {
+                color: #4495d1;
+                text-transform: uppercase;
+                font-weight: 700;
+                font-size: 1.5em;
+                margin-bottom: 0.5em;
+                overflow-wrap: break-word;
+                display: flex;
+                justify-content: space-between;
+            }
+            tr{
+                text-align: left;
+            }
+            #candidate_profile .table.candidate_check_box tbody tr td, #candidate_profile .table.candidate_check_box tbody tr th, #candidate_profile .table.candidate_profile tbody tr td, #candidate_profile .table.candidate_profile tbody tr th {
+                border: none;
+            }
+            .table>tbody>tr>td, .table>tbody>tr>th, .table>tfoot>tr>td, .table>tfoot>tr>th, .table>thead>tr>td, .table>thead>tr>th {
+                padding: 8px;
+                line-height: 1.42857143;
+                vertical-align: top;
+                border-top: 1px solid #ddd;
+            }
+        </style>
+    </head>
+    <body style="margin: auto;background: #e2e5e7;position: relative">
+        <div class="container" id="candidate_profile">
+            <div class="clear2"></div>
+            <h1> {{candidate}} </h1>
+            <div class="clear2"></div>
+
+            <div class="content-box">
+                <div class="candidate_name" style="width:100%;">
+                    {{candidate}}
+                    <span id="candidate_fa_icon">
+                        {% if comment.favorite == 1 %}
+                            <i class="fa fa-star"></i>
+                        {% elseif comment.like == 1 %}
+                            <i class="fa fa-thumbs-up"></i>
+                        {% elseif comment.like == -1 %}
+                            <i class="fa fa-thumbs-down"></i>
+                        {% endif %}
+                    </span>
+                </div>
+                <table class="table candidate_profile">
+                    <tr>
+                        <th>Téléphone </th>
+                        <td>{{candidate.phone}}</td>
+                    </tr>
+                    <tr>
+                        <th>Email </th>
+                        <td>
+                            {% if not is_granted('ROLE_CANDIDATE') %}
+                                {{candidate.email}}
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {% if candidate.wantedJob %}
+                        <tr>
+                            <th>Poste recherché</th>
+                            <td>
+                                {{candidate.wantedJob}}
+                            </td>
+                        </tr>
+                    {% endif %}
+                    {% if candidate.degree or is_granted('ROLE_CANDIDATE') %}
+                        <tr>
+                            <th>Niveau d'étude</th>
+                            <td>
+                                {% if candidate.degree %}
+                                    {{candidate.degree}}
+                                {% else %}
+                                    <a class="text-danger" href="{{path('candidate_user_edit')}}">
+                                        Merci de renseigner votre niveau d'étude
+                                    </a>
+                                {% endif %}
+                            </td>
+                        </tr>
+                    {% endif %}
+                    {% if candidate.mobility or is_granted('ROLE_CANDIDATE') %}
+                        <tr>
+                            <th>Mobilité</th>
+                            <td>
+                                {% if candidate.mobility %}
+                                    {{candidate.mobility}}
+                                {% else %}
+                                    <a class="text-danger" href="{{path('candidate_user_edit')}}">
+                                        Merci de renseigner votre mobilité
+                                    </a>
+                                {% endif %}
+                            </td>
+                        </tr>
+                    {% endif %}
+                    {% if candidate.city or is_granted('ROLE_CANDIDATE') %}
+                        <tr>
+                            <th>Ville</th>
+                            <td>
+                                {% if candidate.city %}
+                                    {{candidate.city}}
+                                {% else %}
+                                    <a class="text-danger" href="{{path('candidate_user_edit')}}">
+                                        Merci de renseigner votre ville
+                                    </a>
+                                {% endif %}
+                            </td>
+                        </tr>
+                    {% endif %}
+
+                    {% if candidate.working is same as(true) or candidate.working is same as(false) or is_granted('ROLE_CANDIDATE') %}
+                        <tr>
+                            <th>En poste </th>
+                            <td>
+                                {% if candidate.working %}
+                                    Oui
+                                {% elseif candidate.working is same as(false) %}
+                                    Non
+                                {% else %}
+                                    <a class="text-danger" href="{{path('candidate_user_edit')}}">
+                                        Merci de renseigner votre statut
+                                    </a>
+                                {% endif %}
+                            </td>
+                        </tr>
+                    {% endif %}
+                    {% if candidate.wantedJob %}
+                        <tr>
+                            <th>Poste recherché </th>
+                            <td>{{candidate.wantedJob}}</td>
+                        </tr>
+                    {% elseif  candidate.position %}
+                        <tr>
+                            <th>Poste recherché </th>
+                            <td>{{candidate.position}}</td>
+                        </tr>
+                    {% endif %}
+                    {% if candidate.sectors|length > 0 or is_granted('ROLE_CANDIDATE') %}
+                        <tr>
+                            <th>Secteurs recherchés</th>
+                            <td>
+                                <table>
+                                    {% for sector in candidate.sectors %}
+                                        <tr>
+                                            <td>
+                                                {{sector}}
+                                            </td>
+                                        </tr>
+                                    {% else %}
+                                        <tr>
+                                            <td>
+                                                <a class="text-danger" href="{{path('candidate_user_edit')}}">
+                                                    Merci de définir les secteurs que vous recherchez
+                                                </a>
+                                            </td>
+                                        </tr>
+                                    {% endfor %}
+                                </table>
+                            </td>
+                        </tr>
+                    {% endif %}
+                </table>
+            </div>
+            <div class="clear1"></div>
+            <h2>Commentaire :</h2>
+            <div class="content-box">
+                <span id="comment">{{ comment.comment ? comment.comment}}</span>
+                {% if not comment.comment %}
+                    <i id="no_comment">Entrer ici votre commentaire / synthèse d'entretien</i>
+                {% endif %}
+                <textarea id="comment_loading" style="display:none">{{ comment.comment ? comment.comment }}</textarea>
+
+                <a href="#" class="pull-right" id="show_edit" data-id="{{comment.id}}">
+                    <i class="fa fa-edit"></i>
+                </a>
+
+                <a href="#" class="pull-right" id="save_comment" data-id="{{comment.id}}" style="display:none">
+                    <i class="fa fa-check" ></i>
+                </a>
+
+                <div class="simple_loader pull-right"></div>
+            </div>
+
+            <div class="clear2"></div>
+
+            {# <a href="{{path('exposant_show_candidates', {'id' : comment.organizationParticipation.id})}}" class="btn btn-primary">
+                <i class="fa fa-arrow-left"></i>
+                Retour à la liste
+            </a> #}
+        </div>
+    </body>
+</html>
+
+

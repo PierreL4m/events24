@@ -1,0 +1,19 @@
+{% extends 'partials/form.html.twig' %}
+
+{% block title %}
+	Édition du guide technique - {{techGuide.standSize}} m<sup>2</sup>
+	<br>
+	{{helper.getAdminEventLink(techGuide.event)|raw}}
+{% endblock %}
+
+{% block form %}
+	{{ form_start(form) }}
+	    {{ form_widget(form) }}
+	    <p>
+	    	<i> <i class="fa fa-warning"></i> Modifier la superficie de ce guide va modifier la superficie des participations associées</i>
+	    </p>
+	    <div class="clear1"></div>
+	    <button class="btn btn-success" id="{{button_id|default('save')}}">{{ button_label|default('Enregistrer') }}</button>
+	    
+	{{ form_end(form) }}
+{% endblock %}

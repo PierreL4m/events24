@@ -1,0 +1,396 @@
+{% extends 'admin_base.html.twig' %}
+
+{% block content %}
+    <div class="container" id="candidates_list_event">
+        <h1>
+            {% if not status %} {{candidates.getTotalItemCount}} candidat(s){% endif %}
+            {% if is_granted('ROLE_VIEWER') %}
+                {{helper.getAdminEventLink(event)|raw}}
+                <br>
+                {{helper.countHaveCome(event)}} venus au total
+            {% else %}
+                {{ event }}
+            {% endif %}
+
+        </h1>
+
+        {% if is_granted('ROLE_VIEWER') %}
+            <a href="{{path('app_stats', {'id' : event.id})}}" class="btn btn-primary">
+                <i class="fa fa-bar-chart" aria-hidden="true"></i>
+                Statistiques appli
+            </a>
+            {% if registration_validation %}
+                <a href="{{path('experts_stats', {'id' : event.id})}}" class="btn btn-primary">
+                    <i class="fa fa-bar-chart" aria-hidden="true"></i>
+                    Statistiques {{ event.type }}
+                </a>
+            {%  endif %}
+        {% endif %}
+
+        {% if old_candidates is defined or new_candidates is defined %}
+            {% if old_candidates is defined and old_candidates != 0 %}
+                <a href="{{path('event_candidates', {'id' : event.id})}}">
+                    {{old_candidates}} candidats <i> (anciennes inscriptions)</i>
+                </a>
+                {% set nb = old_candidates %}
+            {% elseif new_candidates is defined and new_candidates != 0 %}
+                <a href="{{path('candidates_list', {'id' : event.id})}}">
+                    {{new_candidates}} candidats <i> (nouvelles inscriptions)</i>
+                </a>
+                {% set nb = new_candidates %}
+            {% endif %}
+
+            {% if nb is defined %}
+                <div class="total">Total : {{candidates.getTotalItemCount + nb }} candidats</div>
+                <div class="clear1"></div>
+            {% endif %}
+        {% endif %}
+
+        {% if not search %}
+
+            {% if is_granted('ROLE_VIEWER') %}
+                <a href="{{path('event_print_candidates', {'id' : event.id})}}" class="btn btn-primary">
+                    <i class="fa fa-print"></i>
+                    Imprimer la liste
+                </a>
+                <a href="{{ path(app.request.attributes.get('_route'), app.request.query.all|merge(app.request.attributes.get('_route_params'))|merge({'mode': 'export'})) }}" class="btn btn-primary" target="_blank">
+                    <i class="fa fa-download"></i>
+                    Exporter cette liste
+                </a>
+                <a href="{{ path(app.request.attributes.get('_route'), app.request.query.all|merge(app.request.attributes.get('_route_params'))|merge({'mode': 'exportScanned'})) }}" class="btn btn-primary" target="_blank">
+                    <i class="fa fa-download"></i>
+                    Exporter la liste des candidats venus
+                </a>
+                <a href="{{ path(app.request.attributes.get('_route'), app.request.query.all|merge(app.request.attributes.get('_route_params'))|merge({'mode': 'exportOrigin'})) }}" class="btn btn-primary" target="_blank">
+                    <i class="fa fa-download"></i>
+                    Exporter la liste des candidats avec une provenance
+                </a>
+                <a href="{{path('export_sms', {'id' : event.id})}}" class="btn btn-primary">
+                    <i class="fa fa-download"></i>
+                    Export sms rappel
+                </a>
+                <a href="{{path('export_sms_urgence', {'id' : event.id})}}" class="btn btn-primary">
+                    <i class="fa fa-download"></i>
+                    Export sms rappel - urgence
+                </a>
+
+                <a href="{{path('emails_send_candidats', {'id' : event.id, 'slug' : 'Candidats'})}}" class="btn btn-primary">
+                    <i class="fa fa-envelope"></i>
+                    Envoyer un mail aux <span class="important">candidats</span>
+                </a>
+            {% endif %}
+
+            <a href="{{path('event_add_candidate', {'id' : event.id})}}" class="btn btn-primary">
+                <i class="fa fa-plus"></i>
+                Ajouter un candidat
+            </a>
+            {% if unslot is not defined %}
+            <a href="{{path('recall_candidates', {'id' : event.id })}}" class="btn btn-primary" id="send_fills">
+                <i class="fa fa-envelope"></i>
+                        Envoyer les mails <span class="important">de rappel</span>
+            </a>
+            {% else %}
+                <a href="{{path('recall_candidates_unslots', {'id' : event.id })}}" class="btn btn-primary" id="send_fills">
+                    <i class="fa fa-envelope"></i>
+                    Envoyer les mails <span class="important">de relance</span>
+                </a>
+            {% endif %}
+            <div class="clear1"></div>
+
+            {% if registration_validation and can_validate_registration and is_granted('ROLE_RH')%}
+                {%  for status_loop in helper.getStatus %}
+                    <a href="{{path('candidates_list', {'id' : event.id})}}?status={{ status_loop.id }}" class="btn btn{% if status_loop.id == status %}-success{% else %}-info{% endif %}">
+                        <i class="fa fa-search"></i>
+                        {{ status_loop.name|capitalize }}
+                    </a>
+                {%  endfor %}
+            {% endif %}
+
+            {% if status %}
+                <h2>{{candidates.getTotalItemCount}} candidat(s)</h2>
+                <div class="clear1"></div>
+            {% endif %}
+        {%  endif %}
+
+        {%  if search or status %}
+            <a href="{{path('candidates_list', {'id' : event.id})}}" class="btn btn-primary">
+                <i class="fa fa-arrow-left"></i>
+                Retour à la liste
+            </a>
+        {% endif %}
+
+        <div class="clear2"></div>
+        {{form_start(form)}}
+        {% if is_granted('ROLE_VIEWER') %}
+            {{form_widget(form)}} {# why this?#}
+        {% else %}
+            {{form_widget(form)}}
+        {% endif %}
+
+        <button type="submit" class="btn btn-info">
+            <i class="fa fa-search"></i> Rechercher
+        </button>
+        {{form_end(form)}}
+
+
+        <table class="table table-striped" id="candidate_list">
+            <thead>
+            <tr>
+                <th>Prénom Nom</th>
+                {% if registration_type %}
+                    <th>Poste sélectionné</th>
+                {% elseif registration_validation %}
+                    <th>Poste sélectionné</th>
+                {% endif %}
+                {% if registration_joblinks %}
+                    <th>Session joblink</th>
+                {% endif %}
+                {% if helper.countSlotsInEvent(event) != 0 %}
+                <th>Créneau</th>
+                {% endif %}
+                <th>Email</th>
+                <th>Téléphone </th>
+                <th>Date d'inscription</th>
+                <th>Venu</th>
+                <th>Provenance</th>
+                <th>Suivi{% if registration_validation and can_validate_registration %} / Statut{% endif %}</th><th class="text-center">CV</th>
+                {# to do notes #}
+                <th class="text-center">Renvoyer <br>l'invitation</th>
+                <th class="text-center">Regénérer <br>l'invitation</th>
+                <th class="text-center">Regénérer <br>et renvoyer<br> l'invitation</th>
+                <th class="text-center">Télécharger <br>l'invitation</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for candidate in candidates %}
+
+                {% if slots is defined %}
+                    {% set participation = helper.getCandidateParticipationByEventAndSlots(candidate,event,slots) %}
+                {% else %}
+                    {% set participation = helper.getCandidateParticipationByEvent(candidate,event) %}
+                {% endif %}
+                {% if participation is not null %}
+                    <tr>
+                        <td>
+                            {% if is_granted("ROLE_VIEWER") %}
+                                <a href="{{path('admin_candidate_profile', {'event' : event.id, 'id' : candidate.id})}}">
+                                    {{candidate}}
+                                </a>
+                                {#}<a href="{{path('candidate_rh_comment', {'id' : participation.id})}}">
+                                    <i class="fa fa-comment"></i>
+                                </a>#}
+                                {% if is_granted('ROLE_ADMIN') %}
+                                    <a href="{{path('event_delete_candidate_participation', {'id' : participation.id})}}" class="a_confirm" data-msg="cette participation ?">
+                                        <i class="fa fa-remove"></i>
+                                    </a>
+                                {% endif %}
+                            {% elseif is_granted("ROLE_RH") %}
+                                {{candidate}}
+                                {#<a href="{{path('candidate_rh_comment', {'id' : participation.id})}}">
+                                    <i class="fa fa-comment"></i>
+                                </a>#}
+                                <a href="{{path('event_edit_candidate_participation', {'event' : event.id, 'id' : participation.id})}}">
+                                    <i class="fa fa-edit"></i>
+                                </a>
+
+                            {% else %}
+                                {{candidate}}
+                            {% endif %}
+                        </td>
+                        {% if registration_type %}
+                            <td>
+                                {# Control for the phpunit test : testAddCandidateToJoblinkSession #}
+                                {% if participation.job %}
+                                    {% if participation.job.participation %}
+                                        {{participation.job.participation.companyName}} -
+                                    {% endif %}
+                                    {{participation.job}}
+                                {% else %}
+                                    <p>-</p>
+                                {% endif %}
+                            </td>
+                        {% elseif registration_validation %}
+                            <td>
+                                {{candidate.wantedJob}}
+                            </td>
+                        {% endif %}
+                        {% if registration_joblinks %}
+                            <td>
+                                <form id="formCandidatesJoblinks" action="{{ path('candidate_joblinkSession', {'id': participation.id}) }}" method="POST">
+                                    <input type="hidden" name="token" value="{{ csrf_token('edit-joblink-session') }}"/>
+                                    <select name="joblink_session">
+                                        <option value="">Choisir une session joblink</option>
+                                        {% for joblink_session in joblink_sessions %}
+                                            <option
+                                                    {% for participationJoblinkSession in participation.joblinkSessions %}
+                                                        {% if joblink_session == participationJoblinkSession %}
+                                                            selected="selected"
+                                                        {% endif %}
+                                                    {% endfor %}
+                                                    value="{{ joblink_session.id }}">{{ joblink_session }} - {{ joblink_session.participation }}</option>
+                                        {% endfor %}
+                                    </select>
+                                    <button id="{{button_id|default('enregistrer')}}" name="submitAction" value="enregistrer" class="text-success"><i class="fa fa-check" aria-hidden="true"></i></button>
+                                    <button id="{{button_id|default('supprimer')}}" name="submitAction" value="supprimer" ><i class="fa fa-remove" aria-hidden="true"></i></button>
+                                </form>
+                            </td>
+                        {% endif %}
+                        {% if helper.countSlotsInEvent(event) != 0 %}
+                        <td>
+                            <form id="formCandidateSlots" action="{{ path('candidate_slots', {'id': participation.id}) }}" method="POST">
+                            <input type="hidden" name="token" value="{{ csrf_token('edit-slots-session') }}"/>
+                                <select name="slots">
+                                    <option {% if participation.slot is null %}
+                                            selected="selected"
+                                            {% endif %}
+                                            value="Aucun créneau choisi"></option>
+                                    {% for slots_session in slots_session %}
+                                        <option {% if slots_session == participation.slot %}
+                                                selected="selected"
+                                                {% endif %}
+                                                value="{{ slots_session.id }}">{{ slots_session.name }}</option>
+                                    {% endfor %}
+                                </select>
+                            <button id="{{button_id|default('enregistrer')}}" name="submitAction" value="enregistrer" class="text-success"><i class="fa fa-check" aria-hidden="true"></i></button>
+                            </form>
+                        </td>
+                            {% endif %}
+                        <td>
+                            {{candidate.email}}
+                        </td>
+                        <td>
+                            {{candidate.phone}}
+                        </td>
+                        <td>
+                            {{participation.createdAt|date('d/m/Y H:i')}}
+                        </td>
+                        <td>
+                            {% if participation.scannedAt %}
+                                {{ participation.scannedAt|date('H:i') }}
+                            {% else %}
+                                <a target="_blank" href="{{path('valider_venue', {'id' : participation.id})}}">
+                                    <button type="submit" class="btn btn-info">
+                                        Valider la venue
+                                    </button>
+                                </a>
+                            {% endif %}
+                        </td>
+                        <td>
+                            {% if participation.candidate.origin %}
+                                {{ participation.candidate.origin.name }}
+                            {% else %}
+                                <form id="formCandidatesJoblinks" action="{{path('valider_origin', {'id' : participation.id})}}" method="POST">
+                                    <input type="hidden" name="token" value="{{ csrf_token('edit-joblink-session') }}"/>
+                                    <select name="origin_candidate">
+                                        <option value="">Choisir une provenance</option>
+                                        {% for origin in origins %}
+                                            <option value="{{ origin.id }}">{{ origin.name }}</option>
+                                        {% endfor %}
+                                    </select>
+                                        <button type="submit" class="btn btn-info">
+                                            Valider
+                                        </button>
+                                </form>
+                            {% endif %}
+                        </td>
+                        <td>
+                            {% if registration_validation and can_validate_registration %}
+                                <a href="{{path('recruitment_change_status', {'id' : participation.id})}}">
+                                    {% if participation.status == "confirmé" %}
+                                        {{participation.status ? participation.status|capitalize : 'Changer'}}<div class="confirmed-candidate"></div>
+                                    {% elseif participation.status == "refusé" %}
+                                        {{participation.status ? participation.status|capitalize : 'Changer'}}<div class="refused-candidate"></div>
+                                    {% elseif participation.status == "inscrit" %}
+                                        {{participation.status ? participation.status|capitalize : 'Changer'}}<div class="registered-candidate"></div>
+                                    {% elseif participation.status == "en attente" %}
+                                        {{participation.status ? participation.status|capitalize : 'Changer'}}<div class="waiting-candidate"></div>
+                                    {% endif %}
+                                    {{participation.statusDate|date('d/m/Y H:i')}}
+                                </a><br>
+                            {% endif %}
+
+                            {% if participation.handledBy %}
+                                Par {{ participation.handledBy }}
+                            {% endif %}
+                        </td>
+
+                        <td class="text-center">
+                            {% if helper.fileExists(candidate.getCvPath) %}
+                                <a href="{{path('candidate_user_download_cv', {'id' : participation.id})}}" target="_blank">
+                                    <i class="fa fa-download"></i>
+                                </a>
+                                <a href="#" data-toggle="modal" data-target="#previewCv{{candidate.id}}">
+                                    <i class="fa fa-eye"></i>
+                                </a>
+                                <div class="modal fade bd-example-modal-lg" id="previewCv{{candidate.id}}" tabindex="-1" role="dialog" aria-labelledby="previewCvLabel" aria-hidden="true" style="margin:27px;">
+                                    <div class="modal-dialog modal-lg" role="document">
+                                        <div class="modal-content">
+                                            <div class="modal-body">
+                                                <object data="{{asset(candidate.getCvPath)}}" type="application/pdf" width="100%" height="720">
+                                                    lien alternatif : <a href="{{asset(candidate.getCvPath)}}">{{candidate.cv}}</a>
+                                                </object>
+                                            </div>
+                                            <div class="modal-footer">
+                                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Fermer</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            {% else %}
+                                <i class="text-danger fa fa-warning"></i>
+                            {% endif %}
+
+                            {% if is_granted("ROLE_VIEWER") %}
+                                {% include 'partials/display_from.html.twig' %}
+                            {% endif %}
+
+                        </td>
+                        {%  set datas = '' %}
+                        {%  if participation.status %}
+                            {%  set datas = "Etes vous-sur de vouloir effectuer cette action pour le candidat " ~ participation.candidate  ~ " - " ~ participation.status.name ~ "?" %}
+                        {%  endif %}
+
+                        <td class="text-center">
+                            {% if helper.fileExists(participation.invitationPath) %}
+                                <a href="{{path('candidate_user_resend_invitation', {'id' : participation.id})}}" class="append_loader a_confirm" data-msg="{{ datas }}" data-no-text=true>
+                                    <i class="fa fa-envelope"></i>
+                                </a>
+                            {% else %}
+                                <i class="text-danger fa fa-warning"></i>
+                            {% endif %}
+                        </td>
+                        <td class="text-center">
+                            {% if not (registration_validation and (participation.status and participation.status.slug == 'registered')) %}
+                                <a href="{{path('candidate_user_regenerate_invitation', {'id' : participation.id})}}" class="append_loader a_confirm" data-msg="{{ datas }} "  data-no-text=true>
+                                    <i class="fa fa-spinner"></i>
+                                </a>
+                            {% endif %}
+                        </td>
+                        <td class="text-center">
+                            <a href="{{path('candidate_user_resend_invitation', {'id' : participation.id})}}?regenerate=1" class="append_loader a_confirm" data-msg="{{ datas }}" data-no-text=true>
+                                <i class="fa fa-spinner"></i> & <i class="fa fa-envelope"></i>
+                            </a>
+                        </td>
+
+                        <td class="text-center">
+                            {% if helper.fileExists(participation.invitationPath) %}
+                                <a target="_blank" href="{{asset(participation.invitationPath)}}">
+                                    <i class="fa fa-download"></i>
+                                </a>
+                            {% else %}
+                                <i class="text-danger fa fa-warning"></i>
+                            {% endif %}
+                        </td>
+                    </tr>
+                {% endif %}
+            {% endfor %}
+            </tbody>
+        </table>
+        <a class="btn btn-info" href="{{ path('event_show', {'id': event.id}) }}">Retour</a>
+
+        <div class="navigation">
+            {{ knp_pagination_render(candidates) }}
+        </div>
+
+    </div>
+{% endblock %}

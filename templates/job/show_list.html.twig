@@ -1,0 +1,55 @@
+{% extends 'admin_base.html.twig' %}
+
+{% block content %}
+<h1 style="text-align:center">Vos offres</h1>
+    <div class="container">
+      <div class="row">
+          <div style="display: flex;flex-wrap:wrap;justify-content: center" class="allOffers">
+          {% if jobs is defined %}
+            {% if jobs|length > 0 %}
+              {% for job in jobs %}
+              <div style="background-color: white;margin:10px;word-wrap:break-word;min-height:150px;padding-left:0;padding-right:0" class="col-xs-12 col-sm-5">
+                <a href="{{ path('job_show', {'id': job.id}) }}">
+                  <div style="padding:20px"class="containtOffer">
+                    <p>{{job.contractType}}</p>
+                    <p style="color:#0099cb;text-transform:uppercase;font-size:1.25em;text-align:left">{{job.name}}</p>
+                    {% if job.city is not null %}
+                      <div class="cityJob">
+                        <div class="row">
+                          <div class="col-xs-1">
+                            <i style="padding-right:0" class="fa fa-map-marker"></i>
+                          </div>
+                          <div style="padding-left:0" class="cityJobInfo col-xs-11">
+                            <p>{{job.city.name}} - ({{job.city.cp}})</p>
+                          </div>
+                        </div>
+                      </div>
+                    {% endif %}
+                    <p>{{job.offerType.name}}</p>
+                  </div>
+                </a>
+              </div>
+              {% endfor %}
+            {% endif %}
+          {% endif %}
+          </div>
+        </div>
+      </div>
+    </div>
+    <a style="display:block;margin:auto;width:10%"href="{{ path('job_new', {'id': participation.id}) }}" class="btn btn-primary" id="participation_edit"> <i class="fa fa-plus"></i> Nouvelle offre</a>
+    {% if helper.isAtLeastViewer(app.user) %}
+        <a style="display:block;margin:auto;width:10%;margin-top:10px" href="{{path('job_import',{'id':participation.id})}}" class="btn btn-primary" id="return">
+            <i class="fa fa-retweet"></i> Importer des offres
+        </a>
+        <a style="display:block;margin:auto;width:10%;margin-top:10px" href="{{ path('event_show', {'id': participation.event.id, 'anchor' : participation.id}) }}" class="btn btn-primary" id="return">
+            <i class="fa fa-arrow-left"></i> Retour à l'événement
+        </a>
+    {% else %}
+        <a style="display:block;margin:auto;width:10%;margin-top:10px" href="{{path('job_import',{'id':participation.id})}}" class="btn btn-primary" id="return">
+            <i class="fa fa-retweet"></i> Importer des offres
+        </a>
+        <a style="display:block;margin:auto;width:10%;margin-top:10px" href="{{path('exposant_participation_show',{'id':participation.id})}}" class="btn btn-primary" id="return">
+            <i class="fa fa-arrow-left"></i> Retour à la fiche
+        </a>
+    {% endif %}
+{% endblock %}

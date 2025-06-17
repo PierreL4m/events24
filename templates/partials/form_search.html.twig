@@ -1,0 +1,15 @@
+{% if form_search is not defined %}
+	<p class="text-danger missing_form"> 
+		Veuillez nous excuser, le formulaire de recherche est manquant. <br>
+		Merci de signaler ce bug à notre webmaster <a href="mailto:webmaster@l4m.fr?Subject=Formulaire de recherche manquant sur le back ofiice événement L4M" target="_top"> en cliquant ici </a>
+	</p>
+{% else %}
+	<div class="form_search_container">
+		{{form_start(form_search)}}
+			{{form_widget(form_search)}}
+			<button type="submit" class="btn btn-info">
+				<i class="fa fa-search"></i>
+			</button>
+		{{form_end(form_search)}}
+	</div>
+{% endif %}

@@ -1,0 +1,46 @@
+{% extends 'admin_base.html.twig' %}
+{# should not be used #}
+{% block content %}
+	<div class="container" id="edit_candidate_comment">
+		{# <div class="clear2"></div>
+		<h1> 
+			{{comment.candidateParticipation.candidate}} 
+			
+		</h1>
+		<div class="clear1"></div>
+		<div class="raw_likes">
+			<div class="favorite{% if comment.favorite %} current{% endif %}">
+				{% if comment.favorite %}
+					<i class="fa fa-star"></i>
+				{% else %}
+					<i class="fa fa-star-o"></i>
+				{% endif %}
+			</div>
+			<div class="like{% if comment.like == 1 %} current{% endif %}">
+				{% if comment.like == 1 %}
+					<i class="fa fa-thumbs-up"></i>
+				{% else %}
+					<i class="fa fa-thumbs-o-up"></i>
+				{% endif %}
+			</div>
+			<div class="dislike{% if comment.like == -1 %} current{% endif %}">
+				{% if comment.like == -1 %}
+					<i class="fa fa-thumbs-down"></i>
+				{% else %}
+					<i class="fa fa-thumbs-o-down"></i>
+				{% endif %}
+			</div>
+		</div>	
+		{{form_start(form)}}			
+			<div class="hide_this">
+				{{form_widget(form.favorite)}}
+				{{form_widget(form.like)}}
+			</div>
+			{{form_row(form.comment)}}
+			 <button class="btn btn-success" id="{{button_id|default('save')}}"> <i class="fa fa-check"></i> {{ button_label|default('Enregistrer') }}</button>
+			 
+		{{form_end(form)}} #}
+		<p> Veuillez nous excusez cette page a été déplacée. Merci de revenir en arrière</p>
+		{{helper.getReturnButton()|raw}}
+	</div>
+{% endblock %}

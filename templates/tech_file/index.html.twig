@@ -1,0 +1,247 @@
+{% extends 'admin_base.html.twig' %}
+
+{% block content %}
+	<div class="container" id="tech_file_index">
+		<h1> Dossier Technique - {{helper.getAdminEventLink(event)|raw}} </h1>
+		 {% include 'partials/missingResponsable.html.twig' %}
+		<div class="spec">
+			<p class="title">Cahier des charges </p>
+			<ul>
+				<li>
+					<span class="text">Base cahier des charges (sans la dernière page)</span>
+					 {% if helper.specBaseExists(event) %}
+					 	<span><i>{{event.specBase.name}}</i></span>
+						<a href="{{path('download_spec_base', {'id' : event.specBase.id})}}">
+							<i class="fa fa-download"></i>
+						</a>
+					{% else %}
+						<span class="download_clearer"></span>
+					{% endif %}
+					<a href="{{path('event_spec_base_edit', {'id' : event.id})}}">
+						<i class="fa fa-edit"></i>
+					</a>
+				</li>
+				<li>
+					<span class="text">Dernière page signée</span>
+					<span class="download_clearer"></span>
+					{% if helper.specBaseExists(event) %}
+						<a href="{{path('spec_last_page', {'id' : event.id})}}">
+							<i class="fa fa-edit"></i>
+						</a>
+					{% else %}
+						<p>Merci de d'abord télécharger le cahier des charges "de base"</p>
+					{% endif %}
+				</li>
+				{% if event.specificationPath %}
+					<li>
+						<span class="text">Cahier des charges signé</span>
+						<a href="{{path('download_spec',{'id' : event.id})}}">
+							<i class="fa fa-download"></i>
+						</a>
+					</li>
+				{% endif %}
+			</ul>
+		</div>
+		<div class="tech_guide item_container">
+			<p class="title">Guides techniques </p>
+			<ul>
+				{% for techGuide in event.techGuides %}
+					<li>
+						<span class="stand_size">
+							{{techGuide.getStandSize}} m<sup>2</sup>
+						</span>
+						<a href="{{path('download_tech_guide',{'id' : techGuide.id})}}">
+							<i class="fa fa-download"></i>
+						</a>
+						<a href="{{path('tech_guide_edit',{'id' : techGuide.id})}}">
+							<i class="fa fa-edit"></i>
+						</a>
+						<a href="{{path('tech_guide_delete',{'id' : techGuide.id})}}" class="a_confirm" data-msg="ce guide technique? (toutes les participations associées vont perdre leur superficie de stand)">
+							<i class="fa fa-remove"></i>
+						</a>
+						<a href="{{path('tech_guide_add_participation',{'id' : techGuide.standType.id})}}" class="btn btn-primary add_participation">
+							<i class="fa fa-plus"></i>
+							Exposants
+						</a>
+					</li>
+
+				{% endfor %}
+			</ul>
+			<a href="{{path('tech_guide_new',{'id' : event.id})}}" class="btn btn-primary">
+				<i class="fa fa-plus"></i>
+				Ajouter un guide technique
+			</a>
+		</div>
+		<div class="ack item_container">
+			<p class="title">Accusé de récéption</p>
+			<div id="ack_date_container">
+				{% if event.ackDate %}
+					Date de retour de l'accusé de récéption : <span id="defined_date_ack">{{event.ackDate|date('d/m/Y')}}</span>
+					<i class="fa fa-edit" id="edit_ack"></i>
+				{% else %}
+					<button class="btn btn-danger" id="edit_ack">
+						<i class="fa fa-warning"></i>
+						Définir la date de retour de l'accusé de récéption
+					</button>
+				{% endif %}
+			</div>
+			<div id="edit_ack_container">
+				<input type="text" id="date_ack" value="{{event.ackDate|date('d/m/Y')}}" data-provide="datepicker" readonly="readonly">
+				<button id="save_ack" class="btn btn-success" data-id="{{event.id}}"> Enregistrer</button>
+			</div>
+		</div>
+		<div class="details item_container">
+			<p class="title">Détails</p>
+			{% include 'partials/participation_mail_list.html.twig' with {'tech' : true} %}
+		</div>
+		<div class="send item_container">
+			<p class="title">Envoi des dossiers techniques</p>
+			{% set ok = true %}
+			{% if not event.specificationPath %}
+				<p>
+					<a href="{{path('spec_last_page', {'id' : event.id})}}" class="btn btn-danger">
+						<i class="fa fa-warning"></i>
+						Merci de télécharger la dernière page du cahier des charges
+					</a>
+				</p>
+				{% set ok = false %}
+			{% endif %}
+			{% if not event.ackDate %}
+				<p>
+					<button id="ask_edit_ack" class="btn btn-danger">
+						<i class="fa fa-warning"></i>
+						Merci de définir la date de retour de l'accusé de réception
+					</button>
+				</p>
+				{% set ok = false %}
+			{% endif %}
+			{% if helper.missingStandNumber(event) %}
+				<p>
+					<a href="{{path('participation_stand_numerotation', {'id' : event.id, 'ack' : true})}}" class="btn btn-danger">
+						<i class="fa fa-warning"></i>
+						Merci de numéroter tous les stands
+					</a>
+				</p>
+				{% set ok = false %}
+			{% endif %}
+
+			{% if helper.missingTechGuide(event) %}
+				<p>
+					<button id="ask_tech_guide" class="btn btn-danger">
+						<i class="fa fa-warning"></i>
+						Merci d'assigner un guide technique à tous les exposants
+					</button>
+				</p>
+				{% set ok = false %}
+			{% endif %}
+
+			<a href="{{path('nosend_tech_files',{'id':event.id})}}" class="btn btn-danger">
+				<i class="fa fa-minus-circle"></i>
+				Retirer des exposants de l'envoi
+			</a>
+			<div class="clear1"></div>
+			{% if ok %}
+				<a href="{{path('send_all_files',{'id':event.id, 'type' : 'Tech'})}}" class="btn btn-primary send_all_mail">
+					<i class="fa fa-envelope"></i>
+					Envoyer tous les dossiers techniques
+				</a>
+				<i>(Les dossiers déjà envoyés ne seront pas réenvoyés)</i>
+			{% endif %}
+		</div>
+		<div class="badges" id="badges">
+			<p class="title">Génération des badges exposants</p>
+			<h1 style="color:red;text-transform: uppercase;font-weight: bold">Pensez à mettre les fond badges et réseaux sociaux dans les paramètres de l'événement !</h1>
+			<a href="{{path('generate_badges',{'id':event.id})}}" class="btn btn-primary">
+				<i class="fa fa-download"></i>
+				Générer tous les badges
+			</a>
+			<a href="{{path('download_visuels', {'id':event.id})}}" class="btn btn-primary">
+				<i class="fa fa-download"></i>
+			    Télécharger les visuels réseaux sociaux
+			</a>
+		<button  class="btn btn-primary" id="sendSelectedRs" event="{{event.id}}" style="display:{% if event.rs_ready == 1 %}block{% else %}none{% endif %};margin-top:5px">
+				<i class="fa fa-envelope"></i>
+				Envoyer les visuels des réseaux sociaux
+			</button>
+			<p class="print">
+				{% if helper.canPrintBadges(event) %}
+					<a href="{{path('print_badges',{'id':event.id})}}" class="btn btn-primary">
+						<i class="fa fa-print"></i>
+						Imprimer les badges
+					</a>
+					<button  class="btn btn-primary" id="printSelectedBadges" event="{{event.id}}">
+						<i class="fa fa-print"></i>
+						Imprimer les badges sélectionnés
+					</button>
+					<ul>
+						<li>Enregistrer l'image</li>
+						<li>Ouvrir avec paint</li>
+						<li>Aller dans "Imprimer"</li>
+						<li>Cliquer sur "Page Setup"</li>
+						<li>Taille A3</li>
+						<li>Orientation : Portrait</li>
+						<li>Echelle "fit to" 1 par {{helper.getNbPages(event)}}</li>
+					</ul>
+				{% else %}
+					<i class="fa fa-warning text-danger"></i>
+					Merci de numéroter la taille de tous les stands et de cliquer sur générer tous les badges avant de les imprimer
+				{% endif %}
+			</p>
+			<p class="note">
+				Note : si un badge ne conviens pas, il est toujours possible de coller manuellement le logo de l'exposant avec photoshop. Modèle badge dans Salon/Organisation pour salons/modele_badge_2017.psd
+			</p>
+			<button  class="btn btn-primary" id="checkAll">
+				Tout cocher
+			</button>
+			<button  class="btn btn-primary" id="unCheckAll">
+				Tout décocher
+			</button>
+			{% for p in event.participations %}
+				<div class="custom_row">
+					<div class="companyNameBadgeGenerator">{{ p.companyName }}</div>
+						<div class="generation" style="width: 56%">
+							{% if p.logo is null %}
+								<span class="alert alert-danger"><i class="fa fa-warning"></i>Merci de télécharger un logo</span>
+							{% else %}
+								<div class="nbPrintBadge">
+									<input class="checkBadge" type="checkbox" id="subscribeNews{{ p.id }}" name="subscribe" participation="{{p.id}}">
+									<input style="margin: 2px;width:50px" type="number" class="nbBadgesTxt" value="1"  name="nbBadges">
+									<button class="btn btn-success validPrintBadge" participation="{{ p.id }}"><i class="fa fa-check"></i></button>
+									<a style="color:white" href="{{path('download_visuels_one', {'id':p.id})}}" class="btn btn-primary">
+										<i class="fa fa-download"></i>
+									</a>
+									<p>Valider pour imprimer uniquement ces badges</p>
+								</div>
+								<a href="#" class="btn btn-primary generate btnBadge" data-id="{{p.id}}">
+									<i class="fa fa-spinner"></i>
+									{% if p.badge %}Reg{% else %}G{% endif %}énérer le badge
+								</a>
+							{% endif %}
+						</div>
+						<div class="badge_container" badge-id="{{p.id}}">
+							{% if p.badge %}
+								<img src="{{p.getBadgeSrc}}" alt="badge">
+							{% endif %}
+						</div>
+					</div>
+			{% endfor %}
+		</div>
+		<div class="clear2"></div>
+		<div class="export_users" id="export_users">
+			<p class="title">Export des identifiants exposant pour le scan des candidats</p>
+			{# to do chekc if every organization has exposant user scan #}
+			<a href="{{path('export_export_username', {'id':event.id})}}" class="btn btn-primary">
+				<i class="fa fa-file-excel-o"></i>
+				Télécharger
+			</a>
+	</div>
+{% endblock %}
+
+{% block js_dev %}
+    <script>
+        var anchor = null;
+        {% if anchor is defined and anchor %}
+            var anchor = {{anchor}} ;
+        {% endif %}
+    </script>
+{% endblock %}
