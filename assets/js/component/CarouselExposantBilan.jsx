@@ -6,8 +6,6 @@ import 'moment/locale/fr';
 import axios from "axios";
 import ModalPicturesBilan from "./ModalPicturesBilan";
 import UseModal from "./Hooks/UseModal";
-import { LazyLoadImage } from 'react-lazy-load-image-component';
-import 'react-lazy-load-image-component/src/effects/opacity.css';
 import Form from "react-validation/build/form";
 import AuthService from "./Services/auth.service";
 export default function CarouselExposantBilan (props) {
@@ -208,7 +206,7 @@ export default function CarouselExposantBilan (props) {
                         {filteredData ?
                             images.map((image, key) => {
                                     return (
-                                        <LazyLoadImage
+                                        <img
                                             key={key}
                                             style={{minWidth:"250px",heigth:"365px;"}}
                                             wrapperClassName={"galleryWrapper"}
@@ -228,7 +226,7 @@ export default function CarouselExposantBilan (props) {
                             :
                             images.map((image, key) => {
                                     return (
-                                        <LazyLoadImage
+                                        <img
                                             key={image.key}
                                             style={{minWidth:"250px",heigth:"365px;"}}
                                             wrapperClassName={"galleryWrapper"}
