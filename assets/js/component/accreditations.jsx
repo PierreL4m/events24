@@ -104,6 +104,7 @@ export default function Accreditations () {
             e.target.phone.value
         ).then(
             (response) => {
+                setIsLoading(false)
                 if (response.status == 201) {
                     if(response.data.mailErrorFormat || response.data.firstnameError || response.data.lastnameError || response.data.phoneError ||response.data.mailError || response.data.phonelenError){
                         setError(response.data)
