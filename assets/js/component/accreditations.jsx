@@ -229,7 +229,6 @@ export default function Accreditations () {
                                         }
                                         <div className="form-group">
                                             {data &&
-                                            isLaoding === false ?
                                                 <button
                                                     style={styles.button} className="btn btn-primary btn-block">
 
@@ -237,15 +236,6 @@ export default function Accreditations () {
                                                         color: "white",
                                                         marginRight: "15px"
                                                     }}></i><span>Valider</span></>
-                                                </button>
-                                                :
-                                                <button
-                                                    style={styles.button} className="btn btn-primary btn-block">
-                                                    disabled
-                                                    <><i className="fa-solid fa-check" style={{
-                                                        color: "white",
-                                                        marginRight: "15px"
-                                                    }}></i><span>Chargement...</span></>
                                                 </button>
                                             }
                                         </div>
