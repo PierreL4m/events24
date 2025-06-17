@@ -1,0 +1,11 @@
+{% extends 'admin_base.html.twig' %}
+
+{% block content %}
+        <div id="readerScan" width="600px"></div>
+    </div>
+    <div style="position: absolute;bottom:calc(38.5vh)" class="container" id="scan_candidate">
+        <input placeholder="Entrez le code sous le QR code" style="width:80%;border-radius:75px;border:none;color:gray;padding:7px" id="infoCandidatScan" type="text" name="infoCandidatScan">
+        <input style="position:absolute;visibility: hidden;height: 0;width: 0" id="idParticipation" type="text" name="infoCandidatScan" value={{ participation.id }}>
+        <button id="searchCandidatScanScan">Valider</button>
+    </div>
+{% endblock %}

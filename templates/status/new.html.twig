@@ -1,0 +1,13 @@
+{% extends 'admin_base.html.twig' %}
+
+{% block title %}Créer un Status{% endblock %}
+
+{% block content %}
+	<div class="container">
+    <h1>Créer un statut</h1>
+
+    {{ include('status/_form.html.twig') }}
+
+    <a href="{{ path('status_index') }}">Retour</a>
+    </div>
+{% endblock %}

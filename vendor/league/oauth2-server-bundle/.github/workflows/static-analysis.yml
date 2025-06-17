@@ -1,0 +1,24 @@
+name: "static analysis"
+
+on: ["pull_request", "push"]
+
+jobs:
+    static-analysis:
+        name: "static analysis"
+        runs-on: "ubuntu-latest"
+        steps:
+            - name: "checkout"
+              uses: "actions/checkout@v2"
+
+            - name: "build the environment"
+              run: "dev/bin/docker-compose build"
+
+            - name: "install dependencies"
+              run: "dev/bin/php composer update --prefer-stable"
+
+            - name: "run static analysis"
+              run: "dev/bin/php psalm --shepherd --stats"
+
+            - name: clear docker volumes
+              if: ${{ always() }}
+              run: dev/bin/docker-compose down --volumes

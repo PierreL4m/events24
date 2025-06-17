@@ -1,0 +1,25 @@
+{% extends 'admin_base.html.twig' %}
+
+{% block content %}
+	<div class="container" id="scan_candidate">
+		<div class="clear2"></div>
+		<h1> 
+			Merci de saisir le n° de QR code du candidat
+			
+		</h1>
+		<div class="clear1"></div>
+		
+		{{form_start(form)}}			
+			
+			{{form_widget(form)}}
+			 <button class="btn btn-success" id="{{button_id|default('save')}}"> <i class="fa fa-check" type="submit"></i> OK </button>
+			 
+		{{form_end(form)}}
+
+		<div class="clear1"></div>
+		<a href="{{path('exposant_show_candidates', {'id' : participation.id})}}" class="btn btn-primary">
+			<i class="fa fa-arrow-left"></i>
+			Retour à l'événement {{participation.event}}
+		</a>
+	</div>
+{% endblock %}

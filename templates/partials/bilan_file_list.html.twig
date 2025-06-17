@@ -1,0 +1,74 @@
+{% set const = null %}
+{% for bilan_file in bilan_files %}
+    {% if admin is defined %}
+        {% set current = bilan_file.getType() %}
+    {% else %}
+        {% set current = bilan_file.getSlug() %}
+    {% endif %}
+
+    {% if const != current and admin is defined %}
+        <hr>
+    {% endif %}
+
+    {% if not const or const != current %}
+        <section id="{{bilan_file.getSLug()}}" class="anchor">
+        <h2 class="title">
+            {% if admin is defined %}
+                {{ bilan_file.bilanFileType }}
+            {% else %}
+                {{ bilan_file.getLabel }}
+            {% endif %}
+        </h2>
+    {% endif %}
+
+    {% if admin is defined %}
+        {% set const = bilan_file.getType() %}
+    {% else %}
+        {% set const = bilan_file.getSlug() %}
+    {% endif %}
+
+    <div class="file_container {{bilan_file.getSLug()}}">
+        <div class="file">
+            {% if bilan_file.getType == 'pdf' %}
+                <a href="{{path('bilan_view_pdf', {'id' : bilan_file.id})}}"  target="_blank">
+                    <i class="fa fa-download"></i>
+                </a>
+            {% endif %}
+            <div class="title">
+               {{ bilan_file.name }}
+            </div>
+
+            {% if admin is defined %}
+                <div class="actions">
+                    <a href="{{ path('bilan_file_edit', {'id': bilan_file.id}) }}">
+                        <i class="fa fa-edit"></i>
+                    </a>
+                    <a href="{{ path('bilan_file_delete', {'id': bilan_file.id}) }}" class="a_confirm" data-msg="supprimer ce fichier ?">
+                        <i class="fa fa-remove"></i>
+                    </a>
+                </div>
+            {% endif %}            
+        </div>
+
+        
+        {% if bilan_file.getType == 'mp3' %}
+           <audio controls>
+                <source src="{{bilan_file.getWebPath}}" type="audio/mpeg">
+                Votre navigateur ne supporte pas les éléments audio
+            </audio>
+        {% elseif bilan_file.getType == 'mp4'  %}
+            <video width="640" height="360" controls>
+                <source src="{{bilan_file.getWebPath}}" type="video/mp4">
+                 Votre navigateur ne supporte pas les éléments vidéos
+            </video>
+         {% elseif bilan_file.getType == 'youtube' %}
+            <iframe width="640" height="360" src="{{helper.getYoutubeLink(bilan_file.getUrl)}}">
+            </iframe>
+         {% elseif bilan_file.getType == 'iframe' %}
+           {{helper.getIFrame(bilan_file.url)|raw}}
+        {% endif %}
+    </div>
+     {% if not const or const != current %}
+     </section>
+ {% endif %}
+{% endfor %}

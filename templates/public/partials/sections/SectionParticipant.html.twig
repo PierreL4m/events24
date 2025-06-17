@@ -1,0 +1,39 @@
+
+<div id="participants_container">
+	{% for participant in section.participants %}
+		<span class="participant_container">
+			<a href="#participant_{{participant.id}}" id="Modal_participant_{{participant.id}}" title="{{participant.name}}" class="flex-item" >
+				<img src="{{ vich_uploader_asset(participant, 'logoFile') }}" alt="{{participant.name}}">
+			</a>
+			
+			{# Modal #}
+			<div id="{{'myModal_participant_' ~ participant.id}}" >
+				{% include 'partials/participant.html.twig' %}
+			</div>
+
+			{% if admin is defined %}
+				<span class="btn_actions">
+					<a href="{{path('participant_edit', {'id' : participant.id})}}">
+						<i class="fa fa-edit"></i>
+					</a>
+					<a href="{{path('participant_delete', {'id' : participant.id, })}}" class="a_confirm" data-msg="ce participant?">
+						<i class="fa fa-remove"></i>
+					</a>
+				</span>
+			{% endif %}
+		</span>
+	{% else %}
+		{% if not section.description %}
+			<p> La partie "{{section.title}}" sera en ligne très prochainement </p>
+		{% endif %}
+	{% endfor %}
+</div>
+
+{% if admin is defined %}
+	<div class="footer_section">
+		<a href="{{path('participant_new', {'id' : section.id })}}" class="btn btn-primary">
+			<i class="fa fa-plus"></i>
+			Ajouter un nouveau participant
+		</a>
+	</div>
+{% endif %}

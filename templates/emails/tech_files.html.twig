@@ -1,0 +1,45 @@
+<p>
+	Bonjour {{p.responsable}},
+</p>
+
+<p>
+	Le {{event.date|date('d/m/Y')}} se tiendra la prochaine édition de l'événement L4M "{{event.getFullType}}" - {{event.place.city}}<br>
+	Nous tenons encore une fois à vous remercier de votre participation.
+</p> 
+
+<p>
+	Vous trouverez ci-joint dans ce mail :
+</p>
+<ul>
+	<li> Le cahier des charges de l'événement,</li>
+	{% if p.joblinkSessions is defined and p.joblinkSessions|length > 0 %}
+		<li>
+			Le cahier des charges de votre joblink {%  for joblinkSession in p.joblinkSessions %} "{{ joblinkSession }}" {%  endfor %}
+		</li>
+	{% endif %}
+	<li> Un accusé de réception, que je vous invite à me retourner pour le <strong>{{event.ackDate|date('d/m/Y')}}  au plus tard.</strong></li>
+
+</ul>
+<p>
+	Looking For Mission <br>
+	Parc Eurasanté<br>
+	Bâtiment G<br>
+	30 avenue Pierre Mauroy<br>
+	59120 Loos<br>
+</p>
+<p>Nous vous invitons également à générer dès à présent votre accréditation et celles de vos collègues qui participeront à l’événement le jour J via ce lien : <a href="https://www.24h-emploi-formation.com/{{event.slug}}#/accreditations/{{event.id}}?participation={{p.id}}">Cliquez ici</a></p>
+{% if event.id == 78 %}
+	<p>
+		<strong><span style="color:red">Important</span> : si vous disposez de matériel lourd et/ou encombrant, l’installation de votre stand devra se faire impérativement le Mercredi 26 septembre, entre 16h et 18h30,</strong> afin de pouvoir utiliser le monte-charge, accessible à l’arrière du batiment (cf. plan d’accès voie intérieure ci-dessous). Pour des raisons de sécurité, le monte-charge ne sera pas accessible le jeudi matin. (Afin que l’on puisse vous aider et vous guider à votre arrivée, merci de nous avertir (06 61 42 87 29 - 06 76 84 09 12) en amont de votre venue le mercredi 26 septembre). 
+	</p>
+{% endif %}
+<p>
+	Je me tiens à votre disposition pour tout complément d’information.
+</p>
+<p>
+	Excellente journée,
+</p>
+<p>
+	Cordialement,
+</p>
+{% include 'emails/signature.html.twig' %}

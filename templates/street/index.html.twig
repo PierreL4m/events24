@@ -1,0 +1,34 @@
+{% extends 'admin_base.html.twig' %}
+
+{% block content %}
+    <div class="container">
+        <h1>Voies</h1>
+
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>Id</th>
+                    <th>Label</th>
+                    <th>actions</th>
+                </tr>
+            </thead>
+            <tbody>
+            {% for street in streets %}
+                <tr>
+                    <td>{{ street.id }}</td>
+                    <td>{{ street.label }}</td>
+                    <td>
+                        <a href="{{ path('street_edit', {'id': street.id}) }}">edit</a>
+                    </td>
+                </tr>
+            {% else %}
+                <tr>
+                    <td colspan="3">no records found</td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+
+        <a href="{{ path('street_new') }}">Create new</a>
+    </div>
+{% endblock %}

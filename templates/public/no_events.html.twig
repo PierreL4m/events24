@@ -1,0 +1,77 @@
+{% extends 'public_base.html.twig' %}
+
+{% block canonical %}
+	{# <link rel="canonical" href="{{'http://www.' ~h~ '-emploi-formation.com'~app.request.pathinfo}}"> #}
+{% endblock %}
+
+{% block js_head %}
+	<script src='https://www.google.com/recaptcha/api.js' async defer></script>
+	<script
+			src="https://code.jquery.com/jquery-3.3.1.min.js"
+			integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
+			crossorigin="anonymous" async defer></script>
+
+	<script>
+		function recaptcha_check(token, form){
+			$.ajax({
+				type: "POST",
+				url: "/check-captcha",
+				data: {token : token},
+				cache: false,
+
+				success: function(data){
+					form.submit();
+					console.log('success');
+				},
+				error: function(xhr,status,error){
+					alert('La validation par reCAPTCHA a échoué');
+					location.reload();
+				}
+			});
+		}
+
+		function recaptcha_check_register(token){
+			recaptcha_check(token,$('form[name=registration_simple]'));
+		}
+
+		function recaptcha_check_contact(token){
+			recaptcha_check(token,$('form[name=contact]'));
+		}
+	</script>
+
+{% endblock %}
+
+{% block body %}
+
+	<div id="btn_top"><i class="fa fa-arrow-up"></i></div>
+
+	{% block main %}
+		<p> Revenez très vite pour découvrir nos événements de recrutement </p>
+		<meta http-equiv="refresh" content="0;URL=https://24h-emploi.com/">
+	{% endblock %}
+
+	{% block footer %}
+		<footer>
+			<div class="content">
+				<ul id="social_mobile">
+					<li>
+						<a class="fb" href="https://www.facebook.com/L4M.fr" target="_blank"><i class="fa fa-facebook"></i></a>
+					</li>
+					<li>
+						<a class="twitter" href="https://twitter.com/l4mfr" target="_blank"><i class="fa fa-twitter"></i></a>
+					</li>
+					<li>
+						<a class="linkedin" href="https://www.linkedin.com/company/l4m-fr-looking-for-mission" target="_blank"><i class="fa fa-linkedin"></i></a>
+					</li>
+					<li>
+						<a class="viadeo" href="https://fr.viadeo.com/fr/profile/l4m.emploi,stage-et-formation-dans-le-nord-pas-de-calais" target="_blank"><i class="fa fa-viadeo"></i></a>
+					</li>
+				</ul>
+				<p class="footer_text">
+					<i><a href="https://www.l4m.fr">L4M.FR </a> organisateur d'événements de recrutement depuis 2004</i>
+				</p>
+			</div>
+		</footer>
+	{% endblock %}
+
+{% endblock %}

@@ -1,0 +1,77 @@
+{% extends 'admin_base.html.twig' %}
+
+{% block content %}
+	<div class="container">
+		<h1> Types d'événements </h1>
+		<a href="{{path('event_type_new')}}" class="btn btn-info">
+                    <i class="fa fa-plus" aria-hidden="true"></i>
+                    Nouveau
+		</a>
+		{% for event_type in event_types %}
+                    <div class="row event_type"> 
+                        <div class="col-md-10">
+                            {% if is_granted('ROLE_SUPER_ADMIN') %}
+                                id : {{event_type.id}}<br>
+                                <button class="btn"><a href="{{ path('debug_invit', {'id': event_type.id, 'mode': 'html'}) }}" target="_blank">debug invitation (html)</a></button> <button class="btn"><a href="{{ path('debug_invit', {'id': event_type.id, 'mode': 'pdf'}) }}" target="_blank">debug invitation (pfd)</a></button><br><br>
+
+                            {% endif %}
+
+                            <p>{{event_type.fullName}} - {{event_type.shortName}}</p> <br>
+                            Création {% include 'partials/created.html.twig' with {'entity' : event_type} %}<br>
+                            Édition {% include 'partials/updated.html.twig' with {'entity' : event_type} %}<br>
+                            Inscription obligatoire : 
+                            {% if event_type.mandatoryRegistration %}
+                                Oui
+                            {% else %}
+                                Non
+                            {% endif %}<br>
+                            Afficher les informations sur les exposants : 
+                            {% if event_type.displayParticipationContactInfo %}
+                                Oui
+                            {% else %}
+                                Non
+                            {% endif %}<br>
+                            Type de validation des inscriptions candidats : 
+
+                            {% if event_type.registrationValidation == constant('REGISTRATION_VALIDATION_AUTO', event_type) %}
+                                Automatique
+                            {% elseif event_type.registrationValidation == constant('REGISTRATION_VALIDATION_VIEWER', event_type) %}
+                                Admins
+                            {% elseif event_type.registrationValidation == constant('REGISTRATION_VALIDATION_VIEWER_RH', event_type) %}
+                                Admins ET cabinets
+                            {% endif %}
+                            <br>
+
+                            {% if event_type.analyticsId %}
+                                Id suivi Analytics : {{ event_type.analyticsId}}<br> 
+                            {% endif %}
+
+                            Type d'exposants acceptés :
+                            <ul>
+                                {% for type in event_type.organizationTypes %}
+                                    <li>{{type}}</li>
+                                {% endfor %}
+                            </ul><br>
+                            Hôte principal : {{ event_type.host }}<br>
+                            Hôtes :
+                            <ul>
+                                {% for host in event_type.hosts %}
+                                    <li>{{host}}</li>
+                            </ul>			
+                                {% endfor %}	
+                            {% if event_type.header %}
+                                <img src="{{event_type.getHeaderSrc()}}" class="banner_admin">
+                            {% endif %}
+
+                        </div>
+                        <div class="col-md-1">
+                            <a href="{{path('event_type_edit',{'id':event_type.id})}}"> <i class="fa fa-edit"></i></a>
+                        </div>
+                        <div class="col-md-1">
+                            <a href="{{path('event_type_delete',{'id':event_type.id})}}" class='a_confirm' data-msg="ce type d'événement ?"> <i class="fa fa-remove"></i></a>
+                        </div>
+                    </div>
+                    <div class="clear2"></div>
+            {% endfor %}
+	</div>
+{% endblock %}

@@ -1,0 +1,9 @@
+{% extends 'admin_base.html.twig' %}
+
+{% block content %}
+    <div class="container">
+        <h1> Exposant(s) à relancer - {{helper.getAdminEventLink(event)|raw}}</h1>
+        {% include 'partials/missingResponsable.html.twig' %}
+        {% include 'partials/recall_list.html.twig' %}
+    </div>
+{% endblock %}

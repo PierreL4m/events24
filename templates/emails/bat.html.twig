@@ -1,0 +1,23 @@
+<p>
+	Bonjour {{p.responsable}},
+</p>
+
+<p>
+	Je vous invite à découvrir en pièce jointe votre BAT pour le guide de l'événement L4M "{{event.getFullType}}" , qui sera à disposition des candidats le {{event.date|date('d/m/Y')}} - {{event.place.name}} - {{event.place.city}}<br>
+	Nous tenons encore une fois à vous remercier de votre participation.
+</p> 
+
+<p>
+	Je vous prie de me faire part de votre validation ou vos éventuelles remarques et demandes de modification avant ce <strong>{{event.batDate|date('d/m/Y')}}</strong>
+</p>
+<p>
+	Sans retour de votre part à ce sujet, nous considérerons que ce BAT vous convient et l'enverrons à l'impression.
+</p>
+<p>Je vous remercie de votre attention et me tiens à votre disposition pour tout complément d'information.</p>
+<p> 
+	Bonne journée,
+</p>
+<p>
+	Cordialement,
+</p>
+{% include 'emails/signature.html.twig' %}

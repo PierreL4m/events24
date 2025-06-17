@@ -1,0 +1,31 @@
+{% extends 'admin_base.html.twig' %}
+
+{% block title %}BilanFileType{% endblock %}
+
+{% block content %}
+	<div class="container">
+    <h1>BilanFileType</h1>
+
+    <table class="table">
+        <tbody>
+            <tr>
+                <th>Id</th>
+                <td>{{ bilan_file_type.id }}</td>
+            </tr>
+            <tr>
+                <th>Label</th>
+                <td>{{ bilan_file_type.label }}</td>
+            </tr>
+            <tr>
+                <th>Slug</th>
+                <td>{{ bilan_file_type.slug }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <a href="{{ path('bilan_file_type_index') }}">back to list</a>
+
+    <a href="{{ path('bilan_file_type_edit', {'id': bilan_file_type.id}) }}">edit</a>
+
+    {{ include('bilan_file_type/_delete_form.html.twig') }}
+{% endblock %}

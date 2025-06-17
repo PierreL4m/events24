@@ -1,0 +1,21 @@
+{% extends 'admin_base.html.twig' %}
+{% block content %}
+    <div class="container">
+    	<h1> Recruteur(s) vu(s) - {{participation.event}}</h1>
+    	<div class="clear2"></div>
+    	<div class="grid_container">
+			<div class="grid">				
+				{% for c in participation.candidateComments%}
+					{% if c.organizationParticipation.logo %}
+						{% if c.organizationParticipation.logo.path != 'no_path' and c.organizationParticipation.logo.path %}
+							<div class="logo grid-item ">
+								<span class="helper"></span><img src="{{c.organizationParticipation.logo.getWebPath()}}" alt="{{c.organizationParticipation.companyname}}" />
+							</div>		
+						{% endif %}
+					{% endif %}
+				{% endfor %}
+			</div>
+		</div>
+		{{helper.getReturnButton|raw}}
+    </div>
+{% endblock %}

@@ -1,0 +1,50 @@
+{{form_start(form)}}
+		{% if form.lastname is defined %}
+			{{form_row(form.lastname)}}
+		{% endif %}
+		{% if form.firstname is defined %}
+			{{form_row(form.firstname)}}
+		{% endif %}
+		{% if form.email is defined %}
+			{{form_row(form.email, {'attr' : {'autocomplete' : 'username'}})}}
+		{% endif %}
+		{% if form.phone is defined %}
+			{{form_row(form.phone)}}
+		{% endif %}
+		{% if form.plainPassword is defined %}
+			{% if pwd_placeholder is not defined %}
+				{% set pwd_placeholder = "" %}
+			{% endif %}
+			{# {{form_row(form.plainPassword.first, {'attr' : {'placeholder' : pwd_placeholder}})}}
+			{{form_row(form.plainPassword.second, {'attr' : {'placeholder' : pwd_placeholder}})}} #}
+			{{form_row(form.plainPassword, {'attr' : {'placeholder' : pwd_placeholder}})}}
+		{% endif %}
+		{% if form.mailingRecall is defined %}
+			{# <label class="form-check-label" for="registration_mailingEvents">
+				{{form_widget(form.mailingRecall)}}
+			</label> #}
+			{{form_widget(form.mailingRecall)}}
+		{% endif %}
+		{% if form.mailingEvents is defined %}
+			{{form_widget(form.mailingEvents)}}
+		{% endif %}
+		{% if form.phoneRecall is defined %}
+			{{form_widget(form.phoneRecall)}}
+		{% endif %}
+			<p>
+				En validant mon inscription, j'accepte que mes données soient visibles des recruteurs.
+			</p>
+			<button class="btn btn-success
+			g-recaptcha"
+			id="register_action" type="submit"
+			{% if app.environment == 'prod'%}
+				data-sitekey="6LdpB3AUAAAAAGhw1sTJc0XCUNWKqbbD67b8IXMv"
+			{% else %}
+				data-sitekey="6LeIxAcTAAAAAJcZVRqyHh71UMIEGNQ_MXjiZKhI"
+			{% endif %}
+			data-callback="recaptcha_check_register">
+			<span>
+			Valider
+			</span>
+		</button>
+	{{form_end(form)}}

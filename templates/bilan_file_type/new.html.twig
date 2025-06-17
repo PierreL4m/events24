@@ -1,0 +1,10 @@
+{% extends 'admin_base.html.twig' %}
+
+{% block content %}
+	<div class="container">
+    <h1>Créer une nouvelle catégorie de fichiers bilan</h1>
+
+    {{ include('bilan_file_type/_form.html.twig') }}
+
+    <a href="{{ path('bilan_file_type_index') }}">back to list</a>
+{% endblock %}

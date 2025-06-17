@@ -1,0 +1,16 @@
+knp_snappy:
+    temporary_folder: "%kernel.cache_dir%/snappy"
+    #process_timeout: 120 # In seconds
+    pdf:
+        enabled:    true
+        binary:     '%env(XVFB_PATH)% -a %env(WKHTMLTOPDF_PATH)%'
+        options:
+            - { name: 'enable-local-file-access', value: true }
+            - { name: 'page-size', value: 'A4' }
+            - { name: 'lowquality', value: false }
+            - { name: 'image-quality', value: 100 }
+            - { name: 'image-dpi', value: 300 }
+    image:
+        enabled:    true
+        binary:     '%env(WKHTMLTOIMAGE_PATH)%'
+        options:    []

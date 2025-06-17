@@ -1,0 +1,9 @@
+{% extends 'partials/form.html.twig' %}
+{% block title %} 
+	Télécharger des photos pour {{participation}} <br>
+    {{helper.getAdminEventLink(participation.event)|raw}} <br>
+    
+{% endblock %}
+{% block preform %}
+	<h2> Merci de convertir vos photos en amont ☺</h2>
+{% endblock %}

@@ -1,0 +1,24 @@
+{% extends 'admin_base.html.twig' %}
+
+{% block content %}
+	<div id="form_template" class="container">
+		<h1 class="title">Cabinet de recrutement {{helper.getAdminEventLink(event)|raw}} </h1>
+		
+		{{ form_start(form) }}
+		    {{ form_widget(form) }}
+		    <button class="btn btn-success" id="{{button_id|default('save')}}">{{ button_label|default('Enregistrer') }}</button>		
+		{{ form_end(form) }}
+			
+		{% if app.environment != 'prod' or is_granted('ROLE_SUPER_ADMIN') %}
+			<a href="#" id="fill"> fill </a>
+		{% endif %}
+
+		<p><strong> Créer un nouveau cabinet de recrutement </strong></p>
+		{{ form_start(form_new) }}
+		    {{ form_widget(form_new) }}
+		    <button class="btn btn-success" id="{{button_id|default('save')}}">{{ button_label|default('Enregistrer') }}</button>		
+		{{ form_end(form_new) }}
+
+		{{helper.getReturnButton()|raw}}
+	</div>
+{% endblock %}

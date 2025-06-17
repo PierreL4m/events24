@@ -1,0 +1,46 @@
+{% extends 'admin_base.html.twig' %}
+
+
+{% block content %}
+    <div class="container">
+        {% include 'public/partials/section.html.twig' with {'event': section.event, 'admin' : true} %}
+
+        <div class="footer_section">
+          <a href="{{ path('section_edit', {'id': section.id}) }}" class="btn btn-success">
+              <i class="fa fa-edit text-white"></i>
+              Éditer la rubrique
+          </a>
+          <div class="clear1"></div>
+          <a href="{{ path('section_index', {'id' : section.event.id}) }}" class="btn btn-primary">
+              <i class="fa fa-arrow-left"></i>
+              Retour à la liste des rubriques
+          </a>
+        </div>
+    </div>
+{% endblock %}
+
+{% block js_dev %}
+
+    <script>
+        if (document.getElementById('infos')){
+            var lat = {{section.event.place.latitude}};
+            var long = {{section.event.place.longitude}};
+
+            function initMap() {
+                var place = {lat: lat, lng: long};
+
+                var map = new google.maps.Map(document.getElementById('google_map'), {
+                  zoom: 16,
+                  center: place,
+                  scrollwheel: false
+                });
+                var marker = new google.maps.Marker({
+                  position: place,
+                  map: map,
+                  icon: '/images/point_carte_google_02.png',
+                  title: "{{section.event.place.name|raw}}"
+                });
+            }
+        }
+    </script>
+{% endblock %}

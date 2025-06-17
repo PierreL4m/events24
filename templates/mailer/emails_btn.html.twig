@@ -1,0 +1,18 @@
+{% set email = helper.hasEmail(event,slug) %}
+
+{% if email %}
+	{% set path = 'email_list' %}
+	{% set fa = 'search' %}
+{% else %}
+	{% set path = 'emails_send' %}
+	{% set fa = 'envelope' %}
+{% endif %}
+<span class="wrapper">
+	<a href="{{path(path,{'id':event.id, 'slug' : slug})}}" class="btn btn-primary {% if email %}has_email{% endif %}">
+		<i class="fa fa-{{fa}}"></i>
+		{{helper.getEmailTypeBySlug(slug)}}
+		{% if email %}
+			<span class="sent">Envoyé le {{email.sent|date('d/m/Y à H:i')}}</span>
+		{% endif %}
+	</a>
+</span>

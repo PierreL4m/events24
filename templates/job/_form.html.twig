@@ -1,0 +1,13 @@
+{{ form_start(form) }}
+    {{ form_row(form.offerType) }}
+    {{ form_row(form.name) }}
+    {{ form_row(form.jobType) }}
+    {{ form_row(form.presentation) }}
+    {{ form_row(form.contractType) }}
+<div id="timeContract">
+    {{ form_row(form.timeContract) }}
+</div>
+{{form_row(form.city, {'attr' : {'class' : 'focus-select', 'autocomplete' : 'off'}})}}
+			{{form_row(form.city_id)}}
+<button class="btn btn-success" id="participation_save">{{ button_label|default('Enregistrer') }}</button>
+{{ form_end(form) }}

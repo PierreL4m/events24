@@ -1,0 +1,10 @@
+{% extends 'partials/form.html.twig' %}
+
+{% block title %}
+	Numérotation des stands de l'événement {{helper.getAdminEventLink(event)|raw}}
+{% endblock %}
+
+{% block form %}
+	{% form_theme form 'bootstrap_4_horizontal_layout.html.twig' %}
+	{{parent()}}
+{% endblock %}

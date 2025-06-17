@@ -1,0 +1,108 @@
+{% extends 'admin_base.html.twig' %}
+
+{% block content %}
+<div class="container" id="candidates_list_event">
+    <h1>
+
+        {{filteredAccreditations|length}} accréditations
+        {{ event }}
+    </h1>
+    <a href="{{path('export-phone-accred', {'id' : event.id})}}" class="btn btn-primary">
+        <i class="fa fa-print"></i>
+        Exporter les numéros de téléphone
+    </a>
+    <a href="{{path('export-accred', {'id' : event.id})}}" class="btn btn-primary">
+        <i class="fa fa-print"></i>
+        Exporter les accréditations
+    </a>
+    <br/>
+    <br/>
+    <form>
+        <label>Filtrer par structure :</label>
+        <select name="filterStructure">
+            {% if selectedStructure is null %}
+                <option value="null">Toutes</option>
+                {% for accreditation in accreditationsList %}
+                    <option value="{{ accreditation.id }}">{{ accreditation.companyName }}</option>
+                {% endfor %}
+            {% else %}
+                <option value="null">Toutes</option>
+                <option selected value={{ selectedStructure[0].participation.id }}>{{ selectedStructure[0].participation.companyName }}</option>
+                {% for accreditation in accreditationsList|filter(v => v.companyName != selectedStructure[0].participation.companyName) %}
+                    <option value="{{ accreditation.id }}">{{ accreditation.companyName }}</option>
+                {% endfor %}
+            {% endif %}
+        </select>
+        <button type="submit" class="btn btn-info">
+            Valider
+        </button>
+    </form>
+    <table class="table table-striped" id="candidate_list">
+        <thead>
+        <tr>
+            <th>Nom</th>
+            <th>Prénom</th>
+            <th>Email</th>
+            <th>Téléphone </th>
+            <th>Structure </th>
+            <th class="text-center">Renvoyer <br>l'accreditation</th>
+            <th class="text-center">Regénérer <br>l'accreditation</th>
+            <th class="text-center">Regénérer <br>et renvoyer<br> l'accreditation</th>
+            <th class="text-center">Télécharger <br>l'accreditation</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for accreditation in filteredAccreditations %}
+        <tr>
+            <td>
+                {{ accreditation.lastname }}
+            </td>
+            <td>
+                {{ accreditation.firstname }}
+            </td>
+            <td>
+                {{ accreditation.email }}
+            </td>
+            <td>
+                {{ accreditation.phone }}
+            </td>
+            <td>
+                {{ accreditation.participation.companyName }}
+            </td>
+            {% set datas = 'Valider le choix ?' %}
+            <td class="text-center">
+                {% if helper.fileExists(accreditation.accreditationPath) %}
+                    <a href="{{path('candidate_user_resend_accreditation', {'id' : accreditation.id})}}" class="append_loader a_confirm" data-msg="{{ datas }}" data-no-text=true>
+                        <i class="fa fa-envelope"></i>
+                    </a>
+                {% else %}
+                    <i class="text-danger fa fa-warning"></i>
+                {% endif %}
+            </td>
+            <td class="text-center">
+                    <a href="{{path('regeneration_accred', {'id' : accreditation.id})}}" class="append_loader a_confirm" data-msg="{{ datas }} "  data-no-text=true>
+                        <i class="fa fa-spinner"></i>
+                    </a>
+            </td>
+            <td class="text-center">
+                <a href="{{path('candidate_user_resend_accreditation', {'id' : accreditation.id})}}?regenerate=1" class="append_loader a_confirm" data-msg="{{ datas }}" data-no-text=true>
+                    <i class="fa fa-spinner"></i> & <i class="fa fa-envelope"></i>
+                </a>
+            </td>
+            <td class="text-center">
+                {% if helper.fileExists(accreditation.accreditationPath) %}
+                    <a target="_blank" href="{{asset(accreditation.accreditationPath)}}">
+                        <i class="fa fa-download"></i>
+                    </a>
+                {% else %}
+                    <i class="text-danger fa fa-warning"></i>
+                {% endif %}
+            </td>
+        </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+    <a class="btn btn-info" href="{{ path('event_show', {'id': event.id}) }}">Retour</a>
+
+</div>
+{% endblock %}

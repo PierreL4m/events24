@@ -1,0 +1,101 @@
+<div id="participation_mail_list">
+	{% if tech is defined %}
+		{% set var = "Tech" %}
+	{% elseif bat is defined %}
+		{% set var = "Bat" %}
+	{% endif %}
+
+	{% if var is defined %}
+		{% for p in helper.getOrderedParticipations(event) %}
+			<div class="custom_row">
+				<div class="company_name">
+					<a href="{{path('participation_show', {'id' : p.id})}}">
+						{{p.companyName}}
+					</a>
+				</div>
+				{% if tech is defined %}
+					<div class="stand_number">
+						{% if p.standNumber %}
+							n° <strong>{{p.standNumber}}</strong>
+						{% else %}
+							<i class="fa fa-warning text-danger"></i>
+						{% endif %}
+					</div>
+					<div class="stand_size">
+						{% if p.standType %}
+							{{p.standType.dimension}}</strong> m<sup>2</sup>
+						{% else %}
+							<i class="fa fa-warning text-danger"></i>
+						{% endif %}
+					</div>
+				{% elseif bat is defined %}
+					<div class="page">
+						{% if p.bats|length == 0 %}
+							<i class="fa fa-warning text-danger"></i>Pas de Bat
+						{% else %}
+							Pages :							
+							{% for bat in p.bats %}
+								{{bat}} {% if loop.index != loop.last %} / {% endif %}
+							{% endfor %}
+						{% endif %}
+					</div>
+				{% endif %}
+
+				{% if tech is defined %}
+					<div class="download">
+						{% if helper.canCreateAck(p) %}
+							<a href="{{path('ack_download',{'id' : p.id})}}"> 
+								<i class="fa fa-download"></i>
+							</a>							
+						{% endif %}
+					</div>
+				{% endif %}
+
+				{% if (p.noTechGuide and tech is defined ) 
+					or (p.noBat and bat is defined ) 
+					or (p.responsable and p.responsable.hasRole('ROLE_SUPER_ADMIN')) 
+				%}
+					<div class="no_send">
+						<i class="fa fa-ban text-danger"></i>Pas d'envoi
+					</div>
+				{% else %}
+					{% if not p.responsable %}
+						<div class="no_responsable">
+							<i class="fa fa-warning text-danger"></i>Pas de responsable	
+						</div>	
+					{% else %}
+						<div class="email">
+							{% if (helper.canSendMail(p,var)) %}	
+								<a href="#" class="send-mail" data-id="{{p.id}}" data-type="{{var}}">
+									<i class="fa fa-envelope"></i>
+								</a>
+							
+							{% else %}
+								<span class="list_clearer"></span>
+							{% endif %}
+						</div>
+						<div class="sent" sent-id="{{p.id}}">
+							{% if (p.techGuideSent and tech is defined) %}
+							 	{{p.techGuideSent|date('d/m/Y à H:i')}}
+							{% elseif (p.batSent and bat is defined) %}
+							 	{{p.batSent|date('d/m/Y à H:i')}}
+							{% else %}
+								<span class="list_clearer"></span>
+							{% endif %}
+						</div>
+					{% endif %}
+				{% endif %}
+				{% if helper.canSendMailToMe(p,var) %}
+					<div class="send_to_me" sent-to-me-id="{{p.id}}">
+					</div>
+					<span class="pacman_helper">
+						<a href="#" class="btn btn-default send-mail" data-id="{{p.id}}" data-email="{{app.user.email}}" data-type="{{var}}">
+							<i class="fa fa-envelope"></i>
+							M'envoyer le mail
+						</a>
+					</span>
+				{% endif %}
+			</div>
+		{% endfor %}
+	{% endif %}
+</div>

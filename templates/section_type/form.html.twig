@@ -1,0 +1,25 @@
+{% extends 'partials/form.html.twig' %}
+{% block notice %}
+	<p class="notice">
+		<span class="title">Explications sur ce formulaire :</span>
+		<ul>
+			<li>
+				<strong>Titre : </strong>s'affiche sur la page
+			</li>
+			<li>
+				<strong>Titre du menu: </strong>s'affiche dans le menu, par défaut = au titre
+			</li>
+			<li>
+				<strong>Chargement des données précédentes : </strong>à l'ajout de cette rubrique à un l'événement, les données de cette rubrique seront chargées avec les données de l'événement précédent de même type dans la même ville. <i>(information pratiques, concept)</i>
+			</li>
+			<li>
+				<strong>Présence par défaut sur le site public : </strong>à la création de l'événement, la rubrique est ajoutée au site public<i>(liste des logos entreprise, infos pratiques)</i> <br>
+				Ceci peut être couplé à la génération automatique. Dans ce cas, à la création d'un événement, la rubrique est ajoutée et contient les données de l'événement précédent dans la même ville.<br>
+				Sinon, seul le titre de la rubrique avec une mention "contenu à venir" sera affiché. <i> (planning, villages)</i>
+			</li>
+			<li>
+				<strong>Présence par défaut sur la page ville : </strong>la rubrique la plus récente pour un certain lieu sera affichée sur la page ville de ce lieu.<i> (partenaires, informations pratiques)</i>
+			</li>
+		</ul>
+	</p>
+{% endblock %}

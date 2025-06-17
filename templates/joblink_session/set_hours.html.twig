@@ -1,0 +1,3 @@
+{% extends 'partials/form.html.twig' %}
+
+{% block title %} {{ joblink_session.participation }} - {{ joblink_session.joblink }}- {{helper.getAdminEventLink(joblink_session.participation.event)|raw}} {% endblock %}

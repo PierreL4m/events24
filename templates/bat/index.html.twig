@@ -1,0 +1,109 @@
+{% extends 'admin_base.html.twig' %}
+
+{% block content %}
+    <div class="container" id="bats">
+        <h1>BAT {{helper.getAdminEventLink(event)|raw}}</h1>
+        {% include 'partials/missingResponsable.html.twig' %}
+        <div class="container" >
+            <div id="bat_date_container">
+                {% if event.batDate %}
+                    Date de retour des BAT : <span id="defined_date_bat">{{event.batDate|date('d/m/Y')}}</span>
+                    <i class="fa fa-edit" id="edit_bat"></i>
+                {% else %}
+                    <button class="btn btn-danger" id="edit_bat">
+                        <i class="fa fa-warning"></i>
+                        Définir la date de retour des BAT
+                    </button>
+                {% endif %}
+            </div>
+            <div id="edit_bat_container">
+                <input type="text" id="date_bat" readonly="readonly" value="{{event.batDate|date('d/m/Y')}}" data-provide="datepicker" > 
+                <button id="save_bat" class="btn btn-success" data-id="{{event.id}}"> Enregistrer</button>
+            </div>
+            <div class="clear1"></div>
+            {% for bat in bats %}
+                <div class="bat_container">
+                    <div class="custom_row">       
+                        <div class="page_label">
+                            <i class="fa fa-file-text-o"></i>
+                            Page {{ bat.pageLabel }}
+                        </div>
+                        <div class="fa_container"> 
+                            <a href="{{path('bat_edit',{'id' : bat.id})}}">
+                                <i class="fa fa-edit"></i>
+                            </a>
+                        </div>
+                        <div class="fa_container"> 
+                            <a href="{{path('bat_download',{'id' : bat.id})}}">
+                                <i class="fa fa-download"></i>
+                            </a>
+                        </div>
+                        <div class="fa_container">
+                            {% if bat.participations|length == 0 %}
+                                <a href="{{path('bat_remove',{'id' : bat.id})}}">
+                                    <i class="fa fa-remove"></i>
+                                </a>
+                            {% endif %}
+                        </div>
+                    </div>
+                    <div class="custom_row">
+                       <div class="new">
+                            <a href="{{path('bat_add_organizations',{'id' : bat.id})}}" class="btn btn-primary">
+                                <i class="fa fa-plus"></i>
+                                Exposants
+                            </a>
+                        </div>
+                    </div>
+                    <div class="custom_row participation">
+                        <ul>
+                            {% for participation in bat.participations %}
+                                <li> {{participation}}</li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                </div>
+            {% else %}
+                <p>Pas de BAT</p>              
+               <div class="clear1"></div>
+            {% endfor %}
+            
+        </div>
+
+        <a href="{{ path('bat_new', {'id' : event.id}) }}" class="btn btn-primary">
+            <i class="fa fa-plus"></i>
+           Nouveau BAT 
+        </a>
+
+        <div class="send_bats">
+            <p class="title">Envoi des BAT </p>
+            {% if not event.batDate %}
+                <p>
+                    <button id="ask_edit_bat" class="btn btn-danger">
+                        <i class="fa fa-warning"></i>
+                        Merci de définir la date de retour des BAT
+                    </button>
+                </p>
+            {% else %}
+                <a href="{{path('nosend_bat',{'id':event.id})}}" class="btn btn-danger">
+                    <i class="fa fa-minus-circle"></i>
+                    Retirer des exposants de l'envoi
+                </a>                
+            {% endif %}
+
+            <div class="participation_list">
+                {% include 'partials/participation_mail_list.html.twig' with {'bat' : true} %}
+            </div>
+
+            {% if event.batDate %}
+                <div class="clear1"></div>
+                <a href="{{path('send_all_files',{'id':event.id, 'type':'Bat' })}}" class="btn btn-primary send_all_bat">
+                    <i class="fa fa-envelope"></i>
+                    Envoyer tous les bat 
+                </a>
+                <i>
+                    (Les bat déjà envoyés ne seront pas réenvoyés, les exposants sans page ne recevrons pas leur bat)
+                </i>
+            {% endif %}
+        </div>
+    </div>
+{% endblock %}

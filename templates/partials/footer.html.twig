@@ -1,0 +1,34 @@
+<div class="footer_clearer"></div>
+<footer>
+  <div class="content">
+    <p class="organizer">
+      <a href="https://www.l4m.fr" target="_blank">L4M.fr, </a>organisateur d'événements dédiés au recrutement et à la formation depuis 2004. {# }vous propose ses salons dans les villes suivantes :#}
+      </i>
+    </p>
+    <p class="places">
+      {# {% for place in helper.getActiveCities() %} #}
+          {# {% if place.description %}
+            <a href="#" class="city"> {{place.city}} </a>
+            {% if loop.index != loop.last %}
+              -
+          {% endif %}
+        {% else %} #}
+          {# {{place.city}}
+          {% if loop.index != loop.last %}
+              -
+          {% endif %}
+       {#  {% endif %} #}
+      {# {% endfor %} #}
+    </p>
+      {% if event is defined and event.pressFiles %}
+        {% block press %}
+            {% if event.pressFiles.count() > 0 %}
+              <a id="presse" href="{{path('public_press',{'slug' : event.slug})}}">
+                KIT PRESSE <i class="fa fa-download" aria-hidden="true"></i>
+              </a>
+            {% endif %}
+          {% endblock %}
+        {% endif %}
+
+  </div>
+</footer>

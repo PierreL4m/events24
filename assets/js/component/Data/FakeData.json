@@ -1,0 +1,51 @@
+  [
+    {
+      "id": 1,
+      "name": "Agriculture",
+      "component": "AgricultureSvg"
+    }, {
+      "id": 2,
+      "name": "Commerce et relation client",
+      "component": "CommerceSvg"
+    }, {
+      "id": 3,
+      "name": "Industrie",
+      "component": "IndustrieSvg"
+    }, {
+      "id": 4,
+      "name": "Transport Logistique",
+      "component": "TransportSvg"
+    }, {
+      "id": 5,
+      "name": "Comptabilité Finance",
+      "component": "ComptaSvg"
+    }, {
+      "id": 6,
+      "name": "Hôtellerie Restauration",
+      "component": "HotelSvg"
+    }, {
+      "id": 7,
+      "name": "Informatique",
+      "component": "InformatiqueSvg"
+    }, {
+      "id": 8,
+      "name": "Services à la personne",
+      "component": "ServiceSvg"
+    }, {
+      "id": 9,
+      "name": "Santé",
+      "component": "SanteSvg"
+    }, {
+      "id": 10,
+      "name": "Sécurité Défense",
+      "component": "SecuriteSvg"
+    }, {
+      "id": 11,
+      "name": "Fonctions Supports",
+      "component": "FonctionsSvg"
+    }, {
+      "id": 12,
+      "name": "Distribution",
+      "component": "DistributionSvg"
+    }
+  ]

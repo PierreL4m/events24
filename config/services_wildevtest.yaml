@@ -1,0 +1,29 @@
+services:
+    _defaults:
+        autowire: true
+        autoconfigure: true
+        
+    Behatch\HttpCall\Request:
+        arguments:
+            - '@behat.mink'
+        public: false
+
+    behatch.http_call.request:
+        alias: Behatch\HttpCall\Request
+
+    App\Tests\Behat\:
+        resource: '../tests/Behat/*'
+        
+    App\Tests\Behat\ApiContext:
+        arguments:
+            $base_url: 'http://dev.events.portable'
+
+parameters:
+    host_map:
+        default: 'www.24h-emploi-formation.com'
+        localhost: 'www.24h-emploi-formation.com'
+        dev.events.portable: 'www.24h-emploi-formation.com'
+        48h.master.events.local: 'www.48h-emploi-formation.com'
+        experts.master.events.local: 'www.recrutementexperts.fr'
+        escape.master.events.local: 'www.escapegamerecrut.fr'
+        comedy.master.events.local: 'www.recrutcomedyclub.fr'

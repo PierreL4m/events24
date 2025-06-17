@@ -1,0 +1,21 @@
+name: "coding standards"
+
+on: ["pull_request", "push"]
+
+jobs:
+    coding-standards:
+        name: "coding standards"
+        runs-on: "ubuntu-latest"
+        steps:
+            - name: "checkout"
+              uses: "actions/checkout@v2"
+
+            - name: "build the environment"
+              run: "dev/bin/docker-compose build"
+
+            - name: "check coding standards"
+              run: "dev/bin/php php-cs-fixer fix --dry-run --diff --ansi"
+
+            - name: clear docker volumes
+              if: ${{ always() }}
+              run: dev/bin/docker-compose down --volumes

@@ -1,0 +1,27 @@
+<h3> Bonjour {{participation.candidate}}</h3>
+
+{% if image is not defined %}
+	<p> Nous sommes désolés de constater que vous n'avez pas fourni votre CV. </p>
+	{% set label = 'Mettre mon CV en ligne !' %}
+{% else %}
+	<p> 
+		Vous avez pris votre CV en photo.
+	</p>
+	{% set label = 'Modifier mon CV en ligne' %}
+{% endif %}
+
+<p> 
+	Pour augmenter vos chances d'être recruté, nous vous invitons à télécharger votre CV {% if image is defined %}au format doc, docx ou pdf {% endif %}dans votre espace !
+</p>
+<p> 
+	<a href="{{url('candidate_user_edit')}}">
+		{{label}}
+	</a>
+</p>
+
+<p>
+	Nous vous souhaitons bonne chance dans votre recherche d'emploi
+</p>
+
+
+{% include ('emails/signature.html.twig') with {'team' : true } %}

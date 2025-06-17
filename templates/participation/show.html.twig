@@ -1,0 +1,75 @@
+{% extends 'admin_base.html.twig' %}
+
+{% block content %}
+    <div class="container">
+        <h1>
+            {% if is_granted("ROLE_SUPER_ADMIN") %}
+                id = {{participation.id}}
+            {% endif %}
+
+            {% if helper.isAtLeastViewer(app.user) %}
+            	{{participation.getType}} <br>
+            	{{participation.organization.name}} - {{helper.getAdminEventLink(participation.event)|raw}}
+            {% else %}
+                Fiche de participation à l'événement {{participation.event.getFullType}} <br> {{participation.event}}
+            {% endif %}
+        </h1>
+
+        {% if participation.premium %}
+            <h2 class="premium"><i> <i class="fa fa-star"></i> Premium </i></h2>
+        {% endif %}
+        <p><i>Ceci est un aperçu de votre fiche sur le site web de l'événement, vous ne pouvez donc pas fermer votre fiche</i></p>
+        <div id="participation_show_admin">
+        	{% include 'partials/participation_public.html.twig' %}
+        </div>
+        <div class="footer_participation">
+            {% if helper.isAtLeastViewer(app.user) %}
+                <p>
+                    <strong>Fiche validée : </strong> {% include 'partials/updated.html.twig' with {'entity' : participation, 'no' : true} %}
+                </p>
+                <a href="{{ path('participation_edit', {'id': participation.id}) }}" class="btn btn-success" id="return">
+                    <i class="fa fa-edit"></i> Éditer la fiche
+                </a>
+                <a href="{{ path('participation_pdf', {'id': participation.id}) }}" class="btn btn-success" id="return">
+                    <i class="fa fa-edit"></i> Télécharger la fiche au format PDF
+                </a>
+                <hr>
+                {% set responsable = participation.responsable %}
+                <h3>
+                    {% if responsable %}
+                        Responsable
+                    {% else %}
+                        <i class="fa fa-warning text-danger"></i> Attention vous devez définir un responsable !
+                    {% endif %}
+                 </h3>
+                <div class="row">
+                    <div class="col-md-4">
+                        {% if responsable %}
+                            {% include 'user/user.html.twig' with {'user' : responsable} %}
+                        {% else %}
+                            <img src="{{asset('images/ghost_buster.jpg')}}">
+                        {% endif %}
+                    </div>
+                    <div class="col-md-8">
+                        {% include 'partials/btn_edit_responsable.html.twig' %}
+                    </div>
+                </div>
+                <hr>
+                <a href="{{ path('event_show', {'id': participation.event.id, 'anchor' : participation.id}) }}" class="btn btn-primary" id="return">
+                    <i class="fa fa-arrow-left"></i> Retour à l'événement
+                </a>
+                <div class="clear1"></div>
+
+                {% if remove_helper.canDelete(participation) %}
+                   {{ include('participation/_delete_form.html.twig') }}
+                {% endif %}
+
+            {% elseif participation.event.date >= date('now') %}
+                 <a href="{{ path('exposant_participation_edit', {'id': participation.id}) }}" class="btn btn-primary" id="participation_edit"> <i class="fa fa-edit"></i> Modifier ma fiche</a>
+                 <div class="clear1"></div>
+                 <a href="{{ path('exposant_participation_list') }}" class="btn btn-success" id="return"> <i class="fa fa-check"></i> Terminer</a>
+            {% endif %}
+
+        </div>
+    </div>
+{% endblock %}

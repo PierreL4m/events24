@@ -1,0 +1,68 @@
+name: "unit tests"
+
+on: [ "pull_request", "push" ]
+
+jobs:
+    tests:
+        runs-on: ubuntu-latest
+        continue-on-error: ${{ matrix.can-fail }}
+        strategy:
+            fail-fast: false
+            matrix:
+                #Stable supported versions
+                php: ['7.4', '8.0', '8.1', '8.2']
+                symfony: ['5.4.*', '6.2.*']
+                composer-flags: ['--prefer-stable']
+                can-fail: [false]
+                exclude:
+                    - php: '7.4'
+                      symfony: '6.2.*'
+                    - php: '8.0'
+                      symfony: '6.2.*'
+                include:
+                    # Lowest supported versions
+                    - php: '7.2'
+                      symfony: '5.4.*'
+                      composer-flags: '--prefer-stable --prefer-lowest'
+                      can-fail: false
+                    # EOL PHP versions
+                    - php: '7.2'
+                      symfony: '5.4.*'
+                      composer-flags: '--prefer-stable'
+                      can-fail: false
+                    - php: '7.3'
+                      symfony: '5.4.*'
+                      composer-flags: '--prefer-stable'
+                      can-fail: false
+                    # Development versions
+                    - php: '8.2'
+                      symfony: '6.3.x-dev'
+                      composer-flags: ''
+                      can-fail: true
+
+        name: "PHP ${{ matrix.php }} - Symfony ${{ matrix.symfony }}${{ matrix.composer-flags != '' && format(' - Composer {0}', matrix.composer-flags) || '' }}"
+
+        env:
+            SYMFONY_REQUIRE: ${{ matrix.symfony }}
+
+        steps:
+            - name: "checkout"
+              uses: "actions/checkout@v2"
+
+            - name: "build the PHP7 environment"
+              run: "dev/bin/docker-compose build --build-arg PHP_VERSION=${{ matrix.php }} php"
+              if: startsWith(matrix.php, '7')
+
+            - name: "build the PHP8 environment"
+              run: "dev/bin/docker-compose build --build-arg PHP_VERSION=${{ matrix.php }} --build-arg XDEBUG_VERSION='3.2.0' php"
+              if: startsWith(matrix.php, '8')
+
+            - name: "install dependencies"
+              run: "dev/bin/php composer update --ansi ${{ matrix.composer-flags }}"
+
+            - name: "run unit tests"
+              run: "dev/bin/php-test vendor/bin/simple-phpunit --colors=always"
+
+            - name: clear docker volumes
+              if: ${{ always() }}
+              run: dev/bin/docker-compose down --volumes

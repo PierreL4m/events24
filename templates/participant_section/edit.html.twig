@@ -1,0 +1,5 @@
+{% extends 'partials/form.html.twig' %}
+{% block title %} 
+	Édition de  "{{participant_section}}" - {{participant_section.section}}<br>
+	{{helper.getAdminEventLink(participant_section.section.event)|raw}}
+{% endblock %}

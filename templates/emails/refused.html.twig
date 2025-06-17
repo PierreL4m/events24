@@ -1,0 +1,15 @@
+<h3> Bonjour {{participation.candidate}} </h3>
+<p> 
+	{% if status == 'refused_after_call' %}Suite à notre conversation téléphonique, n{% else %}N{% endif %}ous avons le regret de vous informer que votre candidature n'a pas été retenue pour participer à l'événement {{participation.event.getTypeCityAndDate()}} prochain.
+</p>
+<p>
+	Malgré la qualité de cette dernière, nous regrettons de ne pouvoir y donner une suite favorable. 
+</p>
+<p>
+Nous vous souhaitons du succès dans la suite de vos recherches.
+</p>
+<p>
+Cordialement,
+</p>
+
+{% include 'emails/signature.html.twig' with {'team' : true} %}

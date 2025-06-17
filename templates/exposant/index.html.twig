@@ -1,0 +1,91 @@
+{% extends 'admin_base.html.twig' %}
+
+{% block content %}
+    <div style="padding: 0" class="container" id="organization_view">
+
+    	{% if participation_today %}
+			<h1 style="display:block;width:95%;margin:auto;margin-top:20px;margin-bottom:20px;color: #4c4c4c;font-size:25px;letter-spacing: 1px"> Salon{% if passed_participations|length > 1%}s{% endif %} en cours </h1>
+			<div style="background-color: white;padding: 15px">
+    		{% for participation in participation_today %}
+					<div style="padding:20px;background-color:white;display:flex;justify-content:space-between" id="scanHeader">
+						<div class="scanInfoSalon">
+							<p style="margin:2px;font-size: 20px; font-weight:bold;text-transform:uppercase; color:{{ participation.event.place.colors[0].code }}"class="scanCity">{{ participation.event.place.city }}</p>
+							<p style="margin: 2px;text-transform: uppercase;font-weight: 500;color: #4c4c4c;" class="scanPlace">{{ participation.event.place.name }}</p>
+							<p style="margin: 2px;text-transform: uppercase;color: #6d6868;" class="scanDate">{{ participation.event.date|format_date('none', 'EEEE', null, 'gregorian', 'fr')}} <span style="font-weight:bold">{{ participation.event.date|format_date('none', 'dd', null, 'gregorian', 'fr')}} {{ participation.event.date|format_date('none', 'MMMM', null, 'gregorian', 'fr')}}</span> {{ participation.event.date|format_date('none', 'yyyy', null, 'gregorian', 'fr')}}</p>
+						</div>
+					</div>
+					<div style="display: flex;justify-content: center;gap: 10px" class="bordered">
+						<a style="width: 50%;max-width:200px" href="{{ path('exposant_show_scan', {'id': participation.id}) }}">
+							<img style="width: 100%" src="/images/pictoScanner.svg" />
+						</a>
+						<a style="width: 50%;max-width:200px" href="{{ path('exposant_show_candidates', {'id': participation.id}) }}">
+							<img style="width: 100%" src="/images/pictoCandidatScan.svg" />
+						</a>
+					</div>
+			{% endfor %}
+			</div>
+		{% endif %}
+		{% if is_granted('ROLE_ORGANIZATION') %}
+			<h1 style="display:block;width:95%;margin:auto;margin-top:20px;margin-bottom:20px;color: #4c4c4c;font-size:25px;letter-spacing: 1px">{% if next_participations|length > 1%}Mes{% else %}Mon{% endif %} Salon{% if next_participations|length > 1%}s{% endif %} à venir </h1>
+			{% if next_participations %}
+				{% for participation in next_participations %}
+					<div style="padding:20px;background-color:white;border-radius:10px;width:95%;display:block;margin: auto;margin-bottom: 20px" id="scanHeader">
+						<div class="scanInfoSalon">
+							<p style="margin:2px;font-size: 20px; font-weight:bold;text-transform:uppercase; color:{{ participation.event.place.colors[0].code }}"class="scanCity">{{ participation.event.place.city }}</p>
+							<p style="margin: 2px;text-transform: uppercase;font-weight: 500;color: #4c4c4c;" class="scanPlace">{{ participation.event.place.name }}</p>
+							<p style="margin: 2px;text-transform: uppercase;color: #6d6868;" class="scanDate">{{ participation.event.date|format_date('none', 'EEEE', null, 'gregorian', 'fr')}} <span style="font-weight:bold">{{ participation.event.date|format_date('none', 'dd', null, 'gregorian', 'fr')}} {{ participation.event.date|format_date('none', 'MMMM', null, 'gregorian', 'fr')}}</span> {{ participation.event.date|format_date('none', 'yyyy', null, 'gregorian', 'fr')}}</p>
+							<a href="{{path('exposant_participation_show',{'id':participation.id})}}">
+								Fiche exposant
+							</a>
+							<br/>
+							<a href="{{path('exposant_jobs_list_show',{'id':participation.id})}}">
+								Saisir mes offres
+							</a>
+							<br/>
+							<a target="_blank" href="/{{ participation.event.slug }}#/accreditations/{{ participation.event.id }}?participation={{ participation.id }}">
+								Gerer mes accreditations
+							</a>
+							<br/>
+							{%  if participation.facebookVisuel is not null and participation.twitterVisuel is not null and participation.linkedinVisuel is not null and participation.instaVisuel is not null and participation.signatureVisuel is not null %}
+							<a href="{{path('download_visuels_one_exposant', {'id':participation.id})}}">
+								Télécharger le kit de communication
+							</a>
+							{% endif %}
+
+						</div>
+					</div>
+				{% endfor %}
+
+				{# this works only if more than 10 event in three month (pagination is 10 events) #}
+				{% if index is not defined and is_granted('ROLE_ORGANIZATION') %}
+					<di class="navigation">
+						{{ knp_pagination_render(participations) }}
+					</div>
+				{% endif %}
+
+			{% else %}
+				<p>
+					{% if index is defined %}
+						Vous n'avez pas de participation à venir.
+					{% else %}
+						Vous n'avez pas encore de fiche de participation.
+					{% endif %}
+					En cas de problème n'hésiter pas à contacter l'équipe L4M.
+				</p>
+			{% endif %}
+		{% endif %}
+		{% if passed_participations is defined and passed_participations|length > 0%}
+			<h1 style="display:block;width:95%;margin:auto;margin-top:20px;margin-bottom:20px;color: #4c4c4c;font-size:25px;letter-spacing: 1px"> Salon{% if passed_participations|length > 1%}s{% endif %} Passé{% if passed_participations|length > 1%}s{% endif %} </h1>
+			{% for passed_participation in passed_participations %}
+				<div style="padding:20px;background-color:white;border-radius:10px;width:95%;display:block;margin: auto;margin-bottom: 20px" id="scanHeader">
+					<div class="scanInfoSalon">
+						<p style="margin:2px;font-size: 20px; font-weight:bold;text-transform:uppercase; color:{{ passed_participation.event.place.colors[0].code }}"class="scanCity">{{ passed_participation.event.place.city }}</p>
+						<p style="margin: 2px;text-transform: uppercase;font-weight: 500;color: #4c4c4c;" class="scanPlace">{{ passed_participation.event.place.name }}</p>
+						<p style="margin: 2px;text-transform: uppercase;color: #6d6868;" class="scanDate">{{ passed_participation.event.date|format_date('none', 'EEEE', null, 'gregorian', 'fr')}} <span style="font-weight:bold">{{ passed_participation.event.date|format_date('none', 'dd', null, 'gregorian', 'fr')}} {{ passed_participation.event.date|format_date('none', 'MMMM', null, 'gregorian', 'fr')}}</span> {{ passed_participation.event.date|format_date('none', 'yyyy', null, 'gregorian', 'fr')}}</p>
+					</div>
+					<a style="margin-top:10px;margin-bottom:5px;background-color: #4c4c4c; color:white;text-transform:uppercase;padding:5px;width:100%;display:block;text-align:center" href="{{ path('exposant_show_candidates', {'id': passed_participation.id}) }}">Voir les candidats scannés</a>
+				</div>
+			{% endfor %}
+		{% endif %}
+	</div>
+{% endblock %}

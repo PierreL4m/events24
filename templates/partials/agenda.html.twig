@@ -1,0 +1,28 @@
+<div class="flex_container">
+	<div class="modal_content">
+		
+		<div class="img_container">		
+			{% if agenda.logoFile and agenda.logoFile.path %}
+				<img src="{{ vich_uploader_asset(agenda.event, 'logoFile') }}" alt="{{agenda.title}}">
+			{% endif %}
+		</div>
+		<div class="main">
+				<span class="hours"> {{agenda.start|date('H:i')}} - {{agenda.end|date('H:i')}} </span>
+				<span class="title"> 
+					{{agenda.title}} 
+				</span>				
+			</div>
+		
+		<div class="float_container">
+			<div id="close_agenda_{{agenda.id}}" data-id="{{agenda.id}}">
+				FERMER
+				<i class="fa fa-remove"></i>
+			</div>
+			
+		</div>
+
+		<div class="secondary">
+			<p> {{agenda.description|raw}} </p>
+		</div>
+	</div>
+</div>

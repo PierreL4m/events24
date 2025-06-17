@@ -1,0 +1,71 @@
+{% extends 'admin_base.html.twig' %}
+
+{% block content %}
+    <div class="container" id="section_types">
+        <h1> Liste des types de rubriques </h1>
+
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                {% if is_granted('ROLE_SUPER_ADMIN') %}
+                    <th>Id</th>
+                    <th>Slug</th>
+                    <th>SectionClass</th>
+                {% endif %}
+                <th>Titre</th>
+                <th>Titre menu</th> 
+                <th>Titre appli</th> 
+                <th class="text-center">Chargement des données</th>
+                <th class="text-center">Site public</th>
+                <th class="text-center">Page SEO</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for section_type in section_types %}
+            <tr>
+                {% if is_granted('ROLE_SUPER_ADMIN') %}
+                    <td>{{ section_type.id }}</td>
+                    <td>{{ section_type.slug }}</td>
+                    <td>{{ section_type.sectionClass }}</td>
+                {% endif %}
+                <td>{{ section_type.title }}</td>
+                <td>
+                    {% if section_type.menuTitle != section_type.title %}
+                        {{ section_type.menuTitle }}
+                    {% endif %}
+                </td>
+                 <td>
+                    {% if section_type.apiTitle != section_type.title %}
+                        {{ section_type.apiTitle }}
+                    {% endif %}
+                </td>                      
+                <td class="text-center">{{ section_type.automaticGeneration ? '<i class="fa fa-check-circle"></i>'|raw : '<i class="fa fa-minus-circle"></i>'|raw }}</td>
+                <td class="text-center">{{ section_type.defaultOnPublic ? '<i class="fa fa-check-circle"></i>'|raw : '<i class="fa fa-minus-circle"></i>'|raw }}</td>
+                <td class="text-center">{{ section_type.defaultOnCity ? '<i class="fa fa-check-circle"></i>'|raw : '<i class="fa fa-minus-circle"></i>'|raw }}</td>
+                <td>
+                    <a href="{{ path('section_type_edit', {'id': section_type.id}) }}">
+                        <i class="fa fa-edit"></i>
+                    </a>
+
+                    {% if section_type.sections|length == 0 %}
+                        <a href="{{ path('section_type_delete', {'id': section_type.id}) }}" class="a_confirm" data-msg="ce type de rubrique ?">
+                            <i class="fa fa-remove"></i>
+                        </a>
+                    {% endif %}
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="8">Pas de type de section</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <a href="{{ path('section_type_new') }}" class="btn btn-primary">
+        <i class="fa fa-plus"></i>
+        Nouveau type de rubrique
+    </a>
+    <div class="clear1"></div>
+{% endblock %}

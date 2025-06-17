@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html>
+    <head>        
+        <meta charset="UTF-8">
+        <title>{{event}}</title>       
+        <link rel="stylesheet" type="text/css" href="{{absolute_url(asset('build/css/app.css'))}}"> 
+        <style>
+            body{
+                font-family: Liberation Serif;
+            }  
+        </style>
+    </head>
+    <body>
+        <div class="container" id="candidate_profile">
+            
+            <h1> {{event}} </h1>
+            {% include 'partials/profile.html.twig' with {'pdf' : true} %}
+            <div class="border-box">
+                {{comment.comment|raw}}
+            </div>
+        </div>
+    </body>
+</html>

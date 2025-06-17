@@ -1,0 +1,14 @@
+{% extends 'public_base.html.twig' %}
+
+{% block content %}
+    <div class="container" id="admin_index">
+        <h1 style="margin-top:20px;margin-bottom: 30px;text-align: center">{{event}}</h1>
+        <div class="row event_list">
+            <div class="offset-1 col-10">
+                <a href="{{ path('on_site_registration', {'id' : event.id }) }}" style="margin-top:60%;padding-top:10px;height:70px;text-align:center;font-size:50px;border:solid black 1px; width:100%;display:block">
+                    S'inscrire
+                </a>
+            </div>
+        </div>
+    </div>
+{% endblock %}

@@ -1,0 +1,16 @@
+{% extends 'jobflix.base.html.twig' %}
+
+ {% block title %}
+     {% if event is defined %}
+        {% if event.type == "24" %}24h pour l'emploi et le formation{% else %}Jobfest{% endif %} - {{ event }}
+     {% else %}
+        Evenements L4M
+     {% endif %}
+ {% endblock %}
+
+ {% block body %}
+     <noscript>
+         <iframe src="https://www.googletagmanager.com/ns.html?id=GTM-MQSF7LCH" height="0" width="0" style="display:none;visibility:hidden"></iframe>
+     </noscript>
+     <home-overlay  id="root" {% if event is defined %}data-id = "{{ event.id }}"{% endif %} data-user="{{ app.user ? app.user.id : 0 }}"></home-overlay>
+ {% endblock %}

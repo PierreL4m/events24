@@ -1,0 +1,86 @@
+{% extends 'base.html.twig' %}
+
+{% block custom_stylesheets %}
+	{% if event is defined %}
+{#		<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">#}
+		<link rel="stylesheet" href="{{ asset('build/css/app_public.css') }}">
+{#		<link rel="stylesheet" href="{{ asset('build/css/' ~ event.place.slug ~ '.css') }}">#}
+	{% else %}
+{#		<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">#}
+		<link rel="stylesheet" href="{{ asset('build/css/app_public.css') }}">
+	{% endif %}
+{% endblock %}
+
+{% if event is defined %}
+	{% set title = event.getFullType() ~ ' ' ~ event.date|date('d/m/Y') ~ ' - ' ~ event.place.city %}
+{% endif %}
+
+{% block meta %}
+	<meta name="keywords" content="emploi, formation, salon, événement de recrutement">
+
+	{% if event is defined %}
+		<meta name="description" content="{{title}}">
+
+		{% if event.socialLogo %}
+			{% set logo = event.getSocialLogoSrc() %}
+		{% elseif event.getBanner %}
+			{% set logo = event.getBannerName() %}
+		{% endif %}
+
+		{% if logo is defined %}
+			<meta property="og:image" content="{{'https://' ~ event.type.host.name ~ logo}}" />
+		{% endif %}
+
+		<meta property="og:url" content="{{'https://' ~ event.type.host.name ~ '/' ~ event.slug}}" />
+		<meta property="og:description" content="{{title}}">
+		<meta property="og:title" content="{{title}}" />
+
+		{% block meta_index %}
+			{% if event.offline|date('Ymd') < 'now'|date('Ymd')  %}
+				<META NAME="ROBOTS" CONTENT="INDEX, FOLLOW">
+			{% else %}
+				<META NAME="ROBOTS" CONTENT="INDEX, FOLLOW">
+			{% endif %}
+		{% endblock %}
+	{% else %}
+		{% set title = 'L4M.FR organisateur d\'événements de recrutement depuis 2004' %}
+
+		<meta name="description" content="{{title}}">
+		<meta property="og:image" content="/public/images/6.jpg"/>
+		<meta property="og:url" content="{{app.request.uri}}" />
+		<meta property="og:description" content="{{title}}">
+		<meta property="og:title" content="{{title}}" />
+		<META NAME="ROBOTS" CONTENT="INDEX, FOLLOW">
+	{% endif %}
+
+{% endblock %}
+
+{% block body %}
+	{% block content %} {% endblock %}
+{% endblock %}
+
+
+{% block custom_javascript %}
+	<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+	<script src="{{ asset('build/js/app_public.js') }}"></script>
+{% endblock %}
+
+{% block analytics %}
+	<script async>
+		(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+			(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+				m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+		})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+		{% if event is defined and event.type.analyticsId %}
+		ga('create', '{{event.type.analyticsId}}', 'auto');
+		{% else %}
+		ga('create', 'UA-3778390-3', 'auto');
+		{% endif %}
+		ga('send', 'pageview');
+		{% block analytics_calls %}{% endblock %}
+
+	</script>
+
+
+{% endblock %}

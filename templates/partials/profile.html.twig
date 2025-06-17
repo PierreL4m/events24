@@ -1,0 +1,234 @@
+<div class="candidate_name" style="width:50%;">
+	{% if comment is defined %}
+		<div class="pull-right">
+			{% include 'partials/display_likes.html.twig' %}
+		</div>
+	{% endif %}
+	<span style="text-transform: capitalize">{{candidate.firstname}}</span> {{candidate.lastname}}
+
+	{% if is_granted('ROLE_CANDIDATE') %}
+    	<p class="aboutProfilProgress">Profile complété à {{percentageProfilInfos|round(0,'floor')}}%</p>
+    	<div class="progress">
+    	{% if percentageProfilInfos|round(0,'floor') == 100 %}
+      	<div class="progress-bar profil100" role="progressbar" aria-valuenow="70" aria-valuemin="0" aria-valuemax="100" style="width: {{percentageProfilInfos|round(0,'floor')}}%; color : black">
+      	</div>
+    	{% elseif percentageProfilInfos|round(0,'floor') < 100 and percentageProfilInfos|round(0,'floor') >= 75 %}
+    	<div class="progress-bar profil75" role="progressbar" aria-valuenow="70" aria-valuemin="0" aria-valuemax="100" style="width: {{percentageProfilInfos|round(0,'floor')}}%; color : black">
+    	</div>
+    {% elseif percentageProfilInfos|round(0,'floor') < 75 and percentageProfilInfos|round(0,'floor') >= 50 %}
+    	<div class="progress-bar profil50" role="progressbar" aria-valuenow="70" aria-valuemin="0" aria-valuemax="100" style="width: {{percentageProfilInfos|round(0,'floor')}}%; color : black">
+    	</div>
+    {% elseif percentageProfilInfos|round(0,'floor') < 50 and percentageProfilInfos|round(0,'floor') >= 25 %}
+    	<div class="progress-bar profil25" role="progressbar" aria-valuenow="70" aria-valuemin="0" aria-valuemax="100" style="width: {{percentageProfilInfos|round(0,'floor')}}%; color : black">
+    	</div>
+    {% elseif percentageProfilInfos|round(0,'floor') < 25 %}
+    	<div class="progress-bar profil0" role="progressbar" aria-valuenow="70" aria-valuemin="0" aria-valuemax="100" style="width: {{percentageProfilInfos|round(0,'floor')}}%; color : black">
+    	</div>
+    	{% endif %}
+    	</div>
+    
+    {% endif %}
+</div>
+{% if is_granted('ROLE_CANDIDATE') %}
+<table class="table candidate_profile">
+	{% if candidate.phone %}
+		<tr>
+			<th>Téléphone </th>
+			<td>{{candidate.phone}}</td>
+		</tr>
+	{% endif %}
+	{% if candidate.email %}
+		<tr>
+			<th>Email </th>
+			<td>
+				{% if not is_granted('ROLE_CANDIDATE') %}
+					<a href="mailto:{{candidate.email}}">
+				{% endif %}
+				{{candidate.email}}
+				{% if not is_granted('ROLE_CANDIDATE') %}
+					</a>
+				{% endif %}
+			</td>
+		</tr>
+	{% endif %}
+	{% if candidate.wantedJob %}
+		<tr>
+			<th>Poste recherché</th>
+			<td>
+				{{candidate.wantedJob}}
+			</td>
+		</tr>
+	{% endif %}
+	{% if candidate.degree or is_granted('ROLE_CANDIDATE') %}
+		<tr>
+			<th>Niveau d'étude</th>
+			<td>
+				{% if candidate.degree %}
+					{{candidate.degree}}
+				{% else %}
+					<a class="text-danger" href="{{path('candidate_user_edit')}}">
+						Merci de renseigner votre niveau d'étude
+					</a>
+				{% endif %}
+			</td>
+		</tr>
+	{% endif %}
+	{% if candidate.mobility or is_granted('ROLE_CANDIDATE') %}
+		<tr>
+			<th>Mobilité</th>
+			<td>
+				{% if candidate.mobility %}
+					{{candidate.mobility}}
+				{% else %}
+					<a class="text-danger" href="{{path('candidate_user_edit')}}">
+						Merci de renseigner votre mobilité
+					</a>
+				{% endif %}
+			</td>
+		</tr>
+	{% endif %}
+	{% if candidate.city or is_granted('ROLE_CANDIDATE') %}
+		<tr>
+			<th>Ville</th>
+			<td>
+				{% if candidate.city %}
+					{{candidate.city}}
+				{% else %}
+					<a class="text-danger" href="{{path('candidate_user_edit')}}">
+						Merci de renseigner votre ville
+					</a>
+				{% endif %}
+			</td>
+		</tr>
+	{% endif %}
+
+	{% if candidate.working is same as(true) or candidate.working is same as(false) or is_granted('ROLE_CANDIDATE') %}
+		<tr>
+			<th>En poste </th>
+			<td>
+				{% if candidate.working %}
+					Oui
+				{% elseif candidate.working is same as(false) %}
+					Non
+				{% else %}
+					<a class="text-danger" href="{{path('candidate_user_edit')}}">
+						Merci de renseigner votre statut
+					</a>
+				{% endif %}
+			</td>
+		</tr>
+	{% endif %}
+	{% if candidate.wantedJob %}
+		<tr>
+			<th>Poste recherché </th>
+			<td>{{candidate.wantedJob}}</td>
+		</tr>
+	{% elseif  candidate.position %}
+		<tr>
+			<th>Poste recherché </th>
+			<td>{{candidate.position}}</td>
+		</tr>
+	{% endif %}
+	{% if candidate.sectors|length > 0 or is_granted('ROLE_CANDIDATE') %}
+		<tr>
+			<th>Secteurs recherchés</th>
+			<td>
+				<table>
+					{% for sector in candidate.sectors %}
+						<tr>
+							<td>
+								{{sector}}
+							</td>
+						</tr>
+					{% else %}
+						<tr>
+							<td>
+								<a class="text-danger" href="{{path('candidate_user_edit')}}">
+									Merci de définir les secteurs que vous recherchez
+								</a>
+							</td>
+						</tr>
+					{% endfor %}
+				</table>
+			</td>
+		</tr>
+	{% endif %}
+	{% if mail is not defined %}
+		{% if helper.fileExists(candidate.getCvPath) %}
+			<tr>
+				<th>
+					CV
+				</th>
+				<td>
+					<a href="{{asset(candidate.getCvPath)}}" target="_blank">
+						<i class="fa fa-download"></i>
+					</a>
+					<a href="#" data-toggle="modal" data-target="#previewCv">
+						<i class="fa fa-eye"></i>
+					</a>
+					<div class="modal fade bd-example-modal-lg" id="previewCv" tabindex="-1" role="dialog" aria-labelledby="previewCvLabel" aria-hidden="true" style="margin:27px;">
+					<div class="modal-dialog modal-lg" role="document">
+						<div class="modal-content">
+							<div class="modal-body">
+							<object data="{{asset(candidate.getCvPath)}}" type="application/pdf" width="100%" height="720">
+								lien alternatif : <a href="{{asset(candidate.getCvPath)}}">{{candidate.cv}}</a>
+							</object>
+							</div>
+							<div class="modal-footer">
+								<button type="button" class="btn btn-secondary" data-dismiss="modal">Fermer</button>
+							</div>
+						</div>
+					</div>
+				</div>
+					{% if pdf is defined %}
+						{{candidate.cv}}
+					{% endif %}
+				</td>
+			</tr>
+		{% elseif candidate.getType == 'candidate' %}
+			<tr>
+				<th>
+					CV
+				</th>
+				<td class="text-danger">
+					Merci de fournir votre CV pour les recruteurs
+				</td>
+			</tr>
+		{% endif %}
+	{% endif %}
+</table>
+{% endif %}
+
+{% if is_granted('ROLE_ORGANIZATION') or is_granted('ROLE_EXPOSANT_SCAN') %}
+	{% if candidate.phone %}
+		<p style="letter-spacing:1px;font-weight:bold;color:#cacaca;text-transform:uppercase">Tel : <span style="color:#4c4c4c">{{ candidate.phone }}</span></p>
+	{% endif %}
+	{% if candidate.email %}
+		<p style="letter-spacing:1px;font-weight:bold;color:#cacaca;text-transform:uppercase">Mail : <span style="color:#4c4c4c"><a href="mailto:{{candidate.email}}">{{candidate.email}}</a></span></p>
+	{% endif %}
+	{% if candidate.degree%}
+		<p style="letter-spacing:1px;font-weight:bold;color:#cacaca;text-transform:uppercase">Diplôme : <span style="color:#4c4c4c">{{candidate.degree}}</span></p>
+	{% endif %}
+	{% if candidate.mobility%}
+		<p style="letter-spacing:1px;font-weight:bold;color:#cacaca;text-transform:uppercase">Mobilité : <span style="color:#4c4c4c">{{candidate.mobility}}</span></p>
+	{% endif %}
+	{% if candidate.city %}
+		<p style="letter-spacing:1px;font-weight:bold;color:#cacaca;text-transform:uppercase">Ville : <span style="color:#4c4c4c">{{ candidate.city }}</span></p>
+	{% endif %}
+	{% if candidate.working is same as(true) or candidate.working is same as(false) %}
+		<p style="letter-spacing:1px;font-weight:bold;color:#cacaca;text-transform:uppercase">En poste :
+			<span style="color:#4c4c4c">
+				{% if candidate.working %}
+					Oui
+				{% elseif candidate.working is same as(false) %}
+					Non
+				{% endif %}
+			</span>
+		</p>
+	{% endif %}
+
+	<a id="buttonExportScannedCandidat" style="margin-left:0;border:none;width:100%;background-color:{{ comment.OrganizationParticipation.event.place.colors[0].code }}" href="{{asset(candidate.getCvPath)}}" target="_blank" class="btn btn-primary">
+		Afficher/Télécharger le CV
+		<i style="color:white" class="fa fa-download"></i>
+	</a>
+{% endif %}

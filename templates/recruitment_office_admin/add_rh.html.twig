@@ -1,0 +1,18 @@
+{% extends 'admin_base.html.twig' %}
+
+{% block content %}
+	<div id="form_template" class="container">
+		<h1 class="title">Ajouter un utilisateur à {{ro}} </h1>
+		
+		{{ form_start(form) }}
+		    {{ form_widget(form) }}
+		    <button class="btn btn-success" id="{{button_id|default('save')}}">{{ button_label|default('Enregistrer') }}</button>		
+		{{ form_end(form) }}
+			
+		{% if app.environment != 'prod' or is_granted('ROLE_SUPER_ADMIN') %}
+			<a href="#" id="fill"> fill </a>
+		{% endif %}
+
+		{{helper.getReturnButton()|raw}}
+	</div>
+{% endblock %}

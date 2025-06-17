@@ -1,0 +1,61 @@
+{% set current_event = section.event %}
+{% if formation is not defined %}
+	{% set formation = null %}
+	{% set emploi = 'emploi' %}
+{% elseif admin is not defined and h48_helper.is48(event) %}
+	{% set current_event = h48_helper.getSecond48(event) %}
+{% endif %}
+{% if event.online < date('now') or is_granted('ROLE_VIEWER') %}
+	{% if admin is defined %}
+		<p>
+			Ceci est un aperçu. <br>
+			Pour l'affichage réel :
+			{{ helper.getPreviewLink(event)|raw }}
+		</p>
+	{% endif %}
+	{{ app.request.query.get("data.participations") }}
+	<div class="grid_container">
+		<div class="grid">
+		{% set myArray = [] %}
+		{% set myArrayId = [] %}
+		{% for participation in helper.getRandomParticipations(current_event.id) %}
+			{% set myArray = myArray|merge([participation]) %}
+		{% endfor %}
+		{% for participation in myArray %}
+			{% set currentParticipation =  helper.getParticipationById(participation.id)%}
+		{% set myArrayId = myArrayId|merge([participation.id]) %}
+			{% if participation.logoName %}
+				{% if participation.logoName != 'no_path' and participation.logoName %}
+				{% if loop.index0 - 1 < 0 %}
+			<a data-toggle="modal" data-target="#exposantModal" href="#" id="Modal{{formation}}{{loop.index}}" title="{{participation.companyName}}"  data-id="exposant_{{participation.id}}" rel="{{participation.id}}" index ='{{loop.index}}' last='{{loop.length}}'  slug='{{app.request.attributes.get('_route_params')['slug']}}' {% if participation.premium %}class="linkToModal premium"{%else%}class="linkToModal"{% endif %}>
+						<div class="logo grid-item ">
+							<span class="helper"></span><img src="{{ vich_uploader_asset(currentParticipation,'logoFile') }}" alt="{{participation.companyName}}" />
+						</div>
+						<div class="triangle {{emploi}}{{formation}}"><i class="fa fa-plus"></i></div>
+					</a>
+				{% else %}
+				<a data-toggle="modal" data-target="#exposantModal" href="#" id="Modal{{formation}}{{loop.index}}" title="{{participation.companyName}}"  data-id="exposant_{{participation.id}}" rel="{{participation.id}}" index ='{{loop.index}}' last='{{loop.length}}' testArray="" slug='{{app.request.attributes.get('_route_params')['slug']}}' {% if participation.premium %}class="linkToModal premium"{%else%}class="linkToModal"{% endif %}>
+						<div class="logo grid-item ">
+							<span class="helper"></span><img src="{{ vich_uploader_asset(currentParticipation,'logoFile') }}" alt="{{participation.companyName}}" />
+						</div>
+						<div class="triangle {{emploi}}{{formation}}"><i class="fa fa-plus"></i></div>
+					</a>
+				{% endif %}
+				{% endif %}
+			{% endif %}
+		{% endfor %}
+		{% set test = myArrayId|join(',') %}
+		{# Modal #}
+		<div testArray="{{test}}" style="z-index:100000;padding-right:0!important" class="modal fade" id="exposantModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+			<div style="width: 101% !important;height: 100% !important;margin: 0 !important;padding: 0 !important;max-width:none !important;"class="modal-dialog-full-screen modal-dialog" role="document">
+				<div style="height: auto !important;min-height: 100% !important;border-radius: 0 !important;background-color: rgba(0,0,0,.97) !important"class="modal-content-full-screen modal-content">
+					<div style="padding:0!important" class="modal-body">
+					</div>
+				</div>
+			</div>
+		</div>
+		</div>
+	</div>
+{% else %}
+	<p class="text-center displayAt"> Venez découvrir la liste complète des exposants participant à cet événement à partir du <strong>{{current_event.online|date('d/m/Y')}}</strong> </p>
+{% endif %}

@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Mon invitation à l'événement {{event.getTypeCityAndDate()}}</title>
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans:400,400i,700,700i" rel="stylesheet">
+    <style>
+        body{
+            margin:0;
+            font-size: 16px;
+        }
+
+        p {
+            margin: 0;
+        }
+
+        .container{
+            padding:100px;
+            padding-top: 50px;
+            padding-bottom:0;
+            width:1040px;  /*150dpi = 1240 x 1754  take care of margin/padding */
+            font-family: 'Open Sans', sans-serif;
+            overflow:hidden;
+        }
+        .top{
+            display: inline-block;
+            border-bottom: 1px solid #7cbfcf;
+            font-size:0;
+            align-items: center;
+            padding-bottom: 20px;
+        }
+
+        .top, .middle {
+            border-bottom: 1px solid #7cbfcf;
+        }
+
+        .participation{
+            display: inline-block;
+            width: 740px;
+            font-size: 2rem;
+        }
+
+        .invitation {
+            text-transform: uppercase;
+            border-bottom: 1px solid #7cbfcf;
+            padding-bottom: .75em;
+            margin-bottom: 1em;
+        }
+
+        .invitation,
+        .participation > .name,
+        .participation > .email,
+        .infos,
+        .event-date,
+        .place-name {
+            text-transform: uppercase;
+            color:{{event.place.getMainColor()}};
+        }
+
+        .participation > .name{
+            font-weight:bold;
+            text-transform:uppercase;
+        }
+        .participation > .first_name{
+            font-size:0.8em;
+        }
+        .participation > .email {
+            font-size:0.7em;
+            text-transform: uppercase;
+        }
+        .logo-container {
+            display: inline-block;
+            width: 250px;
+            text-align: right;
+        }
+
+        .logo-container > .logo-svg-container{
+            width:260px;
+            height: 260px;
+            margin: auto;
+        }
+
+        .logo-container > .logo-svg-container svg {
+            width: 100%;
+            height: 100%;
+        }
+
+        .logo-container img {
+            max-width: 260px;
+            max-height: 260px;
+        }
+
+        .top > .official > .second{
+            font-size:0.9em;
+        }
+        .middle{
+            margin-top:2em;
+            display: inline-block;
+            font-size: 0;
+
+        }
+        .middle-left,
+        .middle-right {
+            width: 45%;
+            display: inline-block;
+            font-size: 1rem;
+            box-sizing: border-box;
+            position: relative;
+            padding: 50px 46px;
+            padding-bottom: 20px;
+        }
+        .middle-left {
+            text-align:left;
+        }
+
+        .middle-right{
+            vertical-align: top;
+            padding-right: 60px;
+        }
+
+        .infos,
+        .event-date,
+        .place-name {
+            font-weight: bold;
+            margin-bottom: .25em;
+            margin-top: 1em;
+        }
+
+        .mention-invitation {
+            margin-top: 1em;
+            color: #544b49;
+            font-size: .8125rem;
+        }
+
+
+
+        .container.escape .event-hours {
+            display: none;
+        }
+
+        .logo-svg-container path,  .logo-svg-container polygon {
+            fill: {{event.place.getMainColor()}} !important;
+        }
+
+        .qr_code_container > img{
+            max-width: 100%;
+            margin-left: -20px;
+        }
+
+        .parallelogram{
+            position: absolute;
+            right:13px; /*padding = container */
+            /*to debug, set dev console on container right border*/
+            z-index: -1;
+            width: 182px;
+            height: 200px;
+            margin-top: -30px;
+
+            transform: skew(-6deg);
+            -webkit-transform: skew(-6deg);
+            -moz-transform: skew(-6deg);
+            -o-transform: skew(-6deg);
+            background-color: {{event.place.getMainColor()}};
+        }
+        .title{
+            font-size: 1.3em;
+            text-transform: uppercase;
+            font-weight: bold;
+            color: {{event.place.getMainColor()}};
+        }
+
+        .left{
+            border-bottom:2px solid {{event.place.getMainColor()}};
+            padding-bottom:1em;
+        }
+        .left p, .right p{
+            margin:0;
+        }
+        .left .hours{
+            font-size:1.2em;
+            margin-bottom: 1em;
+            padding-bottom: 1em;
+            font-weight: bold;
+            font-style: italic;
+            color: {{event.place.getMainColor()}};
+            border-bottom : 2px solid {{event.place.getMainColor()}};
+        }
+        .right{
+            margin-top:1em;
+        }
+        .right .subtitle{
+            text-transform: uppercase;
+            font-weight: bold;
+            margin-bottom:.2em;
+            font-size:1.2em;
+        }
+        .l4m{
+            text-align:right;
+        }
+        .l4m > img{
+            width:150px;
+            margin-top:3em;
+        }
+        .img_pub_container{
+            margin-top:1em;
+            text-align:center;
+            width: 100%;
+            height:659px;
+        }
+        .qr_code_container > .id{
+            position: relative;
+            top: -20px;
+            font-size: 20px;
+            margin-left: -20px;
+        }
+        .qrRecall{
+            width: 150%;
+            margin-left: -80px;
+            text-align: left;
+        }
+    </style>
+</head>
+<body>
+<div class="container {{ event.type|lower }}" {% if h48 is defined %} id="h48" {% endif %}>
+    <div class="top">
+        <div class="participation">
+            <div class="invitation">
+                Accréditation
+            </div>
+            <div class="name">
+                {{ participation.lastname }}
+            </div>
+            <div class="first_name">
+                {{participation.firstName }}
+            </div>
+            <div class="email">
+                {{ participation.email }}
+            </div>
+            {% if event.type.fullName == "Recrutement Experts" %}
+                <div>
+                    <strong><p style="font-size:20px;color:red">En cas de désistement, merci de bien vouloir prévenir <br>à l'adresse suivante : <span style="font-size:20px">communication@recrutementexperts.fr</span></p></strong>
+                </div>
+            {% endif %}
+        </div>
+        <div>
+            <p class="mention-invitation">
+                L'accréditation peut être conservée sur votre smartphone si vous ne désirez pas l'imprimer.
+            </p>
+        </div>
+    </div>
+
+    <div class="middle">
+        <div class="middle-left">
+            {{ text| raw }}
+        </div>
+        <div class="middle-right">
+            <p class="infos">
+                Informations pratiques
+            </p>
+
+            <p>1&nbsp;/&nbsp;A présenter à l'entrée pour bénéficier d'un accès prioritaire</p>
+            {% if event.type.fullName != "Recrut Comedy Club" %}
+                <p class="event-date">
+                    {{event.date|date('d/m/Y')}}
+                </p>
+                <p class="event-hours">
+                    {% include 'partials/event_date.html.twig' %}
+                </p>
+            {% endif %}
+            {#            {% if second_event is defined %}#}
+            {#                <p class="event-date">#}
+            {#                    {{second_event.date|date('d/m/Y')}}#}
+            {#                </p>#}
+            {#                <p class="event-hours">#}
+            {#                    {% include 'partials/event_date.html.twig' with { 'event' : second_event } %}#}
+            {#                </p>#}
+            {#            {% endif %}#}
+
+            <p class="place-name">
+                {{event.place.name}}
+            </p>
+            <p class="place-address">
+                {{event.place.address}} -
+                {{event.place.cp}} {{event.place.city}}
+            </p>
+        </div>
+    </div>
+    {#  <div class="l4m">
+                <img src="https://www.24h-emploi-formation.com/images/l4m_nofr.jpg">
+            </div> #}
+    <div class="img_pub_container">
+        {% if participation.event.pubAccred %}
+            <img src="{{absolute_url(asset(event.pubAccred.path))}}">
+        {% else %}
+            <img src="{{absolute_url(asset('images/pub.jpg'))}}">
+        {% endif %}
+    </div>
+</div>
+</body>
+</html>

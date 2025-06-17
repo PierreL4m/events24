@@ -1,0 +1,24 @@
+{% extends 'partials/form.html.twig' %}
+{% block title %} Édition de l'utilisateur {{user}}{% endblock %}
+
+{% block form %}
+	{{form_start(form)}}
+		{{form_widget(form)}}
+		<button class="btn btn-success" id="save">Enregistrer</button>
+	{{form_end(form)}}
+	{% if form_list %}
+		<h1> Choisir un responsable existant</h1>
+		{{form_start(form_list)}}
+			{{form_widget(form_list)}}
+			<button class="btn btn-success" id="save_list" name="save_list">Enregistrer</button>
+		{{form_end(form_list)}}
+	{% endif %}
+	{% if form_search %}
+		<h1> Recherche par email</h1>
+		{{form_start(form_search)}}
+			{{form_widget(form_search)}}
+			<button class="btn btn-success" id="save_search" name="save_search">Rechercher</button>
+		{{form_end(form_search)}}
+	{% endif %}
+
+{% endblock %}

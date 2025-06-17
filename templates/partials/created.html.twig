@@ -1,0 +1,9 @@
+{% if entity.timestamp and entity.timestamp.created %}
+    {{ entity.timestamp.created|date('d/m/Y') }} à 
+    {{ entity.timestamp.created|date('H:i') }} 
+    {% if entity.timestamp.createdBy %}
+    	par {{entity.timestamp.createdBy}}
+    {% endif %}
+{% else %}
+    à l'import
+{% endif %}

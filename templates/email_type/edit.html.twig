@@ -1,0 +1,15 @@
+{% extends 'admin_base.html.twig' %}
+
+{% block title %}Edit EmailType{% endblock %}
+
+{% block content %}
+	<div class="container">
+	    <h1>Edit EmailType</h1>
+
+	    {{ include('email_type/_form.html.twig', {'button_label': 'Update'}) }}
+
+	    <a href="{{ path('email_type_index') }}">back to list</a>
+
+	    {{ include('email_type/_delete_form.html.twig') }}
+	</div>
+{% endblock %}

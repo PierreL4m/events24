@@ -1,0 +1,35 @@
+{% extends 'admin_base.html.twig' %}
+
+{% block content %}
+	<div class="container">
+		<h1> Hôtes </h1>
+		<a href="{{path('host_new')}}" class="btn btn-info">
+			<i class="fa fa-plus" aria-hidden="true"></i>
+			Nouveau
+		</a>
+		{% for host in hosts %}
+			<div class="row host"> 
+				<div class="col-md-10">
+					{% if is_granted('ROLE_SUPER_ADMIN') %}
+						id : {{host.id}}<br>
+					{% endif %}
+					
+					{{host.name}} <br>
+					Type d'événements liés :
+					<ul>
+						{% for type in host.eventTypes %}
+							<li>{{type}}</li>
+						{% endfor %}
+					</ul>
+				</div>
+				<div class="col-md-1">
+					<a href="{{path('host_edit',{'id':host.id})}}"> <i class="fa fa-edit"></i></a>
+				</div>
+				<div class="col-md-1">
+					<a href="{{path('host_delete',{'id':host.id})}}" class='a_confirm' data-msg="cet hôte ?"> <i class="fa fa-remove"></i></a>
+				</div>
+			</div>
+			<div class="clear2"></div>
+		{% endfor %}
+	</div>
+{% endblock %}

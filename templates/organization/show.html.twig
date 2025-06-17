@@ -1,0 +1,95 @@
+{% extends 'admin_base.html.twig' %}
+
+{% block content %}
+    <div class="container">
+        <h1>{{ organization.name }}</h1>
+
+        <table class="table table-striped">
+            <tbody>
+                {% if is_granted('ROLE_SUPER_ADMIN') %}
+                    <tr>
+                        <th>Id</th>
+                        <td>{{ organization.id }}</td>
+                    </tr>
+                    <tr>
+                        <th>Slug</th>
+                        <td>{{ organization.slug }}</td>
+                    </tr>
+                {% endif %}
+                <tr>
+                    <th>Nom</th>
+                    <td>{{ organization.name }}</td>
+                </tr>
+                <tr>
+                    <th>Nom Interne</th>
+                    <td>{{ organization.internalName }}</td>
+                </tr>
+                
+            </tbody>
+        </table>
+        <h2> Type d'exposant : </h2>
+        <ul>
+            {% for type in organization.organizationTypes %}
+                <li> {{type}} </li>
+            {% endfor %}
+        </ul>
+
+         <h2> Identifiants pour scan de candidat : </h2>
+        {% set scan_user = organization.exposantScanUser %}
+        {% if organization.exposantScanUser %}
+            <p>
+                <strong>{{scan_user.username}} / {{scan_user.savedPlainPassword}}</strong>
+            </p>
+        {% else %}
+            <p class="text-danger"> 
+                Une erreur s'est produite, contacter France !
+            </p>
+        {% endif %}
+   
+
+        <h2> Participations : </h2>
+        <ul>
+            {% for participation in participations %}               
+                <li> 
+                    <a href="{{path('event_show',{'id':participation.event.id})}}">
+                        {{participation.event.place}} {{participation.event.date|date('d/m/Y')}}
+                    </a> <br>
+                    {% if participation.responsable %}
+                        <p style="font-weight: bold">{{participation.responsable}}</p>
+                        <p style="font-style: italic ">{{participation.responsable.position}}</p>
+                        {{participation.responsable.phone}} - {{participation.responsable.email}}
+                        {% if is_granted('ROLE_SUPER_ADMIN') %}
+                            {{participation.responsable.id}}
+                        {% endif %}
+                    {% else %}
+                        <p class="text-danger">
+                            Attention pas de responsable pour cette participation
+                        </p>
+                    {% endif %}
+                        <br>
+                    <strong>{{participation.getType()}}</strong>
+                </li>
+                <div class="clear1"></div>
+            {% endfor %}
+        </ul>
+
+
+        <div class="navigation">
+            {{ knp_pagination_render(participations) }}
+        </div>
+
+        <a href="{{ path('organization_index') }}" class="btn btn-primary">
+            Retour à la liste
+        </a>
+        <div class="clear1"></div>
+
+        <a href="{{ path('organization_edit', {'id': organization.id}) }}" class="btn btn-success">
+            éditer
+        </a>
+         <div class="clear1"></div>
+
+   {% if participations.count == 0 %}
+        {{ include('organization/_delete_form.html.twig') }}
+    {% endif %}
+    </div>
+{% endblock %}

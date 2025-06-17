@@ -1,0 +1,20 @@
+<div class="readable">
+	{% if mail is not defined %}
+		{% if error_code == 404 %}
+			<p> La page que vous cherchez n'existe pas. <span class="url"> ({{app.request.server.get('REQUEST_SCHEME') ~ '://' ~ app.request.server.get('HTTP_HOST') ~  app.request.server.get('REQUEST_URI')}}) </span></p>
+		{% elseif error_code == 403 %}
+			<p>Vous n'êtes pas autorisé a accéder à cette page.</p>
+		{% elseif error_code == 500 %}
+			<p>Le serveur a rencontré une erreur. Veuillez nous en excuser.</p>
+			<p>Un mail a été envoyé à l'équipe technique, l'erreur sera traitée dans les meilleurs délais</p>
+			{{ exception }}
+		{% endif %}
+	{% else %}
+		<p class="custom-dump">
+			Error {{error_code}}
+		</p>
+	{% endif %}
+	<p>
+		{{readable}}
+	</p>
+</div>

@@ -1,0 +1,36 @@
+<html>
+<head>
+	<style>
+		.candidate_name{
+			font-weight: bold;
+		}
+		.candidate_profile>tbody>tr>th{
+			text-align: left;
+			padding-right:20px;
+			font-weight: normal;
+		}
+	</style>
+</head>
+<body>
+<p>
+	Bonjour {{responsable}},
+</p>
+
+		<p>
+			Voici le profil du candidat <strong>{{candidate}}</strong> que vous avez rencontré lors de l'événemement L4M "{{event.getFullType}}" le {{event.date|format_date('none', 'EEEE', null, 'gregorian', 'fr')}} {{event.date|format_date('none', 'd', null, 'gregorian', 'fr')}} {{event.date|format_date('none', ' MMMM', null, 'gregorian', 'fr')}} - {{event.place.city}}<br>
+		</p>
+
+{% include 'partials/profile.html.twig' with {'mail' : true}  %}
+
+<p>
+	<strong>Votre commentaire :</strong>
+</p>
+{{comment.comment|raw}}
+</p>
+
+<p>
+	Bonne réception,
+</p>
+{% include 'emails/signature.html.twig' %}
+</body>
+</html>

@@ -1,0 +1,58 @@
+{% extends 'admin_base.html.twig' %}
+ {% block header %}
+      
+    {% endblock %}
+
+    {% block menu_admin %}
+   
+    {% endblock %}
+
+ 
+
+    
+{% block content %}
+    <div class="container">        
+        {#<h1>{{candidates|length}}  candidats - {{event}} </h1>#}
+       
+
+        {% for key, status in candidates %}
+            {%  if status|length > 0 %}
+                <h1>{{ key }} : {{status|length}}  candidats - {{event}} </h1>
+                <table class="table table-striped" id="candidate_list">
+                    <thead>
+                    <tr>
+                        <th>Nom</th>
+                        <th>Prénom</th>
+                        <th>Email</th>
+                    </tr>
+                    <tbody>
+                        {%  for candidate in status %}
+                            <tr>
+                                <td>
+                                   {#  <a href="{{ path('candidate_show', {'id': candidate.id}) }}"> #}
+                                        {{candidate.lastname}}
+                                   {#  </a> #}
+                                </td>
+                                <td>
+                                   {#  <a href="{{ path('candidate_show', {'id': candidate.id}) }}"> #}
+                                        {{candidate.firstname}}
+                                   {#  </a> #}
+                                </td>
+                                <td>
+                                    {{candidate.email}}
+                                </td>
+                            </tr>
+
+                        {% endfor %}
+                    </tbody>
+                </table>
+            {%  else %}
+                <h1>{{ key }} : aucun - {{event}}</h1>
+            {%  endif %}
+        {% endfor %}
+
+       
+    </div>
+{% endblock %}
+
+{% block footer %}{% endblock %}

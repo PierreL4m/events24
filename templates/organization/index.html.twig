@@ -1,0 +1,61 @@
+{% extends 'admin_base.html.twig' %}
+
+{% block content %}
+    <div class="container">
+    <h1>Liste des organismes</h1>
+
+    {% include 'partials/form_search.html.twig' %}
+<button type="button" class="btn btn-primary displayAll">Afficher tous</button>
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                {% if is_granted("ROLE_SUPER_ADMIN") %}
+                    <th>Id</th>
+                {% endif %}
+                <th>Nom</th>
+                <th>Nom Interne</th>
+                {#<th>Slug</th> #}
+                <th>Type</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for organization in organizations %}
+            <tr>
+                {% if is_granted("ROLE_SUPER_ADMIN") %}
+                    <td>{{ organization.id }}</td>
+                {% endif %}
+                <td>
+                     <a href="{{ path('organization_show', {'id': organization.id}) }}">
+                        {{ organization.name }}
+                    </a>
+                </td>
+                <td>{{ organization.internalName }}</td>
+                {# <td>{{ organization.slug }}</td>#}
+                <td>
+                    {% for type in organization.organizationTypes %}
+                        {{type}}<br>
+                    {% endfor %}
+                </td>
+                <td>
+                    <a href="{{ path('organization_edit', {'id': organization.id}) }}">
+                        <i class="fa fa-edit"></i>
+                    </a>
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="5">Aucun résultats</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+    <div class="navigation">
+        {{ knp_pagination_render(organizations) }}
+    </div>
+
+        <a href="{{ path('organization_new') }}" class="btn btn-primary">
+            <i class="fa fa-plus"></i>
+            Nouvel organisme
+        </a>
+{% endblock %}

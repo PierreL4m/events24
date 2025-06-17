@@ -1,0 +1,79 @@
+{% extends 'admin_base.html.twig' %}
+
+{% block title %}Section index{% endblock %}
+
+{% block content %}
+    <div class="container" id="sections">
+        <h1>Créneaux {{helper.getAdminEventLink(event)|raw}}</h1>
+
+        {{ helper.getPreviewLink(event)|raw }} <a class="btn btn-info" href="{{path('event_show', {'id': event.id})}}">Retour</a>
+        <div class="clear1"></div>
+        <div class="clear1"></div>
+        <p style="color :red; font-weight: bold">{{helper.countUnslots(event)}} candidat(s) inscrit(s) n'ont pas choisi de créneau
+            <a  href="{{path('candidates_list_unslots',{'id':event.id}) }}">
+                <i class="fa fa-list"></i>
+            </a>
+        </p>
+        <a href="{{ path('send_free_slots', {'id' : event.id }) }}" class="btn btn-primary">
+            <i class="fa fa-envelope"></i>
+            Envoyer les mails créneaux disponibles
+        </a>
+        <table class="table table-striped">
+            <thead>
+            <tr>
+                <th>Id</th>
+                <th>Heure de début</th>
+                <th>Heure de fin</th>
+                <th>Participants</th>
+            </tr>
+            </thead>
+            <tbody>
+
+            {% for slots in slots %}
+                <tr style="font-size:17px" event="{{ event.id }}">
+                    <td>{{ slots.id }}</td>
+                    <td>{{ slots.beginSlot|date('H') }} h  {{ slots.beginSlot|date('i') }}</td>
+                    <td>{{ slots.endingSlot|date('H') }} h {{ slots.endingSlot|date('i') }}</td>
+                        {% if helper.countCandidats(slots) ==  slots.maxCandidats %}
+                             <td style="color:red; font-weight: bold">Complet</td>
+                        {% elseif slots.maxCandidats/2 > helper.countCandidats(slots)  %}
+                             <td style="color:green; font-weight: bold">      {{helper.countCandidats(slots)}} / {{ slots.maxCandidats }}</td>
+                        {% else %}
+                            <td style="color:orange; font-weight: bold">      {{helper.countCandidats(slots)}} / {{ slots.maxCandidats }}</td>
+                        {% endif %}
+                    <td>
+                        <a  href="{{path('candidates_list_by_slots',{'id':event.id, 'id_slots': slots.id}) }}">
+                            <i class="fa fa-list"></i>
+                        </a>
+                    </td>
+                    <td>
+                        <a href="{{ path('slots_edit', {'id' : slots.id }) }}" title="Editier réneau">
+                            <i class="fa fa-edit"></i>
+                        </a>
+                    </td>
+                    <td>
+                        <form action="{{ path('slots_delete', {'id': slots.id,'id_event': event.id}) }}" id="a_confirm_form">
+                            <button style="background: none;border:none">
+                                <i class="fa fa-remove"></i>
+                            </button>
+                        </form>
+                    </td>
+
+                </tr>
+            {% else %}
+                <tr>
+                    <td colspan="8">Pas de créneaux </td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+
+        <a href="{{ path('slots_add', {'id' : event.id }) }}" class="btn btn-primary">
+            <i class="fa fa-plus"></i>
+            Ajouter un créneau
+        </a>
+        <div class="clear1"></div>
+        <div class="clear1"></div>
+        <div id="test"></div>
+    </div>
+{% endblock %}

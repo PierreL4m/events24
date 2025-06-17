@@ -1,0 +1,55 @@
+<html>
+	<head>
+		{% include 'bundles/TwigBundle/Exception/error_style.html.twig' %}
+	</head>
+	<body>
+		{% include 'bundles/TwigBundle/Exception/error_readable.html.twig'  with {'mail' : true }  %}
+		
+		<table class="custom-dump">
+			<tr>
+				<td width="10px"></td>
+				<td width="200px">
+					Request
+				</td>
+				<td>
+					<span class="custom-dump-green">{{(request.method)}} {{request.requestUri}}</span>
+				</td>
+			</tr>
+			<tr>
+				<td width="10px"></td>
+				<td width="200px">
+					User-agent
+				</td>
+				<td>
+					<span class="custom-dump-green">{{request.headers.get('user-agent')}}</span>
+				</td>
+			</tr>
+			<tr>
+				<td width="10px"></td>
+				<td>
+					Host
+				</td>
+				<td>
+					<span class="custom-dump-green">{{request.headers.get('host')}}</span>
+				</td>
+			</tr>				
+			<tr>
+				<td width="10px"></td>
+				<td>
+					User
+				</td>
+				<td>
+					{% if user and user.email is defined %}
+						<span class="custom-dump-green">{{user.email}} - {{user}} - {{user.getType}}</span>
+					{% else %}
+						<span class="custom-dump-green">anonymous</span>
+					{% endif %}
+				</td>
+			</tr>					
+		</table>
+		{% include 'bundles/TwigBundle/Exception/error_custom_dump.html.twig'%}
+		
+		
+		{% include 'bundles/TwigBundle/Exception/error_trace.html.twig' %}
+	</body>
+</html>

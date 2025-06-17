@@ -1,0 +1,34 @@
+{% extends 'admin_base.html.twig' %}
+
+{% block content %}
+    <div class="container" id="emails_list">
+        <h1> Emails {{helper.getEmailTypeBySlug(slug)}} - {{helper.getAdminEventLink(event)|raw}} </h1>
+        <table class="table table-striped" id="event_list">
+            <tbody>
+                {% for email in emails%}
+                    <tr>
+                        <td>
+                            <a href="{{ path('email_show', {'id': email.id}) }}">
+                                <i class="fa fa-eye"></i> Envoyé le : {{email.sent|date('d-m-Y à H:i')}}
+                            </a>                                           
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        
+        <a href="{{ path('emails_send', {'slug' : slug, 'id' : event.id}) }}" class="btn btn-primary">
+            <i class="fa fa-plus"></i> Nouvel email {{helper.getEmailTypeBySlug(slug)}}
+        </a>       
+        <div class="clear1"></div>
+        <a href="{{path('arnaud_index')}}" class="btn btn-primary">
+            <i class="fa fa-arrow-left"></i>
+            Retour à la liste d'envoi d'emails
+        </a>
+        <div class="clear1"></div>
+        <a href="{{path('event_show', {'id' : event.id})}}" class="btn btn-primary">
+            <i class="fa fa-arrow-left"></i>
+            Retour à l'événement
+        </a>
+    </div>
+{% endblock %}

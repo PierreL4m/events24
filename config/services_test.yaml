@@ -1,0 +1,34 @@
+services:
+    _defaults:
+        autowire: true
+        autoconfigure: true
+        public: true
+        
+    Behatch\HttpCall\Request:
+        arguments:
+            - '@behat.mink'
+        public: false
+
+    behatch.http_call.request:
+        alias: Behatch\HttpCall\Request
+        
+#    Symfony\Component\Mailer\EventListener\MessageLoggerListener:
+#        shared: true
+#        lazy: true
+#        public: true
+#        autowire: true
+#        autoconfigure: true
+        
+#    mailer.message_logger_listener:
+#        alias: Symfony\Component\Mailer\EventListener\MessageLoggerListener
+
+    App\Tests\Behat\:
+        resource: '../tests/Behat/*'
+        
+    App\Tests\Behat\ApiContext:
+        arguments:
+            $base_url: 'http://dev.events.portable'
+
+parameters:
+    host_map:
+        default: 'www.24h-emploi-formation.com'

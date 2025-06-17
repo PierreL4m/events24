@@ -1,0 +1,33 @@
+{% extends 'admin_base.html.twig' %}
+
+{% block content %}
+    <div class="container" id="candidate_rh_comment">        
+        <h1>
+            {{participation.candidate}} - {{participation.event}} - {{participation.status}}
+        </h1>
+
+        {% if form is defined %}
+            {{ form_start(form) }}
+                {{ form_widget(form) }}
+
+                <button class="btn btn-success" id="{{button_id|default('save')}}">{{ button_label|default('Enregistrer') }}</button>
+                
+             
+            {{ form_end(form) }}
+
+        {% else %}
+            <p><strong> Commentaire RH : </strong></p>
+            {{participation.rhComment}}
+
+            <div class="clear2"></div>
+
+            <a href="{{path('candidate_rh_comment_edit',{'id' : participation.id})}}" class="btn btn-success"> 
+                <i class="fa fa-edit"></i>
+                Modifier
+            </a>
+        {% endif %}
+
+        <div class="clear1"></div>
+        {{helper.getReturnButton()|raw}}
+    </div>
+{% endblock %}

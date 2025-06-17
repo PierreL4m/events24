@@ -1,0 +1,92 @@
+<nav>
+	{% if login is not defined and admin is not defined and no_menu is not defined %}
+		<div id="menu_fix">
+			{# <span class="menu">MENU</span> #}
+			<span class="menu-bar"></span>
+			<span class="menu-bar"></span>
+			<span class="menu-bar"></span>
+			<i class="fa fa-close"></i>
+		</div>
+	{% endif %}
+	{% if admin is not defined %}
+		<div class="menu_item_container">
+			<div class="menu_item">
+				{% if sections is defined %}
+					{% for section in sections %}
+						{% if section.onpublic %}
+							<div class="ie_fix"></div>
+							<a href="#{{section.sectionType.slug}}" class="item" data-scroll="#{{section.sectionType.slug}}">
+								{{section.menuTitle}}
+							</a>
+						{% endif %}
+					{% endfor %}
+					<div class="ie_fix"></div>
+					<a href="{{path('public_index')}}" class="item">
+						Nos événements à venir
+					</a>
+				{% elseif bilan is defined %}
+					<div class="ie_fix"></div>
+					<a href="#photos" class="item" data-scroll="#photos">
+						Photos
+					</a>
+					{% for item in helper.getBilanMenuItems(event) %}
+						<div class="ie_fix"></div>
+						<a href="#{{item.slug}}" class="item" data-scroll="#{{item.slug}}">
+							{{item.label}}
+						</a>
+					{% endfor %}
+					{% for section in helper.getBilanSections(event) %}
+						<div class="ie_fix"></div>
+						<a href="#{{section.sectionType.slug}}" class="item" data-scroll="#{{section.sectionType.slug}}">
+							{{section.menuTitle}}
+						</a>
+					{% endfor %}
+				{% endif %}
+				{% if event is defined %}
+					{% if event.pressFiles.count() > 0 %} %}
+						<div class="ie_fix"></div>
+						<a href="#Kit-presse" class="item" data-scroll="#Kit-presse">
+							Kit Presse
+						</a>
+					{% endif %}
+				{% endif %}
+			</div>
+		</div>
+	{% elseif admin is defined and true %}
+		{% block menu_admin %}
+	      {% include 'menu_admin.html.twig' %}
+	    {% endblock %}
+	{% endif %}
+
+	{% if login is not defined %}
+		<div id="user">
+			{% if app.user %}
+				{% set label = app.user.firstName %}
+				{% set path = 'redirect_login' %}
+			{% else %}
+				{% set label = 'Se connecter' %}
+				{% set path = 'app_login' %}
+			{% endif %}
+
+			<a href="{{ path(path) }}">
+				<span id="nav_username">
+					{{label}}
+				</span>
+				<span id="nav_picto_user">
+					<i class="fa fa-user"></i>
+				</span>
+			</a>
+
+			{% if app.user %}
+				<a href="{{path('app_logout')}}">
+					<i class="fa fa-sign-out"></i>
+				</a>
+			{% endif %}
+
+		</div>
+	{% else %}
+		<a href="{{path('public_index')}}" id="home">
+			<i class="fa fa-home"></i>
+		</a>
+	{% endif %}
+</nav>

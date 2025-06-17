@@ -1,0 +1,7 @@
+{% extends 'jobflix.base.html.twig' %}
+
+ {% block title %}Événements L4M{% endblock %}
+
+ {% block body %}
+         <home-overlay id="root" data-user="{{ app.user ? app.user.id : 0 }}"></home-overlay>
+ {% endblock %}

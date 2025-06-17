@@ -1,0 +1,54 @@
+<div id="agendas_container">
+	{% for agenda in section.agendas|sort %}
+		<div class="agenda_container">
+
+			{% if agenda.description %}
+				<a href="#agenda_{{agenda.id}}" id="Modal_agenda_{{agenda.id}}" title="{{agenda.title}}" class="flex-item">
+				{% endif %}
+			<div class="img_container">
+				{% if agenda.logo %}
+					<img src="{{ vich_uploader_asset(agenda, 'logoFile') }}" alt="{{agenda.title}}" target="_blank">
+				{% else %}
+					<span class="logoText">{{agenda.logoText}}</span>
+				{% endif %}
+			</div>
+			{% if agenda.description %}
+				<div class="triangle"><i class="fa fa-plus"></i></div>
+				</a>
+				{# Modal #}
+				<div id="{{'myModal_agenda_' ~ agenda.id}}" >
+					{% include 'partials/agenda.html.twig' %}
+				</div>
+
+			{% endif %}
+
+			<div class="main">
+				<span class="hours"> {{agenda.start|date('H:i')}} - {{agenda.end|date('H:i')}} </span>
+				<span class="title">
+					{{agenda.title}}
+					{% if admin is defined %}
+						<span class="btn_actions">
+							<a href="{{path('agenda_edit', {'id' : agenda.id})}}">
+								<i class="fa fa-edit"></i>
+							</a>
+							<a href="{{path('agenda_delete', {'id' : agenda.id })}}" class="a_confirm" data-msg="cet horaire?">
+								<i class="fa fa-remove"></i>
+							</a>
+						</span>
+					{% endif %}
+				</span>
+			</div>
+		</div>
+	{% else %}
+		<p> "{{section.title}}" sera en ligne très prochainement </p>
+	{% endfor %}
+</div>
+
+{% if admin is defined %}
+	<div class="footer_section">
+		<a href="{{path('agenda_new', {'id' : section.id })}}" class="btn btn-primary">
+			<i class="fa fa-plus"></i>
+			Ajouter un élément à l'agenda
+		</a>
+	</div>
+{% endif %}

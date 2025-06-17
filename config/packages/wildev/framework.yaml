@@ -1,0 +1,5 @@
+# config/packages/test/framework.yaml
+framework:
+    profiler: ~
+    session:
+        storage_factory_id: session.storage.factory.native

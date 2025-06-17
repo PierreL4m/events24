@@ -1,0 +1,38 @@
+{% extends 'admin_base.html.twig' %}
+
+{% block content %}
+    <div class="container">
+    <h1>Type d'exposants</h1>
+
+    <table class="table">
+
+        <tbody>
+        {% for organization_type in organization_types %}
+            <tr>
+                {% if is_granted("ROLE_SUPER_ADMIN") %}
+                    <td>{{ organization_type.id }}</td>
+                    <td>{{ organization_type.slug }}</td>
+                {% endif %}
+                <td>{{ organization_type.name }}</td>
+               
+                {% if is_granted("ROLE_SUPER_ADMIN") %}
+                    <td> 
+                        <a href="{{path('organization_type_edit', {'id' : organization_type.id})}}">
+                            <i class="fa fa-edit"></i>
+                        </a>
+                    </td>
+                {% endif %}
+            </tr>
+        {% else %}
+            <tr>
+                <td> Pas de type d'exposant</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    {% if is_granted("ROLE_SUPER_ADMIN") %}
+        <a href="{{ path('organization_type_new') }}">Nouveau type d'exposant</a>
+    {% endif %}
+</div>
+{% endblock %}

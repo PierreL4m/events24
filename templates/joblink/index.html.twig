@@ -1,0 +1,40 @@
+{% extends 'admin_base.html.twig' %}
+
+{% block content %}
+    <div class="container" id="bats">
+        <h1>Joblink index</h1>
+        <a class="btn btn-info" href="{{ path('admin_index') }}">Retour</a>
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Id</th>
+                    <th>Nom</th>
+                    <th>Evenement</th>
+                    <th>Description</th>
+                    <th>Dernière modification</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+            {% for joblink in joblinks %}
+                <tr>
+                    <td>{{ joblink.id }}</td>
+                    <td>{{ joblink.name }}</td>
+                    <td>{{ event_slug }}</td>
+                    <td>{{ joblink.description }}</td>
+                    <td>{{ joblink.updatedAt| date('d/m/Y H:i') }}</td>
+                    <td>
+                        <a class="btn btn-info" href="{{ path('joblink_show', {'id': joblink.id}) }}">Voir</a>
+                        <a class="btn btn-info" href="{{ path('joblink_edit', {'id': joblink.id, 'event_id': event_id}) }}">Modifier</a>
+                    </td>
+                </tr>
+            {% else %}
+                <tr>
+                    <td colspan="6">no records found</td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+
+        </div>
+{% endblock %}

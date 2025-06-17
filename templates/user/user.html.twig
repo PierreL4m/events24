@@ -1,0 +1,22 @@
+{% if user %}
+	<div class="user_container">
+		{% if is_granted("ROLE_SUPER_ADMIN") %}
+			<span> {{user.username}} {{user.id}}</span>
+		{% endif %}
+		<span><strong>{{user}}</strong></span>
+		<span>{{user.position}}</span>
+		<span>{{user.phone}}</span>
+		{% if user.mobile is defined %}
+			<span>{{user.mobile}}</span>
+		{% endif %}
+		<span>{{user.email}}</span>
+
+		<div class="emailBis">	
+			{% if user.responsableBises is defined %}			
+				{% for bis in user.responsableBises %}
+					{{bis}}<br>
+				{% endfor %}
+			{% endif %}
+		</div>
+	</div>
+{% endif %}

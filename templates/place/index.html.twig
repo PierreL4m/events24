@@ -1,0 +1,40 @@
+{% extends 'admin_base.html.twig' %}
+
+{% block content %}
+    <div class="container">
+        <h1> Lieux </h1>
+        
+        <a href="{{ path('place_new') }}" class="btn btn-primary"><i class="fa fa-plus"></i>Nouveau lieu</a>
+        <div class=" clear1"></div>
+        <table class="table table-striped">
+            {% for place in places %}
+                <tr>
+                    {% if is_granted('ROLE_SUPER_ADMIN') %}
+                        <td>{{ place.id }}</td>
+                    {% endif %}
+                    <td>{{ place.name }}</td>
+                    <td>{{ place.nameMobile }}</td>
+                    <td>{{ place.address }}</td>
+                    <td>{{ place.cp }}</td>
+                    <td>{{ place.city }}</td>
+                    <td>{{ place.description }}</td>
+                    {% if is_granted('ROLE_SUPER_ADMIN') %}
+                        <td>{{ place.slug }}</td>
+                        <td>{{ place.latitude }}</td>
+                        <td>{{ place.longitude }}</td>
+                    {% endif %}
+                    <td class="btn-group-vertical">
+                        <a class="btn btn-outline-info btn-sm" href="{{ path('place_show', {'id': place.id}) }}">Voir</a>
+                        <a class="btn btn-outline-info btn-sm" href="{{ path('place_edit', {'id': place.id}) }}">Éditer</a>
+                    </td>
+                </tr>
+            {% else %}
+                <tr>
+                    <td colspan="11">Pas de résultat</td>
+                </tr>
+            {% endfor %}
+        </table>
+
+        
+    </div>
+{% endblock %}

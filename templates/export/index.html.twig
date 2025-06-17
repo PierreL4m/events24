@@ -1,0 +1,36 @@
+{% extends 'admin_base.html.twig' %}
+
+{% block content %}
+    <div class="container">
+        <h1> Événements </h1>
+        <table class="table table-striped" id="event_list">
+            <tbody>
+                {% for event in events %}
+                    <tr>
+                        <td>
+                            <a href="{{ path('export_event', {'id': event.id}) }}">
+                                {{event}} (Export court)<br>
+                            </a>
+                            <a href="{{ path('export_event_long', {'id': event.id}) }}">
+                                {{event}} (Export long)
+                            </a>
+                        </td>
+                        <td class="hd">   
+                        	<a href="{{ path('export_hd', {'id': event.id}) }}">        
+                            	<span class="glyphicon glyphicon-hd-video" aria-hidden="true"></span>
+                            </a>
+                        </td>
+                        <td class="gazette">
+                        	<a href="{{ path('export_gazette', {'id': event.id}) }}">  
+                           		<img src="{{asset('images/gazette.png')}}">
+                       		</a>
+                        </td>                       
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        <div class="navigation">
+            {{ knp_pagination_render(events) }}
+        </div>
+    </div>
+{% endblock %}

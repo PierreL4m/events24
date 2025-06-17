@@ -1,0 +1,51 @@
+<h3>
+	Bonjour {{participation.responsable}}
+</h3>
+{# <p> Nous vous contactons à nouveau aujourd'hui pour faire suite au mail envoyé ce matin et comprenant certaines erreurs de redirection. Vous trouverez ci-après les informations nécessaires à votre connection.</p>
+<p> Veuillez nous excuser pour ce contre temps. </p> #}
+
+<p>
+	Je me permets de vous contacter à nouveau aujourd’hui dans le cadre de votre participation à l'événement L4M <strong>"{{participation.event.getTypeCityAndDate}}" le {{participation.event.date|date('d/m')}} prochain</strong>
+</p>
+
+<p>
+	Pour rappel, l’accès administrateur du site internet de l'événement, qui sera mis en ligne le {{participation.event.online|date('d/m/Y')}} , est désormais ouvert.</p>
+
+	{% if missing %}
+		<p> Je vous sollicite donc aujourd’hui afin que vous puissiez remplir votre fiche exposant.
+	{% else %}
+		<p> Vous ne vous êtes pas connecté depuis la génération automatique de votre fiche exposant. Je vous sollicite donc aujourd’hui afin que vous puissiez vérifier votre fiche exposant.
+	{% endif %}
+		Cela ne vous prendra que quelques minutes.
+	</p>
+
+Je vous communique les informations nécessaires :
+<ul>
+	<li> Votre nom d'utilisateur : {{participation.responsable.username}} ou adresse e-mail : {{participation.responsable.email}} </li>
+	<li> Mot de passe : envoyé précédemment lors de votre dernière participation </li>
+	<li> <a href="{{url('exposant_participation_edit', {'id' : participation.id})}}">Le lien vers votre fiche de participation </a>
+	<li> Si vous avez oublié votre mot de passe <a href="{{url('app_forgot_password_request')}}" > cliquez ici </a> pour le réinitialiser par email</li>
+</ul>
+
+<p>
+	Si vous avez pris part à une édition précédente d'un de nos événements, vous pourrez donc comme d’habitude reprendre les informations déjà renseignées.
+</p>
+{% set user = participation.event.manager %}
+<p>
+	Quelle que soit la question que vous vous posez ou le problème que vous rencontrez, je me tiens à votre disposition au : {{user.phone}}.
+</p>
+<p>
+	Je vous remercie de votre attention et vous prie de constituer votre fiche avant le {{participation.event.online|date('d/m/Y')}}, afin que l’on puisse l’intégrer au plus vite sur le site web de l'événement.
+</p>
+<p>
+	Excellente journée à vous,
+</p>
+<p>
+	Cordialement,
+</p>
+{% set user = participation.event.manager %}
+{% include 'emails/signature.html.twig' %}
+
+<p>
+	<i>Ceci est un mail automatique. En cas de problème, vous pouvez toutefois nous contacter à l’adresse : <a href="{{'mailto:' ~ user.email}}"> {{user.email}} </a> ou par téléphone au {{user.phone}}</i>
+</p>

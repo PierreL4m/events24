@@ -1,0 +1,50 @@
+{% extends 'public/event.html.twig' %}
+
+{% block map %}
+	<div id="map">
+		{{helper.getSvg()|raw}}
+	</div>
+{% endblock %}
+
+{% block register %}
+	<i class="fa fa-rocket"></i>
+	Inscription obligatoire
+{% endblock %}
+
+{% block map_popovers %}
+	{# <div id="popovers">		 #}
+	<div class="container">
+      {% for place in helper.getActiveCities %}
+	      {% set next_event = helper.getNextEvent(place.id) %}
+	      {% set start_link = '' %}
+	      {% set link = '<span class="infos">Infos à venir</span></div>' %}
+
+      	{% if next_event %}
+      		{% if h48_helper.is48(next_event) %}
+
+      			{% set second_event = h48_helper.getSecond48(next_event) %}
+      			{% set date = null %}
+  				{% if second_event %}
+  					{% set date = ' et ' ~ second_event.date|format_date('none', 'MMMM Y', null, 'gregorian', 'fr')|capitalize ~ ' ' %}
+  				{% endif %}
+      			{% set date = next_event.date|format_date('none', 'MMMM Y', null, 'gregorian', 'fr')|capitalize ~ date ~ next_event.date|format_date('none', 'MMMM Y', null, 'gregorian', 'fr')|capitalize %}
+
+      		{% else %}
+      			{% set date = next_event.date|format_date('none', 'MMMM Y', null, 'gregorian', 'fr')|capitalize %}
+      		{% endif %}
+
+      		{% set tmp = '<span class="date">' ~ date ~ '</span></div>' %}
+
+      		{% if place.slug != event.place.slug %}
+      			{% set start_link = '<a href="/' ~ next_event.slug ~ '" target="_blank">' %}
+      			{% set link = tmp ~ '<div class="triangle"><i class="fa fa-plus"></i></span></div></a>'%}
+      		{% else %}
+      			{% set link = tmp ~ '</div>' %}
+      		{% endif %}
+      	{% endif %}
+
+      	{% set content = '<div id="opened_c_' ~ place.slug ~ '">'~ start_link ~ '<div class="place_container"><span class="place">' ~ place.city ~ '</span><span class="place">' ~ place.name ~ '</span>' ~ link ~ '</div>' %}
+          <a href="#" data-toggle="popover" data-content="{{content}}" id="pop_c_{{place.slug}}" data-id="{{place.id}}"></a>
+      {% endfor %}
+    </div>
+ {% endblock %}

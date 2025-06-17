@@ -1,0 +1,14 @@
+<h3>
+	Hello !
+</h3>
+<p> 
+	Voici ton rappel pour rédiger et envoyer le mail "{{email_type.getLabel()}}" pour l'événement {{event}} - <i>{{event.getFullType}}.</i>
+</p>
+<p>
+	Tu peux accéder à l'admin events en <a href="{{url('admin_index')}}">cliquant ici.</a>
+</p>
+<p>
+	Tu peux accéder directement à la page de rédaction de l'email en <a href="{{url('emails_send', {'id' : event.id, 'slug' : email_type.slug})}}">cliquant ici.</a><br>
+
+</p>
+{% include 'emails/signature.html.twig' %}

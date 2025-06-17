@@ -1,0 +1,13 @@
+ {% if entity.timestamp and entity.timestamp.updated %}
+    {{ entity.timestamp.updated|date('d/m/Y') }} à 
+    {{ entity.timestamp.updated|date('H:i') }} 
+    {% if entity.timestamp.updatedBy %}
+    	par {{entity.timestamp.updatedBy}}
+    {% endif %}
+{% else %}
+	{% if no is defined %}
+		Non
+	{% else %}
+    	Aucune
+	{% endif %}
+{% endif %}

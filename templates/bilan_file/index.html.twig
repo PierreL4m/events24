@@ -1,0 +1,81 @@
+{% extends 'admin_base.html.twig' %}
+
+{% block content %}
+	<div class="container" id="bilan">
+    <h1>
+        Site bilan {{helper.getAdminEventLink(event)|raw}}
+        <a href="{{path('public_bilan',{'slug' : event.slug})}}" class="btn btn-primary pull-right" target="_blank">
+            <i class="fa fa-search"></i>
+            Preview
+        </a>
+    </h1>
+
+    <nav class="navbar navbar-default" id="event_nav">
+        <div class="container-fluid text-center">
+            <div class="navbar-header ">
+                {% for bilan_file_type in bilan_file_types %}
+                    <a href="{{ path('bilan_file_new', {'id' : event.id, 'type_id' :bilan_file_type.id}) }}"  class="navbar-brand">
+                        <i class="fa fa-plus"></i> {{bilan_file_type.name}}
+                    </a>
+                {% else %}
+                    <a href="{{ path('bilan_file_type_new') }}">Créer une nouvelle catégorie de fichiers bilan</a>
+                {% endfor %}
+                <a href="#pictures"  class="navbar-brand">
+                    <i class="fa fa-plus"></i> Photos
+                </a>
+            </div>
+        </div>
+    </nav>
+
+    <div> 
+        <button class="btn btn-warning" id="notice_mp3">
+            <i class="fa fa-plus"></i>
+            Notice pour récupérer des mp3 en ligne 
+        </button>
+        <ol id="notice"> 
+            <li>Aller sur la page web où se trouve le fichier à extraire</li>
+            <li>Ouvrir la console du développeur (F12) </li>
+            <li>Dans la barre de menu de la console du développeur, cliquer sur "Network"</li>
+            <li>Cliquer sur "Media" dans toutes les options proposées</li>
+            <li>Dans la page web, cliquez sur lecture pour lancer la lecture</li>
+            <li>Un "truc" apparait dans la console du développeur, double cliquer dessus</li>
+            <li>Un nouvel onglet s'ouvre. Faire clic droit sur la page puis enregistrer</li>
+            <li>Bravo le fichier mp3 est téléchargé sur votre disque dur !</li>
+            <li>Dernière étape, ajouter ce mp3 au site bilan</li>
+        </ol>
+    </div>
+    <div class="clear1"></div>
+    
+    {% include 'mailer/emails_btn.html.twig' with {'slug' : 'bilan'} %}
+
+    {% include 'partials/bilan_file_list.html.twig' with {'admin' : true} %}
+       
+    <div id="pictures">
+        <h2 class="title"> Photos </h2>
+        
+        {% for participation in helper.getOrderedParticipations(event) %}
+            <a href="{{path('bilan_picture_new',{'id':participation.id})}}">
+                <i class="fa fa-plus"></i> 
+                {{participation}}
+            </a>
+            <div class="clear1"></div>
+            <div class="pic_container">
+                
+                    {% for picture in participation.bilanPictures %}
+                        <div class="pic">
+                            <div class="img_container">
+                                <img src="{{picture.getWebPath}}" alt="{{participation}}">
+                            </div>
+                            <div class="actions">
+                                <a href="{{path('bilan_picture_delete',{'id' : picture.id})}}" class="a_confirm" data-msg="supprimer cette photo?">
+                                    <i class="fa fa-remove"></i>
+                                </a>
+                            </div>
+                        </div>                        
+                       
+                    {% endfor %}
+                </div>
+              
+        {% endfor %}
+    </div>
+{% endblock %}

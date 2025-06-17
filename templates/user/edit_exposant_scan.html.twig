@@ -1,0 +1,11 @@
+{% extends 'partials/form.html.twig' %}
+{% block title %} Changer l'identifiant pour l'utilisateur scan {{user.organization}}{% endblock %}
+
+{% block form %}
+	{{form_start(form)}}
+		{{form_widget(form)}}
+		<button class="btn btn-success" id="save">Enregistrer</button>
+	{{form_end(form)}}
+
+	
+{% endblock %}

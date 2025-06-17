@@ -1,0 +1,171 @@
+vich_uploader:
+    db_driver: orm
+
+    mappings:
+        banner_event:
+            uri_prefix: /uploads/banners
+            upload_destination: '%kernel.project_dir%/public/uploads/banners'
+            namer: Vich\UploaderBundle\Naming\UniqidNamer
+            delete_on_update: false
+            delete_on_remove: true
+
+        logo_event:
+            uri_prefix: /uploads/events_logo
+            upload_destination: '%kernel.project_dir%/public/uploads/events_logos'
+            namer: Vich\UploaderBundle\Naming\UniqidNamer
+
+        pub_event:
+            uri_prefix: /uploads/pub
+            upload_destination: '%kernel.project_dir%/public/uploads/pub'
+            namer: Vich\UploaderBundle\Naming\UniqidNamer
+
+        pub_accred_event:
+                uri_prefix: /uploads/pub
+                upload_destination: '%kernel.project_dir%/public/uploads/pub'
+                namer: Vich\UploaderBundle\Naming\UniqidNamer
+
+
+        back_facebook:
+            uri_prefix: /uploads/back_facebook
+            upload_destination: '%kernel.project_dir%/public/uploads/backFacebook'
+            namer: Vich\UploaderBundle\Naming\UniqidNamer
+
+        back_signature:
+          uri_prefix: /uploads/back_signature
+          upload_destination: '%kernel.project_dir%/public/uploads/backSignature'
+          namer: Vich\UploaderBundle\Naming\UniqidNamer
+
+        back_insta:
+            uri_prefix: /uploads/back_insta
+            upload_destination: '%kernel.project_dir%/public/uploads/backInsta'
+            namer: Vich\UploaderBundle\Naming\UniqidNamer
+
+        back_twitter:
+            uri_prefix: /uploads/back_twitter
+            upload_destination: '%kernel.project_dir%/public/uploads/backTwitter'
+            namer: Vich\UploaderBundle\Naming\UniqidNamer
+
+        back_linkedin:
+            uri_prefix: /uploads/back_linkedin
+            upload_destination: '%kernel.project_dir%/public/uploads/backLinkedin'
+            namer: Vich\UploaderBundle\Naming\UniqidNamer
+
+        image_section:
+            uri_prefix: /uploads/sections
+            upload_destination: '%kernel.project_dir%/public/uploads/sections'
+            namer: Vich\UploaderBundle\Naming\UniqidNamer
+
+        logo_participation:
+            uri_prefix: /uploads/logo
+            upload_destination: '%kernel.project_dir%/public/uploads/logo'
+            namer: Vich\UploaderBundle\Naming\UniqidNamer
+
+        visuel_facebook_participation:
+            uri_prefix: /uploads/visuel_rs
+            upload_destination: '%kernel.project_dir%/public/visuel_rs'
+            namer: Vich\UploaderBundle\Naming\UniqidNamer
+
+        visuel_twitter_participation:
+            uri_prefix: /uploads/visuel_rs
+            upload_destination: '%kernel.project_dir%/public/visuel_rs'
+            namer: Vich\UploaderBundle\Naming\UniqidNamer
+
+        visuel_insta_participation:
+            uri_prefix: /uploads/visuel_rs
+            upload_destination: '%kernel.project_dir%/public/visuel_rs'
+            namer: Vich\UploaderBundle\Naming\UniqidNamer
+
+        visuel_linkedin_participation:
+            uri_prefix: /uploads/visuel_rs
+            upload_destination: '%kernel.project_dir%/public/visuel_rs'
+            namer: Vich\UploaderBundle\Naming\UniqidNamer
+
+        logo_partenaire:
+            uri_prefix: /uploads/partenaires
+            upload_destination: '%kernel.project_dir%/public/uploads/partenaires'
+            namer: Vich\UploaderBundle\Naming\UniqidNamer
+            delete_on_update: false
+            delete_on_remove: true
+
+        header_event_type:
+            uri_prefix: /uploads/headerEventType
+            upload_destination: '%kernel.project_dir%/public/uploads/headerEventType'
+            namer: Vich\UploaderBundle\Naming\UniqidNamer
+
+        logo_participants_sections:
+            uri_prefix: /uploads/sections_participants
+            upload_destination: '%kernel.project_dir%/public/uploads/sections_participants'
+            namer: Vich\UploaderBundle\Naming\UniqidNamer
+
+        logo_joblink:
+            uri_prefix: /uploads/joblinks
+            upload_destination: '%kernel.project_dir%/public/uploads/joblinks'
+            namer: Vich\UploaderBundle\Naming\UniqidNamer
+
+        logo_agenda:
+            uri_prefix: /uploads/agenda
+            upload_destination: '%kernel.project_dir%/public/uploads/agenda'
+            namer: Vich\UploaderBundle\Naming\UniqidNamer
+
+        social_logo_event:
+            uri_prefix: /uploads/social_logos
+            upload_destination: '%kernel.project_dir%/public/uploads/social_logos'
+            namer: Vich\UploaderBundle\Naming\UniqidNamer
+
+        back_badge_event:
+            uri_prefix: /uploads/background_badge
+            upload_destination: '%kernel.project_dir%/public/uploads/background_badge'
+            namer: Vich\UploaderBundle\Naming\UniqidNamer
+
+        og_image_event:
+            uri_prefix: /uploads/og_images
+            upload_destination: '%kernel.project_dir%/public/uploads/og_images'
+            namer: Vich\UploaderBundle\Naming\UniqidNamer
+
+        invitation_event:
+            uri_prefix: /invitations
+            upload_destination: '%kernel.project_dir%/public/invitations'
+            namer: Vich\UploaderBundle\Naming\UniqidNamer
+
+        global_image:
+            uri_prefix: /uploads/invitation_event
+            upload_destination: '%kernel.project_dir%/public/uploads/invitation_event'
+            namer: Vich\UploaderBundle\Naming\UniqidNamer
+
+        attachments:
+           uri_prefix: admin/uploads/attachments
+           upload_destination: '%kernel.project_dir%/public/uploads/attachments'
+           namer: 'Vich\UploaderBundle\Naming\OrignameNamer'
+        spec_base:
+           uri_prefix: admin/uploads/spec_base
+           upload_destination: '%kernel.project_dir%/public/uploads/spec_base'
+           namer: 'Vich\UploaderBundle\Naming\OrignameNamer'
+        tech_guide:
+           uri_prefix: admin/uploads/tech_guide
+           upload_destination: '%kernel.project_dir%/public/uploads/tech_guide'
+           namer: 'Vich\UploaderBundle\Naming\OrignameNamer'
+        bat:
+           uri_prefix: admin/uploads/bats
+           upload_destination: '%kernel.project_dir%/public/uploads/bats'
+           namer: 'Vich\UploaderBundle\Naming\OrignameNamer'
+        press_file:
+           uri_prefix: admin/uploads/press_file
+           upload_destination: '%kernel.project_dir%/public/uploads/press_files'
+           namer: 'Vich\UploaderBundle\Naming\OrignameNamer'
+        cv:
+           uri_prefix: uploads/cv
+           upload_destination: '%kernel.project_dir%/public/uploads/cvs'
+           namer: 'Vich\UploaderBundle\Naming\OrignameNamer'
+        bilan:
+           uri_prefix: uploads/bilan
+           upload_destination: '%kernel.project_dir%/public/uploads/bilan'
+           namer: 'Vich\UploaderBundle\Naming\OrignameNamer'
+        pub:
+           uri_prefix: uploads/pub
+           upload_destination: '%kernel.project_dir%/public/uploads/pub'
+        pubMobile:
+            uri_prefix: uploads/pub
+            upload_destination: '%kernel.project_dir%/public/uploads/pub'
+        joblink:
+           uri_prefix: admin/uploads/joblinks
+           upload_destination: '%kernel.project_dir%/public/uploads/joblinks'

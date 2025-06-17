@@ -1,0 +1,12 @@
+{# Form that allows to add the session and the name of the company to which the candidate participates (if there is one) #}
+{% if participation.joblinkSessions is defined %}
+    {% for joblinkSession in participation.joblinkSessions %}
+        {% if joblinkSession.participation.event == event %}
+            <div class="top"></div>
+            <div class="candidate">
+                <p class="email">{{ joblinkSession }}</p>
+                <p class="email">{{ joblinkSession.participation.companyName }}</p>
+            </div>
+        {% endif %}
+    {% endfor %}
+{% endif %}

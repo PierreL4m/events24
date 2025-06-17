@@ -1,0 +1,75 @@
+{% extends 'public/event' ~ event.type ~ '_new.html.twig' %}
+{% set bilan = true %}
+
+{% block bilan %}
+	<div class="bilan_main_title"> Retour sur l'événement </div>
+{% endblock %}
+
+{% block page %}
+	<div id="bilan_public_pictures" class="content">
+		<section id="photos" class="anchor">
+			{% set nbPhotos = 0 %}
+			{% for participation in helper.getOrderedParticipations(event) %}
+				{% if participation.bilanPictures|length > 0 %}
+					{% set nbPhotos = nbPhotos +  participation.bilanPictures|length %}
+				{% endif %}
+			{% endfor %}
+			{% if nbPhotos > 0 %}
+				<h2 class="title" >
+					Les photos de l'événement
+				</h2>
+			{% endif %}
+			<div class="grid_container">
+				<div class="grid">
+					{% for participation in helper.getOrderedParticipations(event) %}
+						{% if participation.bilanPictures|length > 0 %}
+							{% if participation.logo.path != 'no_path' and participation.logo.path %}
+								<a href="{{path('bilan_picture_participation', {'id' : participation.id})}}#photos" title="{{participation.companyname}}">
+									<div class="logo grid-item">
+										<span class="helper"></span>
+										<img src="/uploads/{{participation.logo.getPath()}}" alt="{{participation.companyname}}" />
+									</div>
+									<div class="triangle"><i class="fa fa-plus"></i></div>
+								</a>
+							{% else %}
+								<a href="{{path('bilan_picture_participation', {'id' : participation.id})}}#photos" title="{{participation.companyname}}">
+									<div class="logo grid-item">
+										<span class="helper"></span>
+										{{participation.companyname}}
+									</div>
+									<div class="triangle"><i class="fa fa-plus"></i></div>
+								</a>
+							{% endif %}
+						{% endif %}
+					{% endfor %}
+				</div>
+			</div>
+		</section>
+		{%  if h48_helper.is48(event) and event.place.city != "LE MANS"%}
+			<section id="photos_second">
+				{% set second_event = h48_helper.getSecond48(event) %}
+				{% if h48_helper.is48Formation(event) %}
+					{%  set label = 'emploi' %}
+				{% else %}
+					{%  set label = 'formation' %}
+				{% endif %}
+				<a href="{{ path('bilan_show', {'slug' : second_event.slug}) }}" class="btn btn-success">
+					<i class="fa fa-picture-o"></i>
+					{% if h48_helper.isMain48(event) %}
+					Photos du <span style="text-transform:capitalize">{{ second_event.date|format_date('none', 'EEEE', null, 'gregorian', 'fr')}}</span>
+					{% else %}
+						Photos du <span style="text-transform:capitalize">{{ h48_helper.getMain48(event).date|format_date('none', 'EEEE', null, 'gregorian', 'fr')}}</span>
+					{% endif %}
+				</a>
+			</section>
+		{%  endif %}
+	</div>
+	<div id="bilan_public" class="content">
+		{% include 'partials/bilan_file_list.html.twig' %}
+	</div>
+	{% for section in helper.getBilanSections(event) %}
+		{% include 'public/partials/section.html.twig' %}
+	{% endfor %}
+{% endblock %}
+
+{% block mandatory_registration_container %}{% endblock %}

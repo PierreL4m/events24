@@ -1,0 +1,27 @@
+{% if participation is defined %}
+	{% set candidate = participation.candidate %}
+	{% set event = participation.event %}
+{% endif %}
+
+<h4>Bonjour {{candidate.firstname}} {{candidate.lastname}}</h4>
+
+<p>
+	Nous avons le plaisir de vous transmettre {% if recall %}à nouveau {% endif %}en pièce jointe votre invitation à l'événement  {{event.getTypeCityAndDate}} {% if h48_helper.is48(event) and h48_helper.second48(event) %}et le {{h48_helper.getSecond48(event).date|date('d/m/Y')}}
+	{% endif %}.
+</p>
+<p>
+	Celle-ci est à présenter <strong>obligatoirement</strong> avec votre téléphone (ou en version papier) lors de votre arrivée sur les lieux le {{event.date|date('d/m')}}
+{% if participation.slot is not null %}({{ participation.slot.beginSlot|date('H') }} h  {{ participation.slot.beginSlot|date('i') }} - {{ participation.slot.endingSlot|date('H') }} h {{ participation.slot.endingSlot|date('i') }}){% endif %}
+</p>
+<p>
+	Informations pratiques:<br>
+	{{event.place.name}}<br>
+	{{event.place.address}}<br>
+	{{event.place.cp}} {{event.place.city}}
+</p>
+<p>Retrouvez les entreprises participantes et les offres à pourvoir sur :  <a href="https://24h-emploi-formation.com/{{ participation.event.slug }}">https://24h-emploi-formation.com/{{ participation.event.slug }}</a></p>
+<p>Suivez l’actualité de l’événement sur les réseaux sociaux.</p>
+
+
+
+{% include 'emails/signature.html.twig' with {'team' : true } %}

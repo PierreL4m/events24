@@ -1,0 +1,109 @@
+<div class="container-fluid">
+    <ul style="display:inline" class="nav navbar-nav {% if is_granted('ROLE_CANDIDATE')%}candidate{% endif %}"{% if is_granted('ROLE_VIEWER')%}id="menu_admin"{% endif %}{% if is_granted('ROLE_EXPOSANT_SCAN')%}id="client"{% endif %}>
+        {% if not is_granted('ROLE_EXPOSANT_SCAN') or is_granted('ROLE_ORGANIZATION') %}
+            <li id="menu_mobile">
+                <i class="fa fa-bars"></i>
+            </li>
+        {% else %}
+            <a href="{{path('exposant_participation_list')}}" id="home">
+                <i class="fa fa-home"></i>
+            </a>
+        {% endif %}
+        {% if is_granted('ROLE_VIEWER') %}
+        <li class="dropdown">{# li second child has to be menu item for jquery show or hide menu#}
+            <a class=" dropdown-toggle"  id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                Événements
+            </a>
+            <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
+                <li><a href="{{path('event_place')}}" >Nouveau</a></li>
+                <li><a href="{{path('event_index')}}">Liste</a></li>
+                <li><a href="{{path('event_type_index')}}">Types</a>
+                <li><a href="{{path('event_ids')}}">Ids</a>
+            </ul>
+        </li>
+        <li class="dropdown">
+            <a class=" dropdown-toggle"  id="dropdownMenu2" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                Exposants
+            </a>
+            <ul class="dropdown-menu" aria-labelledby="dropdownMenu2">
+                <li><a href="{{path('organization_new')}}">Nouveau</a></li>
+                <li><a href="{{path('organization_index')}}">Liste</a></li>
+                <li><a href="{{path('organization_type_index')}}">Types</a></li>
+            </ul>
+        </li>
+        <li><a href="{{path('partner_index')}}">Partenaires</a></li>
+        <li class="dropdown">
+            <a class=" dropdown-toggle"  id="dropdownMenu3" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                Lieux
+            </a>
+            <ul class="dropdown-menu" aria-labelledby="dropdownMenu3">
+                <li><a href="{{path('place_new')}}">Nouveau</a></li>
+                <li><a href="{{path('place_index')}}">Liste</a></li>
+                <li><a href="{{path('street_index')}}">Voies</a></li>
+                <li><a href="{{path('street_new')}}">Nouvelle voie</a></li>
+            </ul>
+        </li>
+        <li class="dropdown">
+            <a class=" dropdown-toggle"  id="dropdownMenu4" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                Secteurs
+            </a>
+            <ul class="dropdown-menu" aria-labelledby="dropdownMenu4">
+                <li><a href="{{path('sector_new')}}">Nouveau</a></li>
+                <li><a href="{{path('sector_index')}}">Liste</a></li>
+            </ul>
+        </li>
+        {# <li class="dropdown">
+        <a class=" dropdown-toggle"  id="dropdownMenu5" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+          Joblinks
+          <span class="caret"></span>
+        </a>
+        <ul class="dropdown-menu" aria-labelledby="dropdownMenu5">
+          <li><a href="#">Nouveau</a></li>
+          <li><a href="#">Liste</a></li>
+        </ul>
+      </li> #}
+        <li><a href="{{path('export_index')}}" >Exports</a></li>
+        <li><a href="{{path('bilan_index')}}" >Sites bilans</a></li>
+        <li><a href="{{path('arnaud_index')}}" >Mails Arnaud</a></li>
+        <li><a href="{{path('user_index')}}" >Utilisateurs</a></li>
+        <li><a href="{{path('section_type_index')}}" >Types de rubriques</a></li>
+        <li><a href="{{path('export_mailing_exposantuser')}}">Export pour mailing client (J-3ans)</a></li>
+
+        {% if is_granted ('ROLE_SUPER_ADMIN') %}
+            <li class="dropdown">
+                <a class=" dropdown-toggle"  id="dropdownMenu6" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    ADMIN
+                    <span class="caret"></span>
+                </a>
+                <ul class="dropdown-menu" aria-labelledby="dropdownMenu6">
+                    <li><a href="{{path('event_type_participation_type_index')}}" >EventType ParticipationType</a></li>
+                    <li><a href="{{path('email_type_index')}}" >EmailType</a></li>
+                    <li><a href="{{path('partner_type_index')}}" >PartnerType</a></li>
+                    <li><a href="{{path('bilan_file_type_index')}}" >BilanFileType</a></li>
+                    <li><a href="{{path('export_mailing_list')}}" >Export Mailing</a></li>
+                    <li><a href="{{path('host_index')}}" >Host</a></li>
+                    <li><a href="{{path('status_index')}}" >Status</a></li>
+                    <li><a href="{{path('joblink_index')}}">Joblinks</a></li>
+                    {#<li><a href="{{path('event_type_host_index')}}" >EventType Host</a></li>#}
+                </ul>
+            </li>
+        {% endif %}
+
+        {% elseif is_granted('ROLE_ORGANIZATION') %}
+        <li><a href="{{path('exposant_index')}}" >Mes participations à venir</a></li>
+        <li><a href="{{path('exposant_participation_list')}}" >Toutes mes participations</a></li>
+        {#  <li><a href="#"  >Sites Bilan</a></li> #}
+        <li><a href="{{path('exposant_contact')}}" >Un bug? Une question?</a></li>
+        {#  <a href="{{path('exposant_manual')}}" >Guide d'utilisation</a></li> #}
+        {% elseif is_granted('ROLE_RH') %}
+        <li><a href="{{path('recruitement_index')}}" >Mes événements à venir</a></li>
+        {#  <li><a href="{{path('fos_user_profile_show')}}" >Mon profil</a></li> #}
+        {#  <a href="{{path('exposant_manual')}}" >Guide d'utilisation</a></li> #}
+        {% elseif is_granted('ROLE_CANDIDATE') %}
+
+        {# <li class="next_events"><a href="{{path('public_index')}}" >Salons emploi à venir</a></li> #}
+        {# to do Préférences email #}
+</div>
+{% endif %}
+</ul>
+</div>

@@ -1,0 +1,128 @@
+{% extends 'admin_base.html.twig' %}
+{% block content %}
+    <div class="container" id="candidate_profile">
+        {% if is_granted("ROLE_CANDIDATE") %}
+            <h1> 
+                Mon profil
+                {% if app.environment == 'dev' %}
+                    id = {{candidate.id}}
+                {% endif %}
+            </h1>
+        {% elseif is_granted("ROLE_VIEWER") or is_granted("ROLE_ORGANIZATION") %}
+            <div class="clear1"></div>
+        {% endif %}
+
+        <div class="content-box">
+            {% include 'partials/profile.html.twig' %}
+        </div>
+        <div class="clear2"></div>
+
+        {% if is_granted("ROLE_CANDIDATE") or is_granted("ROLE_VIEWER") %}
+            <div class="content-box">
+                <div class="contact">
+                    {% if is_granted("ROLE_VIEWER") %}P{% else %}Mes p{% endif %}références de contact
+                </div>
+                {% include 'candidate_user/preferences.html.twig' %}
+            </div>
+        {% endif %}
+
+        {% if is_granted("ROLE_CANDIDATE") or is_granted("ROLE_VIEWER") %}
+            <div class="clear2"></div>
+            {% if is_granted("ROLE_CANDIDATE") %}
+                <a href="{{path('candidate_user_edit')}}" class="btn btn-info">
+                    <i class="fa fa-edit"></i>
+                    Éditer mon profil
+                </a>
+            {% else %}
+                <a href="{{path('admin_candidate_user_edit', {'id' : candidate.id})}}" class="btn btn-info">
+                    <i class="fa fa-edit"></i>
+                    Éditer profil
+                </a>
+                <div class="clear1"></div>
+                {{helper.getReturnButton()|raw}}
+            {% endif %}
+            <div class="clear1"></div>
+        {% endif %}
+
+
+        {% if is_granted("ROLE_CANDIDATE") or is_granted("ROLE_VIEWER") %}
+            <div class="participation">
+                {% set future_participations = helper.findFutureParticipationsFromDays(candidate) %}
+                {% if future_participations|length > 0 %}
+                    <h2>
+                        {% if is_granted("ROLE_CANDIDATE") %}Mes é{% else %}É{% endif %}vénements à venir
+                    </h2>
+                    {% include 'candidate_user/participations.html.twig' with { 'participations' : future_participations, 'old' : false } %}
+                {% endif %}
+                
+                {% if is_granted("ROLE_CANDIDATE") %}
+                    <a href="{{path('public_index')}}" class="btn btn-info" id="next_events">
+                        <i class="fa fa-eye"></i>
+                        Voir les salons emploi à venir
+                    </a>
+                {% endif %}
+                
+                {% set old_participations = helper.findOldParticipationsFromDays(candidate) %}
+                {% if old_participations|length > 0 %}
+                    <h2>
+                        {% if is_granted("ROLE_CANDIDATE") %}Mes é{% else %}É{% endif %}vénements passés
+                    </h2>
+                    <div class="clear1"></div>
+                    {% include 'candidate_user/participations.html.twig' with { 'participations' : old_participations, 'old' : true } %}
+                {% endif %}
+            </div>
+            <div class="clear1"></div>
+            {% if is_granted("ROLE_CANDIDATE") %}
+                <div class="content-box delete-account">
+                    <p class="delete-account">
+                        Vous souhaitez supprimer votre compte?<br>
+                        Les recruteurs que vous avez rencontrés n'auront plus accès à vos données et ne pourront plus vous recontacter.<br>
+                        Si vous souhaitez toujours supprimer votre profil, cliquer sur le bouton ci-dessous.<br>
+                        Cette opération est irréversible.
+                    </p>
+                    <div class="clear1"></div>                
+                    {{ include('candidate_user/_delete_form.html.twig') }}
+                    <div class="clear1"></div>
+                </div>
+            {% elseif is_granted("ROLE_VIEWER") %}
+                {{ include('candidate_user/_delete_form.html.twig',{'btn_label' : 'Supprimer le compte'})}}
+            {% endif %}
+
+            {% if is_granted("ROLE_SUPER_ADMIN") %}
+                <div class="clear2"></div>
+                <div><strong>Event_id :</strong> </div>
+                <div class="clear1"></div>
+                <ul>
+                    {% for participation in candidate.candidateParticipations %}
+                        <li>
+                            {{participation.event}} event_id = {{participation.event.id}}                         </li>
+                    {% endfor %}
+                </ul>
+            {% endif %}
+        </div>
+    {% endif %}
+{% endblock %}
+
+
+{% block additionnal_javascript %}
+{% if register_success_event is defined and register_success_event %}
+	<script async>
+	  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+	  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+	  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+	  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+	  
+      {% if register_success_event.type.analyticsId %}
+      ga('create', '{{register_success_event.type.analyticsId}}', 'auto');
+	  {% else %}
+	  ga('create', 'UA-3778390-3', 'auto');
+	  {% endif %}
+	  ga('send', {
+		  hitType: 'event',
+		  eventCategory: 'Inscription',
+		  eventAction: 'Inscription',
+		  eventLabel: 'Succes'
+	   });
+	</script>
+{% endif %}
+{% endblock %}

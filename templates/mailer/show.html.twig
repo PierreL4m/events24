@@ -1,0 +1,54 @@
+{% extends 'admin_base.html.twig' %}
+
+{% block content %}
+    <div class="container" id="email_show">
+    	<h1> Mail "{{email.emailType.label}}" - {{helper.getAdminEventLink(email.event)|raw}} </h1>
+        <p>
+            <strong>Envoyé le </strong>{{email.sent|date('d/m/Y à H:i')}}     
+        </p>
+        <p>
+        	<strong>Sujet :</strong> {{email.subject}} 
+        </p>
+        <p>
+        	<strong>Corps du mail :</strong>        	
+        	{{email.body|raw}}
+        </p>
+
+        {% if email.attachmentPath %}
+        	<div class="attachment_container">
+        		<span class="custom_label">Pièce Jointe : </span>
+        		<a href="{{path('attachment_download',{'id':email.id})}}">
+        			<i class="fa fa-download"></i>
+        		</a>
+        		<br>
+        		{% if 'image' in email.attachmentType %}
+        			<img src="{{asset(email.getAttachmentWebPath)}}" class="attachment_image">
+        		{% elseif 'pdf' in email.attachmentType %}
+        			<embed src="{{path('attachment_show',{'id':email.id})}}" width="100%" height="600px" type="{{email.attachmentType}}">
+        		{% elseif 'opendocument' in email.attachmentType %}
+        			{% if is_granted("ROLE_SUPER_ADMIN") %}
+        				<p> Pas encore de preview pour les fichiers open document </p>
+        			{% endif %}
+        		{% else %}
+        			<embed src="{{path('attachment_show',{'id':email.id})}}" width="100%" height="600px" style="background-color:white">
+		        {% endif %}
+        	</div>
+        {% endif %}
+
+	 	<div class="clear2"></div>
+	 	<a href="{{path('arnaud_index')}}" class="btn btn-primary">
+	 		<i class="fa fa-arrow-left"></i>
+	 		Retour à la liste d'envoi d'emails
+	 	</a>
+        <div class="clear1"></div>
+        <a href="{{path('event_show', {'id' : email.event.id})}}" class="btn btn-primary">
+            <i class="fa fa-arrow-left"></i>
+            Retour à l'événement
+        </a>
+        <div class="clear1"></div>
+        <a href="{{path('bilan_file_index', {'id' : email.event.id})}}" class="btn btn-primary">
+            <i class="fa fa-arrow-left"></i>
+            Retour au site bilan
+        </a>
+    </div>
+{% endblock %}

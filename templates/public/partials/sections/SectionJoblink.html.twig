@@ -1,0 +1,94 @@
+<div id="joblinks_container">
+
+
+		<div class="grid_container">
+			<div class="grid">
+
+				{% for joblink in section.event.joblinks %}
+					<a href="#joblink_{{joblink.id}}" id="Modaljoblink{{joblink.id}}" title="{{joblink.name}}"  data-id="{{joblink.id}}" >
+						<div class="logo grid-item ">
+							<span class="helper"></span><img src="{{ vich_uploader_asset(joblink, 'logoFile') }}" alt="{{joblink.name}}" />
+						</div>
+						{% if joblink.description %}
+							<div class="triangle"><i class="fa fa-plus"></i></div>
+						{% endif %}
+					</a>
+
+					{# Modal #}
+					<div id="{{'myModal_joblink_' ~ joblink.id }}">
+						{% include 'partials/joblink.html.twig' %}
+					</div>
+
+					{% if admin is defined %}
+						<div>
+							<p>
+								<strong>{{ joblink.name }}</strong>
+								<span class="btn_actions">
+
+									<a href="{{path('joblink_edit', {'id' : joblink.id, 'event_id' : event.id})}}">
+										<i class="fa fa-edit"></i>
+									</a>
+
+									{% if helper.fileExists(joblink.getPdfWebPath) %}
+										<a href="{{joblink.getPdfWebPath}}}" target="_blank">
+											<i class="fa fa-file-pdf-o"></i>
+										</a>
+									{% endif %}
+storm
+									<a href="{{path('joblink_remove_from_event', {'id' : joblink.id, 'event_id' : event.id, 'section_id' : section.id})}}" class="a_confirm" data-msg="ce joblink?">
+										<i class="fa fa-remove"></i>
+									</a>
+								</span>
+							</p>
+							{{ joblink.description|raw }}
+						</div>
+
+						<div class="clear1"></div>
+						<a href="{{ path('joblink_add_participation', {'id' : joblink.id, 'event_id' : event.id}) }}" class="btn btn-success">
+							<i class="fa fa-plus"></i>
+							Entreprises
+						</a>
+						<div class="clear1"></div>
+						{% for session in joblink.joblinkSessions %}
+							<div class="joblink_session">
+								<img src="{{session.participation.logo.getWebPath}}" style="max-width:150px">
+								{{ session.participation }} -
+								{%  if session.start and session.end %}
+									{{ session.start|date('H:i') }} - {{ session.end|date('H:i') }}
+								{%  else %}
+									<span class="text-danger">
+									Merci de définir les horaires de la session joblink
+								</span>
+								{% endif %}
+								<a href="{{path('joblink_session_set_hours', {'id' : session.id})}}">
+									<i class="fa fa-edit"></i>
+								</a>
+								<a href="{{path('joblink_session_remove', {'id' : session.id})}}">
+									<i class="fa fa-remove"></i>
+								</a>
+								<div class="clear1"></div>
+							</div>
+						{% endfor %}
+						<div class="clear4"></div>
+					{% endif %}
+				{% else %}
+					<p> Venez découvrir la liste de nos joblinks très prochainement </p>
+				{% endfor %}
+			</div>
+		</div>
+
+</div>
+
+{% if admin is defined %}
+	<div class="footer_section">
+		{# <a href="{{path('joblinks_add', {'id' : event.id, 'section_id' : section.id})}}" class="btn btn-primary">
+			<i class="fa fa-edit text-white"></i>
+			Ajouter des partenaires existants
+		</a>
+		<div class="clear1"></div> #}
+		<a href="{{path('joblink_new', {'id' : event.id})}}" class="btn btn-primary">
+			<i class="fa fa-plus"></i>
+			Nouveau joblink
+		</a>
+	</div>
+{% endif %}

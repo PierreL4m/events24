@@ -1,0 +1,86 @@
+<?php
+
+namespace App\tests\Controller;
+
+use App\Entity\Agenda;
+use App\Entity\Section;
+use App\Tests\AuthentificationHelper;
+
+class AgendaControllerTest extends AuthentificationHelper
+{
+    public function testAddAgenda()
+    {
+        //Je récupère la dernière section ajouté dans la bdd qui est de type agenda
+        $sectionAgenda = $this->em->getRepository(Section::class)->findOneBy(
+            ["menuTitle" => "Agenda"],
+            ["id" => "DESC"]);
+
+        //I request the page to add a calendar and I check that it is valid
+        $crawlerRequest = $this->client->request('GET', '/admin/agenda/new/' . $sectionAgenda->getId());
+
+        $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
+
+        $form = $crawlerRequest->selectButton('save')->form();
+
+        $form['agenda[title]']->setValue("Test pour l'ajout d'un agenda");
+        $form['agenda[start][hour]']->select(9);
+        $form['agenda[start][minute]']->select(15);
+        $form['agenda[end][hour]']->select(17);
+        $form['agenda[end][minute]']->select(30);
+        $form['agenda[description]']->setValue("Ceci est un test d'ajout");
+        //$form['agenda[logo]'] = "";
+        $form['agenda[logoText]']->setValue("Il n'y a pas de logo");
+
+        $this->client->submit($form);
+
+        //Once the form is sent, I follow redirecting to make the verification assertion
+        $crawler = $this->client->followRedirect();
+
+        //I check that there is at least one entry that has a span with a class title that contains the name of the title I just added
+        $this->assertGreaterThan(0, $crawler->filter('span.title:contains("Test pour l\'ajout d\'un agenda")')->count());
+    }
+
+    /**
+     * @depends testAddAgenda
+     */
+    public function testEditAgenda()
+    {
+        //I get the last calendar added in the database with the previous function
+        $agenda = $this->em->getRepository(Agenda::class)->findOneByIdDesc();
+
+        $crawlerRequest = $this->client->request('GET', '/admin/agenda/' . $agenda->getId() . '/edit');
+        $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
+
+        $form = $crawlerRequest->selectButton('save')->form();
+
+        $form['agenda[title]'] = "Test pour la modification d'un agenda";
+        $form['agenda[start][hour]'] = 9;
+        $form['agenda[start][minute]'] = 0;
+        $form['agenda[end][hour]'] = 17;
+        $form['agenda[end][minute]'] = 30;
+        $form['agenda[description]'] = "Ceci est un test de modification";
+        //$form['agenda[logo]'] = "";
+        $form['agenda[logoText]'] = "Il n'y a toujours pas de logo";
+
+        $this->client->submit($form);
+
+        $crawler = $this->client->followRedirect();
+
+        $this->assertGreaterThan(0, $crawler->filter('span.title:contains("Test pour la modification d\'un agenda")')->count());
+    }
+
+    /**
+     * @depends testEditAgenda
+     */
+    public function OLDtestDeleteAgenda()
+    {
+        //I get the last calendar modify in the database with the previous function
+        $agenda = $this->em->getRepository(Agenda::class)->findOneByIdDesc();
+
+        $this->client->request('GET', 'admin/agenda/remove/' . $agenda->getId());
+
+        $this->client->followRedirect();
+
+        $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
+    }
+}
