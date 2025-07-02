@@ -34,7 +34,7 @@ class IndexElement extends Component {
                                             <title>24H pour l'emploi et la formation, Jobfest, Recrutement Expert, Recrut Comedy Club, venez à la rencontre des recruteurs lors des événements L4M dans les régions Hauts-de-France, Normandie, Bretagne, Pays de la Loire et Centre Val de Loire </title>
                                             <meta name="description" content="L4M organise depuis 2004 des salons de l’emploi et de la formation en France. Retrouvez nous dans les régions Hauts-de-France, Normandie, Bretagne, Pays de la Loire et Centre Val de Loire et participez à l'un de nos 25 événements lors d'un 24h pour l'emploi et la formation, Jobfest, Recrutement Expert ou Recrut Comedy Club." />
                                         </Helmet>
-                                        <UserContainer />
+                                        {/*<UserContainer />*/}
                                         <EventsElement />
                                     </>
                                 </Route>
